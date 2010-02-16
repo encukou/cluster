@@ -6,6 +6,17 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     filelistmodel.cpp
+    datawrapper.cpp \
+    modules/cb.c \
+    modules/memctrl.c \
+    modules/interfc.c \
+    modules/file.c
 HEADERS += mainwindow.h \
     filelistmodel.h
+    datawrapper.h \
+    modules/cb.h \
+    modules/owntypes.h \
+    modules/memctrl.h \
+    modules/interfc.h \
+    modules/file.h
 FORMS += mainwindow.ui
