@@ -59,9 +59,9 @@ QModelIndex FileListModel::parent(const QModelIndex &index) const {
 
 int FileListModel::rowCount(const QModelIndex &parent) const {
     if(parent.isValid()) {
-        FileListItem* fi = static_cast<FileListItem*>(index.internalPointer());
+        FileListItem* fi = static_cast<FileListItem*>(parent.internalPointer());
         if(fi->root) {
-            FileListRootItem* root = static_cast<FileListRootItem*>(fi->parent);
+            FileListRootItem* root = static_cast<FileListRootItem*>(fi);
             return root->children.size();
         }else{
             return 0;

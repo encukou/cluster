@@ -5,14 +5,14 @@ TARGET = cluster
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    filelistmodel.cpp
+    filelistmodel.cpp \
     datawrapper.cpp \
     modules/cb.c \
     modules/memctrl.c \
     modules/interfc.c \
     modules/file.c
 HEADERS += mainwindow.h \
-    filelistmodel.h
+    filelistmodel.h \
     datawrapper.h \
     modules/cb.h \
     modules/owntypes.h \
