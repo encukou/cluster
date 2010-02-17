@@ -10,7 +10,9 @@ SOURCES += main.cpp \
     modules/cb.c \
     modules/memctrl.c \
     modules/interfc.c \
-    modules/file.c
+    modules/file.c \
+    tsdata.cpp \
+    cbdata.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -18,5 +20,7 @@ HEADERS += mainwindow.h \
     modules/owntypes.h \
     modules/memctrl.h \
     modules/interfc.h \
-    modules/file.h
+    modules/file.h \
+    tsdata.h \
+    cbdata.h
 FORMS += mainwindow.ui
