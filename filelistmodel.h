@@ -33,6 +33,9 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
+    QStringList mimeTypes() const;
+    QMimeData* mimeData(const QModelIndexList &indexes) const;
+
     /** Add a file to the model
       *
       * The model takes ownership of the file.

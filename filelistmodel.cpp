@@ -1,6 +1,9 @@
 #include "filelistmodel.h"
 #include "tsdata.h"
 
+#include <QtCore/QStringList>
+#include <QtCore/QMimeData>
+
 FileListModel::FileListModel(QObject *parent): QAbstractItemModel(parent) {
 }
 
@@ -27,7 +30,12 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
 
 Qt::ItemFlags FileListModel::flags(const QModelIndex &index) const {
     if (!index.isValid()) return 0;
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    Qt::ItemFlags defaultFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    if(index.internalId() == FL_PARENT) {
+        return defaultFlags;
+    }else{
+        return defaultFlags | Qt::ItemIsDragEnabled;
+    }
 }
 
 QVariant FileListModel::headerData(int, Qt::Orientation, int) const {
@@ -81,4 +89,30 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
         } break;
         default: return QModelIndex();
     }
+}
+
+QStringList FileListModel::mimeTypes() const {
+    QStringList types;
+    types << "application/x-clustering-trainingset";
+    types << "application/x-clustering-codebook";
+    return types;
+}
+
+QMimeData* FileListModel::mimeData(const QModelIndexList &indexes) const {
+    QMimeData *mimeData = new QMimeData();
+    if(indexes.size() != 1) return mimeData;
+    QByteArray encodedData;
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+    QModelIndex index = indexes[0];
+    switch(index.internalId()) {
+        case FL_TRAININGSET: {
+            stream << &tsData[index.row()];
+            mimeData->setData("application/x-clustering-trainingset", encodedData);
+        } break;
+        case FL_CODEBOOK: {
+            stream << &cbData[index.row()];
+            mimeData->setData("application/x-clustering-codebook", encodedData);
+        } break;
+    }
+    return mimeData;
 }
