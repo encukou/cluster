@@ -11,7 +11,6 @@ class ProcessFactoryModel: public QAbstractItemModel {
 
 public:
     ProcessFactoryModel(QObject *parent = 0);
-    ~ProcessFactoryModel();
 
     QVariant data(const QModelIndex &index, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -23,10 +22,12 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    void addFactory(ProcessFactory*);
+    void addFactory(ProcessFactoryPtr);
+    void addFactory(ProcessFactory* f) {addFactory(ProcessFactoryPtr(f));}
+    ProcessFactoryPtr processFactory(const QModelIndex&);
 
 private:
-    QList<ProcessFactory*> processes;
+    QList<QSharedPointer<ProcessFactory> > processes;
 };
 
 

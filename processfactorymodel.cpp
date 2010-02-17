@@ -3,13 +3,6 @@
 ProcessFactoryModel::ProcessFactoryModel(QObject *parent): QAbstractItemModel(parent) {
 }
 
-ProcessFactoryModel::~ProcessFactoryModel() {
-    foreach(ProcessFactory* f, processes) {
-        delete f;
-    }
-    processes.clear();
-}
-
 QVariant ProcessFactoryModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) return QVariant();
     if (role != Qt::DisplayRole) return QVariant();
@@ -52,8 +45,12 @@ int ProcessFactoryModel::columnCount(const QModelIndex &parent) const {
     }
 }
 
-void ProcessFactoryModel::addFactory(ProcessFactory* newFactory) {
+void ProcessFactoryModel::addFactory(ProcessFactoryPtr newFactory) {
     beginInsertRows(QModelIndex(), processes.size(), processes.size());
     processes.append(newFactory);
     endInsertRows();
+}
+
+ProcessFactoryPtr ProcessFactoryModel::processFactory(const QModelIndex& index) {
+    return processes.at(index.row());
 }

@@ -71,6 +71,6 @@ int FileListModel::rowCount(const QModelIndex &parent) const {
     }
 }
 
-int FileListModel::columnCount(const QModelIndex &parent) const {
+int FileListModel::columnCount(const QModelIndex &) const {
     return 1;
 }

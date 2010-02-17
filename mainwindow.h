@@ -18,8 +18,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    class ProcessFactoryModel* processFactoryModel;
 
 private slots:
+    void on_btnStartProcess_clicked();
     void on_actionOpen_triggered();
 };
 

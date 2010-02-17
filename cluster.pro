@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     modules/file.c \
     process.cpp \
     processfactorymodel.cpp \
-    processes/kmeans.cpp
+    processes/kmeans.cpp \
+    processoptions.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -24,5 +25,7 @@ HEADERS += mainwindow.h \
     modules/file.h \
     process.h \
     processfactorymodel.h \
-    processes/kmeans.h
+    processes/kmeans.h \
+    processoptions.h
 FORMS += mainwindow.ui
+QMAKE_CXXFLAGS+=-Werror
