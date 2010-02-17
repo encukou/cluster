@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    FileListModel* flm = new FileListModel(this);
-    ui->tvFiles->setModel(flm);
+    fileListModel = new FileListModel(this);
+    ui->tvFiles->setModel(fileListModel);
 
     processFactoryModel = new ProcessFactoryModel(this);
     ui->lvNewProcess->setModel(processFactoryModel);
@@ -30,14 +30,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    qDebug("Open action triggered...");
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QString(), "Cluster data (*.cb *.ts *.pa)");
 
     if (!fileName.isNull())
     {
         DataWrapper *data = DataWrapper::fromFile(fileName);
-        // TODO: do something with the data
-        (void) data;
+        QModelIndex index = fileListModel->addDataFile(data);
+        ui->tvFiles->expand(index.parent());
+        ui->tvFiles->scrollTo(index);
     }
 }
 

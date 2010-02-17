@@ -2,8 +2,9 @@
 
 CBData::CBData(QString &fileName)
 {
-    this->dataType = TSFILE;
+    this->dataType = CBFILE;
     ReadCodebook(fileName.toLatin1().data(), &this->codebook);
+    _name = fileName;
 }
 
 void* CBData::getData()

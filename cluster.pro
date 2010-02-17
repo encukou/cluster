@@ -36,4 +36,4 @@ HEADERS += mainwindow.h \
     processoption.h \
     processoptions_types.h
 FORMS += mainwindow.ui
-QMAKE_CXXFLAGS += -Werror
+QMAKE_CXXFLAGS += -Werror -g

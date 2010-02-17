@@ -1,9 +1,7 @@
 #include "filelistmodel.h"
+#include "tsdata.h"
 
 FileListModel::FileListModel(QObject *parent): QAbstractItemModel(parent) {
-    rootItems << FileListRootItem(FileListRootItem::TRAININGSET, rootItems.size());
-    rootItems << FileListRootItem(FileListRootItem::CODEBOOK, rootItems.size());
-    rootItems << FileListRootItem(FileListRootItem::PARTITIONING, rootItems.size());
 }
 
 FileListModel::~FileListModel() {
@@ -12,14 +10,17 @@ FileListModel::~FileListModel() {
 QVariant FileListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) return QVariant();
     if (role != Qt::DisplayRole) return QVariant();
-    FileListItem* fi = static_cast<FileListItem*>(index.internalPointer());
-    if(fi && fi->root) {
-        FileListRootItem* root = static_cast<FileListRootItem*>(fi);
-        switch(root->type) {
-            case FileListRootItem::TRAININGSET: return QVariant("Training sets");
-            case FileListRootItem::CODEBOOK: return QVariant("Codebooks");
-            case FileListRootItem::PARTITIONING: return QVariant("Partitionings");
-        }
+    switch(index.internalId()) {
+        case FL_PARENT: {
+            switch(index.row()) {
+                case FL_TRAININGSET: return QVariant("Training sets");
+                case FL_CODEBOOK: return QVariant("Codebooks");
+                case FL_PARTITIONING: return QVariant("Partitionings");
+                default: return QVariant("(error)");
+            }
+        } break;
+        case FL_TRAININGSET: if(index.row() < tsData.size()) return tsData.at(index.row())->name();
+        case FL_CODEBOOK: if(index.row() < cbData.size()) return cbData.at(index.row())->name();
     }
     return QVariant();
 }
@@ -36,41 +37,48 @@ QVariant FileListModel::headerData(int, Qt::Orientation, int) const {
 QModelIndex FileListModel::index(int row, int column,
                                  const QModelIndex &parent) const {
     if(parent.isValid()) {
-        return QModelIndex();
+        return createIndex(row, column, parent.row());
     }else{
-        if(column == 0 && row < rootItems.size()) {
-            return createIndex(row, 0, (void*)&rootItems[row]);
-        }
+        return createIndex(row, column, FL_PARENT);
     }
     return QModelIndex();
 }
 
 QModelIndex FileListModel::parent(const QModelIndex &index) const {
-    if (!index.isValid()) return QModelIndex();
-    FileListItem* fi = static_cast<FileListItem*>(index.internalPointer());
-    if(fi && !fi->root) {
-        FileListRootItem* root = static_cast<FileListRootItem*>(fi->parent);
-        int row = root->index;
-        return createIndex(row, 0, root);
-    }else{
-        return QModelIndex();
-    }
+    if (!index.isValid() || index.internalId() == FL_PARENT) return QModelIndex();
+    return createIndex(index.internalId(), 0, FL_PARENT);
 }
 
 int FileListModel::rowCount(const QModelIndex &parent) const {
-    if(parent.isValid()) {
-        FileListItem* fi = static_cast<FileListItem*>(parent.internalPointer());
-        if(fi->root) {
-            FileListRootItem* root = static_cast<FileListRootItem*>(fi);
-            return root->children.size();
-        }else{
-            return 0;
+    if(!parent.isValid()) {
+        return FL_COUNT;
+    }else if(parent.internalId() == FL_PARENT) {
+        switch(parent.row()) {
+            case FL_TRAININGSET: return tsData.size();
+            case FL_CODEBOOK: return cbData.size();
         }
-    }else{
-        return rootItems.size();
     }
+    return 0;
 }
 
 int FileListModel::columnCount(const QModelIndex &) const {
     return 1;
+}
+
+QModelIndex FileListModel::addDataFile(DataWrapper* file) {
+    switch(file->getType()) {
+        case TSFILE: {
+            beginInsertRows(index(FL_TRAININGSET, 1), tsData.size(), tsData.size());
+            tsData.append(TSDataPtr(dynamic_cast<TSData*>(file)));
+            endInsertRows();
+            return createIndex(tsData.size()-1, 1, FL_TRAININGSET);
+        } break;
+        case CBFILE: {
+            beginInsertRows(index(FL_CODEBOOK, 1), cbData.size(), cbData.size());
+            cbData.append(CBDataPtr(dynamic_cast<CBData*>(file)));
+            endInsertRows();
+            return createIndex(cbData.size()-1, 1, FL_CODEBOOK);
+        } break;
+        default: return QModelIndex();
+    }
 }

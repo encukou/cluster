@@ -18,3 +18,7 @@ DataWrapper* DataWrapper::fromFile(QString &fileName)
             return NULL;
      }
 }
+
+QString DataWrapper::name() {
+    return _name;
+}

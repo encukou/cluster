@@ -3,30 +3,21 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QList>
-
-class FileListRootItem;
-
-class FileListItem {
-public:
-    FileListItem(bool root=false): parent(0), root(root) {}
-    FileListRootItem* parent;
-    bool root;
-};
-
-class FileListRootItem: public FileListItem {
-public:
-    enum TYPE {
-        TRAININGSET,
-        CODEBOOK,
-        PARTITIONING
-    } type;
-    FileListRootItem(TYPE type, int index): FileListItem(true), type(type), index(index) {}
-    QList<FileListItem> children;
-    int index;
-};
+#include "tsdata.h"
+#include "cbdata.h"
 
 class FileListModel: public QAbstractItemModel {
      Q_OBJECT
+
+    enum ItemType {
+        FL_PARENT = -1,
+
+        FL_TRAININGSET,
+        FL_CODEBOOK,
+        FL_PARTITIONING,
+
+        FL_COUNT
+    } type;
 
 public:
     FileListModel(QObject *parent = 0);
@@ -42,8 +33,15 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
+    /** Add a file to the model
+      *
+      * The model takes ownership of the file.
+      */
+    QModelIndex addDataFile(DataWrapper* file);
+
 private:
-    QList<FileListRootItem> rootItems;
+    QList<TSDataPtr> tsData;
+    QList<CBDataPtr> cbData;
 };
 
 #endif // FILELISTMODEL_H

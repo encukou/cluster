@@ -19,6 +19,7 @@ public:
 private:
     Ui::MainWindow *ui;
     class ProcessFactoryModel* processFactoryModel;
+    class FileListModel* fileListModel;
 
 private slots:
     void on_btnStartProcess_clicked();
