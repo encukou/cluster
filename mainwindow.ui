@@ -39,12 +39,6 @@
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
-   <widget class="QMenu" name="menuProcess">
-    <property name="title">
-     <string>Process</string>
-    </property>
-    <addaction name="actionProcess_KM"/>
-   </widget>
    <widget class="QMenu" name="menuImage">
     <property name="title">
      <string>Image</string>
@@ -68,7 +62,6 @@
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuProcess"/>
    <addaction name="menuImage"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -97,9 +90,9 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
+  <widget class="QDockWidget" name="dwProcessChooser">
    <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Choose a Clustering Process</string>
@@ -108,9 +101,29 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0" colspan="2">
       <widget class="QListView" name="lvNewProcess"/>
+     </item>
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>681</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="btnStartProcess">
+       <property name="text">
+        <string>Start Process</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -223,18 +236,34 @@
  <resources/>
  <connections>
   <connection>
-   <sender>toolBar</sender>
-   <signal>actionTriggered(QAction*)</signal>
+   <sender>actionClose</sender>
+   <signal>activated()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>41</y>
+     <x>182</x>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
      <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lvNewProcess</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>btnStartProcess</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>572</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>747</x>
+     <y>626</y>
     </hint>
    </hints>
   </connection>
