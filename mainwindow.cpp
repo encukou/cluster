@@ -41,6 +41,14 @@ void MainWindow::on_actionOpen_triggered()
     }
 }
 
+static QString makeNumberedName(QString base, int number) {
+    if(number == 1) {
+        return base;
+    }else{
+        return base + " (" + QString::number(number) + ")";
+    }
+}
+
 void MainWindow::on_btnStartProcess_clicked() {
     QModelIndex index = ui->lvNewProcess->selectionModel()->currentIndex();
     if(!index.isValid()) return;
@@ -49,13 +57,35 @@ void MainWindow::on_btnStartProcess_clicked() {
     dock->setAllowedAreas(ui->dwProcessChooser->allowedAreas());
     dock->setFeatures(ui->dwProcessChooser->features() | QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
+    dock->show();
     tabifyDockWidget(ui->dwProcessChooser, dock);
-    // Hack to make the new DockWidget appear on top
-    // TODO: Make ot work better
-    ui->dwProcessChooser->hide();
+
+    // HACK: make the new DockWidget appear on top
+    foreach(QDockWidget* d, this->tabifiedDockWidgets(dock)) {
+        d->hide();
+    }
     dock->hide();
     dock->show();
-    ui->dwProcessChooser->show();
+    foreach(QDockWidget* d, this->tabifiedDockWidgets(dock)) {
+        d->show();
+    }
+
+    // Give the process dock a unique name
+    int i=0;
+    QString name;
+    bool unique = true;
+    do {
+        i++;
+        unique = true;
+        name = makeNumberedName(factory->name(), i);
+        foreach(QObject* o, this->children()) {
+            QDockWidget* d = qobject_cast<QDockWidget*>(o);
+            if(d && d != dock && d->windowTitle() == name) {
+                unique = false;
+            }
+        }
+    } while(!unique);
+    dock->setWindowTitle(name);
 
     QStackedWidget* sw = new QStackedWidget(dock);
     sw->addWidget(factory->getOptions()->newOptionsWidget());

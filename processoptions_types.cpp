@@ -2,6 +2,9 @@
 
 #include <QtGui/QSpinBox>
 #include <QtGui/QComboBox>
+#include <QtGui/QDropEvent>
+#include <QtGui/QDragEnterEvent>
+#include <QtDebug>
 
 OptionGUIHelper::OptionGUIHelper(ProcessOptionsPtr options, const ProcessOptionPtr option, QWidget* parent, QVariant value):
         QObject(parent),
@@ -49,4 +52,36 @@ QWidget* EnumOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const
     cb->setCurrentIndex(options->get<int>(*this));
     (new OptionGUIHelper(options, this->pointer(), cb))->connect(cb, SIGNAL(currentIndexChanged(int)), SLOT(setValue(int)));
     return cb;
+}
+
+TrainingSetOption::TrainingSetOption(QString name, QString label):
+        ProcessOption(name, label, (QVariant::Type) QVariant::nameToType("TSDataPtr"))
+{
+}
+
+QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
+    return new TrainingSetWidget(parent);
+    (void) options;
+}
+
+TrainingSetWidget::TrainingSetWidget(QWidget* parent): QLabel(parent) {
+    setAcceptDrops(true);
+    setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+}
+
+void TrainingSetWidget::dragEnterEvent(QDragEnterEvent* event) {
+    if(event->mimeData()->hasFormat("application/x-clustering-trainingset-pointer")) {
+        event->acceptProposedAction();
+    }
+}
+
+QSize TrainingSetWidget::sizeHint() const {
+    return QSize(32 + frameWidth()*2, 32 + frameWidth()*2);
+}
+
+void TrainingSetWidget::dropEvent(QDropEvent* event) {
+    if(event->mimeData()->hasFormat("application/x-clustering-trainingset-pointer")) {
+        qDebug() << event->mimeData();
+        event->acceptProposedAction();
+    }
 }

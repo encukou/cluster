@@ -31,6 +31,7 @@ QList<ProcessOptionPtr> opts;
 
 ProcessOptionsPtr KMeansFactory::getOptions() const {
     if(!opts.size()) {
+        opts.append((new TrainingSetOption("input", "Input training data"))->pointer());
 
         QStringList choices;
         choices << "Random" << "K-Means++" << "Marko's Division to Strips" << "Existing Codebook";

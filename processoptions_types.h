@@ -5,6 +5,7 @@
 #include <climits>
 
 #include <QtCore/QSharedPointer>
+#include <QtGui/QLabel>
 
 /** An integer option. The GUI for this is a QSpinBox.
   */
@@ -26,6 +27,27 @@ public:
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
 protected:
     QStringList values;
+};
+
+/** An enumeration option. The GUI for this is a QComboBox.
+  */
+class TrainingSetOption: public ProcessOption {
+public:
+    TrainingSetOption(QString name, QString label);
+    QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
+protected:
+    QStringList values;
+};
+
+/** A widget that accepts dropped TrainingSets
+  */
+class TrainingSetWidget: public QLabel {
+    Q_OBJECT
+public:
+    TrainingSetWidget(QWidget* parent);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dropEvent(QDropEvent* event);
+    QSize sizeHint() const;
 };
 
 /** Helper class for synchronizing a widget to ProcessOptions

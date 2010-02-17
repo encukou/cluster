@@ -3,6 +3,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QMimeData>
+#include <QtDebug>
 
 FileListModel::FileListModel(QObject *parent): QAbstractItemModel(parent) {
 }
@@ -29,12 +30,12 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
 }
 
 Qt::ItemFlags FileListModel::flags(const QModelIndex &index) const {
-    if (!index.isValid()) return 0;
-    Qt::ItemFlags defaultFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    if (!index.isValid()) return Qt::ItemIsDropEnabled;
+    Qt::ItemFlags commonFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
     if(index.internalId() == FL_PARENT) {
-        return defaultFlags;
+        return commonFlags;
     }else{
-        return defaultFlags | Qt::ItemIsDragEnabled;
+        return commonFlags | Qt::ItemIsDragEnabled;
     }
 }
 
@@ -93,12 +94,13 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
 
 QStringList FileListModel::mimeTypes() const {
     QStringList types;
-    types << "application/x-clustering-trainingset";
-    types << "application/x-clustering-codebook";
+    types << "application/x-clustering-trainingset-pointer";
+    types << "application/x-clustering-codebook-pointer";
+    types << "inode/file";
     return types;
 }
 
-QMimeData* FileListModel::mimeData(const QModelIndexList &indexes) const {
+QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
     QMimeData *mimeData = new QMimeData();
     if(indexes.size() != 1) return mimeData;
     QByteArray encodedData;
@@ -107,12 +109,20 @@ QMimeData* FileListModel::mimeData(const QModelIndexList &indexes) const {
     switch(index.internalId()) {
         case FL_TRAININGSET: {
             stream << &tsData[index.row()];
-            mimeData->setData("application/x-clustering-trainingset", encodedData);
+            mimeData->setData("application/x-clustering-trainingset-pointer", encodedData);
         } break;
         case FL_CODEBOOK: {
             stream << &cbData[index.row()];
-            mimeData->setData("application/x-clustering-codebook", encodedData);
+            mimeData->setData("application/x-clustering-codebook-pointer", encodedData);
         } break;
     }
     return mimeData;
+}
+
+bool FileListModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int, int, const QModelIndex&) {
+    if (action == Qt::IgnoreAction) return true;
+    if (data->hasFormat("application/x-clustering-trainingset-pointer")) {
+        // TODO
+    }
+    return false;
 }

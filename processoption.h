@@ -24,7 +24,7 @@ typedef QSharedPointer<ProcessOptions> ProcessOptionsPtr;
   * Use the concrete subclasses declared in processoptions_types.h
   */
 struct ProcessOption {
-    ProcessOption(QString name, QString label, QVariant::Type type, QVariant defaultValue);
+    ProcessOption(QString name, QString label, QVariant::Type type, QVariant defaultValue=QVariant());
     QString name;
     QString label;
     QVariant::Type type;
