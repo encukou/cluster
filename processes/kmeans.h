@@ -2,18 +2,16 @@
 #define KMEANS_H
 
 #include "process.h"
-
-class CBData;
-class TSData;
+#include "tsdata.h"
+#include "cbdata.h"
 
 class KMeans: public Process {
 public:
-    KMeans(QSharedPointer<TSData> trainingset, QSharedPointer<CBData> initial_codebook, int initialization, int no_clusters);
+    KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters);
 };
 
 class KMeansFactory: public ProcessFactory {
 public:
-    KMeansFactory();
     QString name() const;
     virtual QSharedPointer<ProcessOptions> getOptions() const;
     ProcessPtr newProcess(const ProcessOptionsPtr) const;

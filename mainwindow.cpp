@@ -3,10 +3,11 @@
 
 #include <QtDebug>
 #include <QtGui/QStackedWidget>
-
+#include <QFileDialog>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/kmeans.h"
+#include "datawrapper.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -29,7 +30,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    qDebug("Open action triggered...");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), QString(), "Cluster data (*.cb *.ts *.pa)");
 
+    if (!fileName.isNull())
+    {
+        DataWrapper *data = DataWrapper::fromFile(fileName);
+        // TODO: do something with the data
+        (void) data;
+    }
 }
 
 void MainWindow::on_btnStartProcess_clicked() {
@@ -42,6 +51,7 @@ void MainWindow::on_btnStartProcess_clicked() {
     addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
     tabifyDockWidget(ui->dwProcessChooser, dock);
     // Hack to make the new DockWidget appear on top
+    // TODO: Make ot work better
     ui->dwProcessChooser->hide();
     dock->hide();
     dock->show();

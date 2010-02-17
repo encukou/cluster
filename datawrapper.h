@@ -9,10 +9,13 @@ extern "C" {
 
 class DataWrapper
 {
-private:
-
+protected:
+    CBFILETYPE dataType;
 public:
-    DataWrapper(QString &fileName);
+    CBFILETYPE getType() { return dataType; }
+    virtual void* getData() = 0;
+
+    static DataWrapper* fromFile(QString &fileName);
 };
 
 #endif // DATAWRAPPER_H

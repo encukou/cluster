@@ -30,5 +30,4 @@ private:
     QList<QSharedPointer<ProcessFactory> > processes;
 };
 
-
 #endif // PROCESSFACTORYMODEL_H

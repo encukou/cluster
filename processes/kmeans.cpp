@@ -2,11 +2,14 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QWidget>
-#include "processoptions.h"
+#include "processoptions_types.h"
 
-static QSharedPointer<ProcessOptions> options;
-
-KMeansFactory::KMeansFactory() {
+KMeans::KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters) {
+    // TODO!
+    (void) trainingset;
+    (void) initial_codebook;
+    (void) initialization;
+    (void) no_clusters;
 }
 
 QString KMeansFactory::name() const {
@@ -24,16 +27,21 @@ ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options) const {
     return ProcessPtr(p);
 }
 
-QSharedPointer<ProcessOptions> KMeansFactory::getOptions() const {
-    if(!options) {
-        QList<ProcessOption*> opts;
+QList<ProcessOptionPtr> opts;
+
+ProcessOptionsPtr KMeansFactory::getOptions() const {
+    if(!opts.size()) {
+
+        QStringList choices;
+        choices << "Random" << "K-Means++" << "Marko's Division to Strips" << "Existing Codebook";
+        opts.append((new EnumOption("init_type", "Initialization Method", choices, 0))->pointer());
+
         IntOption* opt;
-        opts.append(new EnumOption("init_type", "Initialization Method", QStringList() << "Random" << "K-Means++" << "Marko's Division to Strips" << "Existing Codebook", 0));
         opt = new IntOption("no_iterations", "No. of iterations");
         opt->specialValueText = "(Until convergence)";
-        opts.append(opt);
-        opts.append(new IntOption("cb_size", "No. of clusters", 256));
-        options = ProcessOptions::newOptions(opts);
+        opts.append(opt->pointer());
+
+        opts.append((new IntOption("cb_size", "No. of clusters", 256))->pointer());
     }
-    return options;
+    return ProcessOptions::newOptions(opts);
 }
