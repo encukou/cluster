@@ -11,3 +11,13 @@ void* TSData::getData()
 {
     return &this->trainingSet;
 }
+
+int TSData::getDataSize()
+{
+    return BookSize(&this->trainingSet);
+}
+
+int TSData::getVectorSize()
+{
+    return VectorSize(&this->trainingSet);
+}

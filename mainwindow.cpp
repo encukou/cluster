@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <QtGui/QStackedWidget>
 #include <QFileDialog>
+#include <QGraphicsEllipseItem>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/kmeans.h"
@@ -38,6 +39,20 @@ void MainWindow::on_actionOpen_triggered()
         QModelIndex index = fileListModel->addDataFile(data);
         ui->tvFiles->expand(index.parent());
         ui->tvFiles->scrollTo(index);
+
+        if (data->getType() == CBFILE || data->getType() == TSFILE)
+        {
+            QGraphicsScene scene;
+            CODEBOOK *cb = static_cast<CODEBOOK*>(data->getData());
+            for (int i=0; i<data->getDataSize(); i++)
+            {
+                QGraphicsEllipseItem *item;
+                item = scene.addEllipse(VectorScalar(cb, i, 0), VectorScalar(cb, i, 1), 1000.0, 1000.0);
+                item->setVisible(true);
+                // TODO: for reasons unknown... it doesn't work
+            }
+            ui->gvView->setScene(&scene);
+        }
     }
 }
 

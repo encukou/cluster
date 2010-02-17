@@ -16,6 +16,7 @@ protected:
 public:
     CBFILETYPE getType() { return dataType; }
     virtual void* getData() = 0;
+    virtual int getDataSize() = 0;
 
     QString name();
 
