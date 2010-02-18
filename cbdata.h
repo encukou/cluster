@@ -11,7 +11,9 @@ private:
     CODEBOOK codebook;
 public:
     CBData(QString &fileName);
+
     void* getData();
+    int getDataSize();
 };
 
 // Make CBDataPtr usable in a QVariant

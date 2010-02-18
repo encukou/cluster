@@ -11,3 +11,8 @@ void* CBData::getData()
 {
     return &this->codebook;
 }
+
+int CBData::getDataSize()
+{
+    return BookSize(&this->codebook);
+}
