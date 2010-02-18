@@ -2,10 +2,12 @@
 #define PROCESSOPTIONS_TYPES_H
 
 #include "processoptions.h"
-#include <climits>
 
+#include <climits>
 #include <QtCore/QSharedPointer>
 #include <QtGui/QLabel>
+
+#include "tsdata.h"
 
 /** An integer option. The GUI for this is a QSpinBox.
   */
@@ -45,9 +47,12 @@ class TrainingSetWidget: public QLabel {
     Q_OBJECT
 public:
     TrainingSetWidget(QWidget* parent);
+protected:
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
     QSize sizeHint() const;
+    QString my_mimetype;
+    TSDataPtr data;
 };
 
 /** Helper class for synchronizing a widget to ProcessOptions

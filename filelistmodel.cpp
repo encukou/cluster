@@ -108,11 +108,13 @@ QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
     QModelIndex index = indexes[0];
     switch(index.internalId()) {
         case FL_TRAININGSET: {
-            stream << &tsData[index.row()];
-            mimeData->setData("application/x-clustering-trainingset-pointer", encodedData);
+            int bytesWritten = stream.writeRawData((const char*)(&tsData[index.row()]), sizeof(TSDataPtr));
+            if(bytesWritten == sizeof(TSDataPtr)) {
+                mimeData->setData("application/x-clustering-trainingset-pointer", encodedData);
+            }
         } break;
         case FL_CODEBOOK: {
-            stream << &cbData[index.row()];
+            stream.writeRawData(reinterpret_cast<const char*>(&cbData[index.row()]), sizeof(void*));;
             mimeData->setData("application/x-clustering-codebook-pointer", encodedData);
         } break;
     }

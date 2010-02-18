@@ -6,6 +6,8 @@
 #include <QtGui/QDragEnterEvent>
 #include <QtDebug>
 
+#include "tsdata.h"
+
 OptionGUIHelper::OptionGUIHelper(ProcessOptionsPtr options, const ProcessOptionPtr option, QWidget* parent, QVariant value):
         QObject(parent),
         options(options),
@@ -67,10 +69,11 @@ QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent
 TrainingSetWidget::TrainingSetWidget(QWidget* parent): QLabel(parent) {
     setAcceptDrops(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+    my_mimetype = "application/x-clustering-trainingset-pointer";
 }
 
 void TrainingSetWidget::dragEnterEvent(QDragEnterEvent* event) {
-    if(event->mimeData()->hasFormat("application/x-clustering-trainingset-pointer")) {
+    if(event->mimeData()->hasFormat(my_mimetype)) {
         event->acceptProposedAction();
     }
 }
@@ -80,8 +83,17 @@ QSize TrainingSetWidget::sizeHint() const {
 }
 
 void TrainingSetWidget::dropEvent(QDropEvent* event) {
-    if(event->mimeData()->hasFormat("application/x-clustering-trainingset-pointer")) {
-        qDebug() << event->mimeData();
-        event->acceptProposedAction();
+    if(event->mimeData()->hasFormat(my_mimetype)) {
+        QByteArray encodedData = event->mimeData()->data(my_mimetype);
+        QDataStream stream(&encodedData, QIODevice::ReadOnly);
+        TSDataPtr ptr;
+        int bytesRead = stream.readRawData((char*)(&ptr), sizeof(TSDataPtr));
+        if(bytesRead == sizeof(TSDataPtr) && ptr) {
+            this->data = ptr;
+            qDebug() << this->data->name();
+            event->acceptProposedAction();
+        }else{
+            qDebug() << ptr;
+        }
     }
 }
