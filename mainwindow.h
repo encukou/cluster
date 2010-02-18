@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <QtGui/QGraphicsScene>
 
 namespace Ui
 {
@@ -20,6 +21,7 @@ private:
     Ui::MainWindow *ui;
     class ProcessFactoryModel* processFactoryModel;
     class FileListModel* fileListModel;
+    QGraphicsScene scene;
 
 private slots:
     void on_btnStartProcess_clicked();
