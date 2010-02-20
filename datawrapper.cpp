@@ -2,7 +2,7 @@
 #include "tsdata.h"
 #include "cbdata.h"
 
-DataWrapper* DataWrapper::fromFile(QString &fileName)
+DataWrapper* DataWrapper::fromFile(QString fileName)
 {
     CBFILETYPE type = DetermineCBFileType(fileName.toLatin1().data());
     switch (type)

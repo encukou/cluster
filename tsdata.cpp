@@ -1,10 +1,11 @@
 #include "tsdata.h"
+#include <QFileInfo>
 
 TSData::TSData(QString &fileName)
 {
     this->dataType = TSFILE;
     ReadTrainingSet(fileName.toLatin1().data(), &this->trainingSet);
-    _name = fileName;
+    _name = QFileInfo(fileName).fileName();
 }
 
 void* TSData::getData()

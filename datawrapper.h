@@ -20,7 +20,7 @@ public:
 
     QString name();
 
-    static DataWrapper* fromFile(QString &fileName);
+    static DataWrapper* fromFile(QString fileName);
 };
 
 #endif // DATAWRAPPER_H

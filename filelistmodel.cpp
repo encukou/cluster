@@ -80,7 +80,6 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
             beginInsertRows(index(FL_TRAININGSET, 0), tsData.size(), tsData.size());
             tsData.append(TSDataPtr(dynamic_cast<TSData*>(file)));
             endInsertRows();
-            qDebug() << "New Size:" << tsData.size();
             return createIndex(tsData.size()-1, 0, FL_TRAININGSET);
         } break;
         case CBFILE: {

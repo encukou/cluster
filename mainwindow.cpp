@@ -5,6 +5,7 @@
 #include <QtGui/QStackedWidget>
 #include <QFileDialog>
 #include <QGraphicsEllipseItem>
+#include <QDir>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/kmeans.h"
@@ -22,6 +23,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lvNewProcess->setModel(processFactoryModel);
 
     processFactoryModel->addFactory(new KMeansFactory);
+
+    // Open files in the current directory, for convenience
+    // TODO: What's the standard file extension for a partitioning?
+    foreach(const QFileInfo& fi, QDir::current().entryInfoList(QStringList() << "*.ts" << "*.cb", QDir::Files | QDir::Readable, QDir::Time)) {
+        DataWrapper *data = DataWrapper::fromFile(fi.filePath());
+        if(data) {
+            QModelIndex index = fileListModel->addDataFile(data);
+            ui->tvFiles->expand(index.parent());
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -36,26 +47,31 @@ void MainWindow::on_actionOpen_triggered()
     if (!fileName.isNull())
     {
         DataWrapper *data = DataWrapper::fromFile(fileName);
-        QModelIndex index = fileListModel->addDataFile(data);
-        ui->tvFiles->expand(index.parent());
-        ui->tvFiles->scrollTo(index);
+        if(data) {
+            QModelIndex index = fileListModel->addDataFile(data);
+            ui->tvFiles->expand(index.parent());
+            ui->tvFiles->scrollTo(index);
 
-        if (data->getType() == CBFILE || data->getType() == TSFILE)
-        {
-            scene.clear();
-            CODEBOOK *cb = static_cast<CODEBOOK*>(data->getData());
-            for (int i=0; i<data->getDataSize(); i++)
+            if (data->getType() == CBFILE || data->getType() == TSFILE)
             {
-                QGraphicsEllipseItem *item;
-                item = scene.addEllipse(VectorScalar(cb, i, 0), VectorScalar(cb, i, 1), 1000.0, 1000.0);
-                item->setVisible(true);
-                item->setBrush(QColor(0, 0, 0));
-                item->setPen(QColor(0, 0, 0));
+                scene.clear();
+                CODEBOOK *cb = static_cast<CODEBOOK*>(data->getData());
+                for (int i=0; i<data->getDataSize(); i++)
+                {
+                    QGraphicsEllipseItem *item;
+                    item = scene.addEllipse(VectorScalar(cb, i, 0), VectorScalar(cb, i, 1), 1000.0, 1000.0);
+                    item->setVisible(true);
+                    item->setBrush(QColor(0, 0, 0));
+                    item->setPen(QColor(0, 0, 0));
+                }
+                ui->gvView->setScene(&scene);
+                ui->gvView->fitInView(scene.sceneRect());
+                qDebug() << cb->MinValue << cb->MaxValue;
+                qDebug() << "Done";
             }
-            ui->gvView->setScene(&scene);
-            ui->gvView->fitInView(scene.sceneRect());
-            qDebug() << cb->MinValue << cb->MaxValue;
-            qDebug() << "Done";
+        }else{
+            // File was not recognized
+            // TODO: Maybe display a warning message
         }
     }
 }
