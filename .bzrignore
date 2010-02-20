@@ -6,3 +6,4 @@ cluster.pro.user
 *.o
 *.cb
 *.ts
+qrc_*.cpp

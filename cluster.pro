@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     processoption.cpp \
     processoptions_types.cpp \
     datafilewidget.cpp \
-    animation.cpp
+    animation.cpp \
+    aboutdialog.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -38,7 +39,12 @@ HEADERS += mainwindow.h \
     processoption.h \
     processoptions_types.h \
     datafilewidget.h \
-    animation.h
-FORMS += mainwindow.ui
+    animation.h \
+    aboutdialog.h \
+    iconhelper.h
+FORMS += mainwindow.ui \
+    aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
+OTHER_FILES += 
+RESOURCES += resources/cluster.qrc

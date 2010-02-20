@@ -24,6 +24,7 @@ private:
     QGraphicsScene scene;
 
 private slots:
+    void on_actionAbout_triggered();
     void on_btnStartProcess_clicked();
     void on_actionOpen_triggered();
 };

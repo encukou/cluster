@@ -15,6 +15,8 @@
 #include "processes/kmeans.h"
 #include "datawrapper.h"
 #include "animation.h"
+#include "aboutdialog.h"
+#include "iconhelper.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -38,6 +40,19 @@ MainWindow::MainWindow(QWidget *parent)
             ui->tvFiles->expand(index.parent());
         }
     }
+
+    // File
+    ui->actionOpen->setIcon(loadIcon("actions", "document-open"));
+    ui->actionSave->setIcon(loadIcon("actions", "document-save"));
+    ui->actionClose->setIcon(loadIcon("actions", "application-exit"));
+    // Image
+    ui->actionSaveImage->setIcon(loadIcon("actions", "image-save"));
+    ui->actionViewSettings->setIcon(loadIcon("cluster", "settings"));
+    ui->actionZoomIn->setIcon(loadIcon("actions", "zoom-in"));
+    ui->actionZoomOut->setIcon(loadIcon("actions", "zoom-out"));
+    ui->actionAutoZoom->setIcon(loadIcon("actions", "zoom-fit-best"));
+    // Help
+    ui->actionAbout->setIcon(loadIcon("actions", "help-about"));
 }
 
 MainWindow::~MainWindow()
@@ -160,4 +175,9 @@ void MainWindow::on_btnStartProcess_clicked() {
     // Done
     sw->addWidget(optionsWidget);
     dock->setWidget(sw);
+}
+
+void MainWindow::on_actionAbout_triggered() {
+    AboutDialog* dlg = new AboutDialog(this);
+    dlg->show();
 }
