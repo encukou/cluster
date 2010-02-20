@@ -31,59 +31,20 @@ protected:
     QStringList values;
 };
 
-/** An enumeration option. The GUI for this is a QComboBox.
+/** A training set option. The GUI for this is a place to drop training sets.
   */
 class TrainingSetOption: public ProcessOption {
 public:
     TrainingSetOption(QString name, QString label);
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
-protected:
-    QStringList values;
 };
 
-/** Base class for widgets that accept DataWrappers (TrainingSets, Codebooks etc.)
+/** A codebook option. The GUI for this is a place to drop codebooks.
   */
-class AbstractDataFileWidget: public QLabel {
-    Q_OBJECT
+class CodebookOption: public ProcessOption {
 public:
-    AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent);
-    QString caption();
-signals:
-    void captionChanged(QString);
-protected slots:
-    virtual void valueChange(ProcessOptionPtr, QVariant)=0;
-    void refresh();
-protected:
-    void dragEnterEvent(QDragEnterEvent* event);
-    void setCaption(QString);
-    QSize sizeHint() const;
-    QString my_mimetype;
-    DataWrapperPtr data;
-    ProcessOptionsPtr options;
-    ProcessOptionPtr option;
-    QString m_caption;
-};
-
-/** Another base class for widgets that accept DataWrappers (TrainingSets, Codebooks etc.)
-  *
-  * (Signals & slots don't work with templates, hence the need for this)
-  */
-template<class DataPtr>
-class DataFileWidget: public AbstractDataFileWidget {
-public:
-    DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent);
-protected:
-    void valueChange(ProcessOptionPtr, QVariant);
-protected:
-    void dropEvent(QDropEvent* event);
-};
-
-/** A widget that accepts dropped TrainingSets
-  */
-class TrainingSetWidget: public DataFileWidget<TSDataPtr> {
-    Q_OBJECT
-public:
-    TrainingSetWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent);
+    CodebookOption(QString name, QString label);
+    QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
 };
 
 /** Helper class for synchronizing a widget to ProcessOptions

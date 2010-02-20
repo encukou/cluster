@@ -38,7 +38,7 @@ ProcessOptionsPtr KMeansFactory::getOptions() const {
         Q_ASSERT(choices.size() == INIT_COUNT); // Make sure the texts correspond to the enum values!
         opts.append((new EnumOption("init_type", "Initialization Method", choices, 0))->pointer());
 
-        //opts.append((new CodebookOption("initial_cb", "Initial codebook"))->pointer());
+        opts.append((new CodebookOption("initial_cb", "Initial codebook"))->pointer());
 
         IntOption* opt;
         opt = new IntOption("no_iterations", "No. of iterations");
@@ -53,8 +53,8 @@ ProcessOptionsPtr KMeansFactory::getOptions() const {
 
 bool KMeansFactory::validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged) {
     TSDataPtr input = options->get<TSDataPtr>("input");
-    CBDataPtr initial_cb = options->get<CBDataPtr>("initial_cb");
     InitType init_type = (InitType) options->get<int>("init_type");
+    CBDataPtr initial_cb = options->get<CBDataPtr>("initial_cb");
 
     // Check init_type is inside bounds
     if(init_type < 0 || init_type >= INIT_COUNT) {

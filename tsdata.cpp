@@ -8,11 +8,6 @@ TSData::TSData(QString &fileName)
     this->dataType = TSFILE;
     ReadTrainingSet(fileName.toLatin1().data(), &this->trainingSet);
     _name = QFileInfo(fileName).fileName();
-    qDebug() << "Creating TSData" << _name;
-}
-
-TSData::~TSData() {
-    qDebug() << "Creating TSData" << _name;
 }
 
 void* TSData::getData()

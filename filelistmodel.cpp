@@ -116,8 +116,12 @@ QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
             }
         } break;
         case FL_CODEBOOK: {
-            stream.writeRawData(reinterpret_cast<const char*>(&cbData[index.row()]), sizeof(void*));;
-            mimeData->setData("application/x-clustering-codebook-pointer", encodedData);
+            const CBDataPtr* ptr = &cbData[index.row()];
+            qDebug() << "Sending" << ptr;
+            int bytesWritten = stream.writeRawData((const char*)(&ptr), sizeof(CBDataPtr*));
+            if(bytesWritten == sizeof(CBDataPtr*)) {
+                mimeData->setData("application/x-clustering-codebook-pointer", encodedData);
+            }
         } break;
     }
     return mimeData;

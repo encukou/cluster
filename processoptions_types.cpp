@@ -7,7 +7,9 @@
 #include <QtGui/QHBoxLayout>
 #include <QtDebug>
 
+#include "datafilewidget.h"
 #include "tsdata.h"
+#include "cbdata.h"
 
 OptionGUIHelper::OptionGUIHelper(ProcessOptionsPtr options, const ProcessOptionPtr option, QWidget* parent, QVariant value):
         QObject(parent),
@@ -69,7 +71,13 @@ TrainingSetOption::TrainingSetOption(QString name, QString label):
 QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
     QWidget* container = new QWidget(parent);
     QBoxLayout* layout = new QHBoxLayout(container);
-    TrainingSetWidget* tsw = new TrainingSetWidget(options, this->pointer(), container);
+    AbstractDataFileWidget* tsw = new DataFileWidget<TSDataPtr>(
+            options,
+            this->pointer(),
+            container,
+            "application/x-clustering-trainingset-pointer",
+            tsw->tr("training set")
+        );
     layout->addWidget(tsw);
     QLabel* label = new QLabel(tsw->caption());
     layout->addWidget(label);
@@ -77,82 +85,24 @@ QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent
     return container;
 }
 
-AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent):
-        QLabel(parent), options(options), option(option)
+CodebookOption::CodebookOption(QString name, QString label):
+        ProcessOption(name, label, (QVariant::Type) QVariant::nameToType("CBDataPtr"))
 {
-    setAcceptDrops(true);
-    setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-    connect(options.data(), SIGNAL(valueChanged(ProcessOptionPtr, QVariant)), SLOT(valueChange(ProcessOptionPtr, QVariant)));
-    QMetaObject::invokeMethod(this, SLOT(refresh()), Qt::QueuedConnection); // Set the current value, when the object is constructed
 }
 
-void AbstractDataFileWidget::refresh() {
-    Q_ASSERT_X(!my_mimetype.isNull(), "AbstractDataFileWidget::refresh", "my_mimetype was not set in subclass!");
-    valueChange(option, options->getVariant(option));
-}
-
-template<class DataPtr>
-DataFileWidget<DataPtr>::DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent):
-        AbstractDataFileWidget(options, option, parent)
-{}
-
-TrainingSetWidget::TrainingSetWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent):
-        DataFileWidget<TSDataPtr>(options, option, parent)
-{
-    my_mimetype = "application/x-clustering-trainingset-pointer";
-}
-
-void AbstractDataFileWidget::dragEnterEvent(QDragEnterEvent* event) {
-    if(event->mimeData()->hasFormat(my_mimetype)) {
-        event->acceptProposedAction();
-    }
-}
-
-QSize AbstractDataFileWidget::sizeHint() const {
-    return QSize(32 + frameWidth()*2, 32 + frameWidth()*2);
-}
-
-template<class DataPtr>
-void DataFileWidget<DataPtr>::dropEvent(QDropEvent* event) {
-    if(event->mimeData()->hasFormat(my_mimetype)) {
-        QByteArray encodedData = event->mimeData()->data(my_mimetype);
-        QDataStream stream(&encodedData, QIODevice::ReadOnly);
-        DataPtr* ptr = NULL;
-        int bytesRead = stream.readRawData((char*)(&ptr), sizeof(DataPtr*));
-        qDebug() << "Got" << ptr;
-        if(bytesRead == sizeof(DataPtr*) && ptr && *ptr) {
-            TSDataPtr data = *ptr;
-            if(options->set(option, QVariant::fromValue<DataPtr>(data))) {
-                event->acceptProposedAction();
-            }
-        }else{
-            qDebug() << ptr;
-        }
-    }
-}
-
-QString AbstractDataFileWidget::caption() {
-    return m_caption;
-}
-
-void AbstractDataFileWidget::setCaption(QString newCaption) {
-    m_caption = newCaption;
-    emit captionChanged(newCaption);
-}
-
-template<class DataPtr>
-void DataFileWidget<DataPtr>::valueChange(ProcessOptionPtr option, QVariant value) {
-    if(option == this->option) {
-        if(!value.isValid()) {
-            setCaption(tr("(Drag a <FILE> here)"));
-        }else{
-            DataPtr ptr = value.value<DataPtr>();
-            if(ptr) {
-                this->data = ptr;
-                setCaption(this->data->name());
-            }else{
-                setCaption(tr("(Something other than a <FILE> is selected!)"));
-            }
-        }
-    }
+QWidget* CodebookOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
+    QWidget* container = new QWidget(parent);
+    QBoxLayout* layout = new QHBoxLayout(container);
+    AbstractDataFileWidget* tsw = new DataFileWidget<CBDataPtr>(
+            options,
+            this->pointer(),
+            container,
+            "application/x-clustering-codebook-pointer",
+            tsw->tr("codebook")
+        );
+    layout->addWidget(tsw);
+    QLabel* label = new QLabel(tsw->caption());
+    layout->addWidget(label);
+    label->connect(tsw, SIGNAL(captionChanged(QString)), SLOT(setText(QString)));
+    return container;
 }

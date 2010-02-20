@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     tsdata.cpp \
     cbdata.cpp \
     processoption.cpp \
-    processoptions_types.cpp
+    processoptions_types.cpp \
+    datafilewidget.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -34,6 +35,8 @@ HEADERS += mainwindow.h \
     tsdata.h \
     cbdata.h \
     processoption.h \
-    processoptions_types.h
+    processoptions_types.h \
+    datafilewidget.h
 FORMS += mainwindow.ui
-QMAKE_CXXFLAGS += -Werror -g
+QMAKE_CXXFLAGS += -Werror \
+    -g
