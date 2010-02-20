@@ -23,6 +23,14 @@ public:
     FileListModel(QObject *parent = 0);
     ~FileListModel();
 
+    /** Add a file to the model
+      *
+      * The model takes ownership of the file.
+      */
+    QModelIndex addDataFile(DataWrapper* file);
+
+public:
+    // Model API (Inherited from QAbstractItemModel)
     QVariant data(const QModelIndex &index, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -32,16 +40,10 @@ public:
     QModelIndex parent(const QModelIndex &index) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-
+    // Drag & Drop (Inherited from QAbstractItemModel)
     QStringList mimeTypes() const;
     QMimeData* mimeData(const QModelIndexList &indexes) const;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
-
-    /** Add a file to the model
-      *
-      * The model takes ownership of the file.
-      */
-    QModelIndex addDataFile(DataWrapper* file);
 
 private:
     QList<TSDataPtr> tsData;

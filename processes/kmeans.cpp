@@ -35,7 +35,10 @@ ProcessOptionsPtr KMeansFactory::getOptions() const {
 
         QStringList choices;
         choices << "Random" << "K-Means++" << "Marko's Division to Strips" << "Existing Codebook";
+        Q_ASSERT(choices.size() == INIT_COUNT); // Make sure the texts correspond to the enum values!
         opts.append((new EnumOption("init_type", "Initialization Method", choices, 0))->pointer());
+
+        //opts.append((new CodebookOption("initial_cb", "Initial codebook"))->pointer());
 
         IntOption* opt;
         opt = new IntOption("no_iterations", "No. of iterations");
@@ -44,5 +47,48 @@ ProcessOptionsPtr KMeansFactory::getOptions() const {
 
         opts.append((new IntOption("cb_size", "No. of clusters", 256))->pointer());
     }
-    return ProcessOptions::newOptions(opts);
+    return ProcessOptions::newOptions(this->pointer(), opts);
+
+}
+
+bool KMeansFactory::validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged) {
+    TSDataPtr input = options->get<TSDataPtr>("input");
+    CBDataPtr initial_cb = options->get<CBDataPtr>("initial_cb");
+    InitType init_type = (InitType) options->get<int>("init_type");
+
+    // Check init_type is inside bounds
+    if(init_type < 0 || init_type >= INIT_COUNT) {
+        // Bad initialization type
+        if(lastChanged->name == "init") return options->setDefault(lastChanged);
+        return false;
+    }
+
+    // Check for valid initialization type (INIT_CB with a codebook, or something else without one)
+    if(initial_cb) {
+        if(init_type != INIT_CB) {
+            if(lastChanged->name == "init_type") {
+                return options->set("initial_cb", QVariant());
+            }else if(lastChanged->name == "initial_cb") {
+                return options->set("init_type", INIT_CB);
+            }else{
+                return false;
+            }
+        }
+    }else{
+        if(init_type == INIT_CB) {
+            if(lastChanged->name == "init_type") {
+                return false;
+            }else if(lastChanged->name == "initial_cb") {
+                return options->setDefault("init_type");
+            }else{
+                return false;
+            }
+        }
+    }
+
+    // Check that we have input
+    if(!input) return false;
+
+    // All OK
+    return true;
 }

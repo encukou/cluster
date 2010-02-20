@@ -4,6 +4,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
+#include <QtGui/QHBoxLayout>
 #include <QtDebug>
 
 #include "tsdata.h"
@@ -40,7 +41,9 @@ QWidget* IntOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const 
     sb->setValue(options->get<int>(*this));
     sb->setSpecialValueText(specialValueText);
     sb->setSuffix(suffix);
-    (new OptionGUIHelper(options, this->pointer(), sb))->connect(sb, SIGNAL(valueChanged(int)), SLOT(setValue(int)));
+    OptionGUIHelper* helper = new OptionGUIHelper(options, this->pointer(), sb);
+    helper->connect(sb, SIGNAL(valueChanged(int)), SLOT(setValue(int)));
+    sb->connect(helper, SIGNAL(valueChanged(int)), SLOT(setValue(int)));
     return sb;
 }
 
@@ -52,7 +55,9 @@ QWidget* EnumOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const
     QComboBox* cb = new QComboBox(parent);
     cb->addItems(values);
     cb->setCurrentIndex(options->get<int>(*this));
-    (new OptionGUIHelper(options, this->pointer(), cb))->connect(cb, SIGNAL(currentIndexChanged(int)), SLOT(setValue(int)));
+    OptionGUIHelper* helper = new OptionGUIHelper(options, this->pointer(), cb);
+    helper->connect(cb, SIGNAL(currentIndexChanged(int)), SLOT(setValue(int)));
+    cb->connect(helper, SIGNAL(valueChanged(int)), SLOT(setCurrentIndex(int)));
     return cb;
 }
 
@@ -62,14 +67,24 @@ TrainingSetOption::TrainingSetOption(QString name, QString label):
 }
 
 QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
-    return new TrainingSetWidget(parent);
-    (void) options;
+    QWidget* container = new QWidget(parent);
+    QBoxLayout* layout = new QHBoxLayout(container);
+    TrainingSetWidget* tsw = new TrainingSetWidget(options, this->pointer(), container);
+    layout->addWidget(tsw);
+    QLabel* label = new QLabel(tsw->caption());
+    layout->addWidget(label);
+    label->connect(tsw, SIGNAL(captionChanged(QString)), SLOT(setText(QString)));
+    return container;
 }
 
-TrainingSetWidget::TrainingSetWidget(QWidget* parent): QLabel(parent) {
+TrainingSetWidget::TrainingSetWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent):
+        QLabel(parent), options(options), option(option)
+{
     setAcceptDrops(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     my_mimetype = "application/x-clustering-trainingset-pointer";
+    connect(options.data(), SIGNAL(valueChanged(ProcessOptionPtr, QVariant)), SLOT(valueChange(ProcessOptionPtr, QVariant)));
+    valueChange(option, options->getVariant(option)); // Set the current value
 }
 
 void TrainingSetWidget::dragEnterEvent(QDragEnterEvent* event) {
@@ -86,14 +101,41 @@ void TrainingSetWidget::dropEvent(QDropEvent* event) {
     if(event->mimeData()->hasFormat(my_mimetype)) {
         QByteArray encodedData = event->mimeData()->data(my_mimetype);
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
-        TSDataPtr ptr;
-        int bytesRead = stream.readRawData((char*)(&ptr), sizeof(TSDataPtr));
-        if(bytesRead == sizeof(TSDataPtr) && ptr) {
-            this->data = ptr;
-            qDebug() << this->data->name();
-            event->acceptProposedAction();
+        TSDataPtr* ptr = NULL;
+        int bytesRead = stream.readRawData((char*)(&ptr), sizeof(TSDataPtr*));
+        qDebug() << "Got" << ptr;
+        if(bytesRead == sizeof(TSDataPtr*) && ptr && *ptr) {
+            TSDataPtr data = *ptr;
+            if(options->set(option, QVariant::fromValue<TSDataPtr>(data))) {
+                event->acceptProposedAction();
+            }
         }else{
             qDebug() << ptr;
+        }
+    }
+}
+
+QString TrainingSetWidget::caption() {
+    return m_caption;
+}
+
+void TrainingSetWidget::setCaption(QString newCaption) {
+    m_caption = newCaption;
+    emit captionChanged(newCaption);
+}
+
+void TrainingSetWidget::valueChange(ProcessOptionPtr option, QVariant value) {
+    if(option == this->option) {
+        if(!value.isValid()) {
+            setCaption(tr("(Drag a training set here)"));
+        }else{
+            TSDataPtr ptr = value.value<TSDataPtr>();
+            if(ptr) {
+                this->data = ptr;
+                setCaption(this->data->name());
+            }else{
+                setCaption(tr("(Something other than a training set is selected!)"));
+            }
         }
     }
 }

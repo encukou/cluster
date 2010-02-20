@@ -46,13 +46,22 @@ protected:
 class TrainingSetWidget: public QLabel {
     Q_OBJECT
 public:
-    TrainingSetWidget(QWidget* parent);
+    TrainingSetWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent);
+    QString caption();
+signals:
+    void captionChanged(QString);
+protected slots:
+    void valueChange(ProcessOptionPtr, QVariant);
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
+    void setCaption(QString);
     QSize sizeHint() const;
     QString my_mimetype;
     TSDataPtr data;
+    ProcessOptionsPtr options;
+    ProcessOptionPtr option;
+    QString m_caption;
 };
 
 /** Helper class for synchronizing a widget to ProcessOptions

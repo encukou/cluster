@@ -71,7 +71,7 @@ void MainWindow::on_actionOpen_triggered()
             }
         }else{
             // File was not recognized
-            // TODO: Maybe display a warning message
+            // TODO: Display a warning message
         }
     }
 }

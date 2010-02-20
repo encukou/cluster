@@ -23,4 +23,6 @@ public:
     static DataWrapper* fromFile(QString fileName);
 };
 
+typedef QSharedPointer<DataWrapper> DataWrapperPtr;
+
 #endif // DATAWRAPPER_H

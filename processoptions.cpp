@@ -6,14 +6,20 @@
 #include <QtGui/QGridLayout>
 #include <QtDebug>
 
-ProcessOptions::ProcessOptions() {}
+ProcessOptions::ProcessOptions(QSharedPointer<ProcessOptionsValidator> validator):
+        validator(validator)
+{}
+
+bool ProcessOptionsValidator::validateOptions(QSharedPointer<ProcessOptions>, ProcessOptionPtr) {
+    return true;
+}
 
 const QList<QSharedPointer<ProcessOption> > ProcessOptions::options() const {
     return _options;
 }
 
-ProcessOptionsPtr ProcessOptions::newOptions(QList<ProcessOptionPtr> options) {
-    ProcessOptionsPtr rv = (new ProcessOptions())->pointer();
+ProcessOptionsPtr ProcessOptions::newOptions(QSharedPointer<ProcessOptionsValidator> validator, QList<ProcessOptionPtr> options) {
+    ProcessOptionsPtr rv = (new ProcessOptions(validator))->pointer();
     foreach(ProcessOptionPtr opt, options) {
         rv->_options.append(opt);
     }
@@ -37,15 +43,30 @@ QWidget* ProcessOptions::newOptionsWidget(QWidget* parent) {
     return w;
 }
 
-void ProcessOptions::set(QString key, QVariant value) {
-    set(getOption(key), value);
+bool ProcessOptions::set(QString key, QVariant value, bool force) {
+    return set(getOption(key), value, force);
 }
 
-void ProcessOptions::set(ProcessOptionPtr key, QVariant value) {
+bool ProcessOptions::set(ProcessOptionPtr key, QVariant value, bool force) {
     QVariant before = getVariant(key);
+    qDebug() << "try to set" << key->name << before << "-->" << value;
     _values[key] = value;
-    emit valueChanged(key, value);
-    qDebug() << "set" << key->name << before << "-->" << value;
+    if(force || validate(key)) {
+        emit valueChanged(key, _values[key]);
+        return true;
+    }else{
+        // Validation did not succeed!
+        emit valueChanged(key, _values[key]);
+        return false;
+    }
+}
+
+bool ProcessOptions::setDefault(ProcessOptionPtr key) {
+    return set(key, key->defaultValue);
+}
+
+bool ProcessOptions::setDefault(QString key) {
+    return setDefault(getOption(key));
 }
 
 const QVariant ProcessOptions::getVariant(const QString key) const {
@@ -74,8 +95,12 @@ ProcessOptionPtr ProcessOptions::getOption(QString key) const {
     return ProcessOptionPtr(new ProcessOption("", "", QVariant::Invalid, QVariant()));
 }
 
-bool ProcessOptions::validate(QString) {
-    return true;
+bool ProcessOptions::validate(QString lastChange) {
+    return validate(getOption(lastChange));
+}
+
+bool ProcessOptions::validate(ProcessOptionPtr lastChange) {
+    return validator->validateOptions(this->pointer(), lastChange);
 }
 
 ProcessOptionsPtr ProcessOptions::pointer() {
@@ -91,7 +116,6 @@ ProcessOptionsPtr ProcessOptions::pointer() {
 const ProcessOptionsPtr ProcessOptions::pointer() const {
     return const_cast<ProcessOptions*>(this)->pointer();
 }
-
 
 bool operator< (const ProcessOptionPtr& key1, const ProcessOptionPtr& key2) {
     Q_ASSERT(sizeof(quintptr) == sizeof(key1.data()));

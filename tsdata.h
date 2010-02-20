@@ -11,6 +11,7 @@ private:
     CODEBOOK trainingSet;
 public:
     TSData(QString &fileName);
+    ~TSData();
 
     void* getData();
     int getDataSize();

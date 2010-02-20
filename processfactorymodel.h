@@ -23,7 +23,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     void addFactory(ProcessFactoryPtr);
-    void addFactory(ProcessFactory* f) {addFactory(ProcessFactoryPtr(f));}
+    void addFactory(ProcessFactory* f) {addFactory(f->pointer());}
     ProcessFactoryPtr processFactory(const QModelIndex&);
 
 private:
