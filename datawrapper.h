@@ -3,6 +3,9 @@
 
 #include <QString>
 #include <QtCore/QSharedPointer>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QGraphicsEllipseItem>
 
 extern "C" {
     #include "modules/cb.h"
@@ -17,6 +20,7 @@ public:
     CBFILETYPE getType() { return dataType; }
     virtual void* getData() = 0;
     virtual int getDataSize() = 0;
+    virtual void paintToScene(QGraphicsScene &scene) = 0;
 
     QString name();
 
