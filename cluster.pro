@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     processoptions_types.cpp \
     datafilewidget.cpp \
     animation.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    processdock.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -41,7 +42,8 @@ HEADERS += mainwindow.h \
     datafilewidget.h \
     animation.h \
     aboutdialog.h \
-    iconhelper.h
+    iconhelper.h \
+    processdock.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
