@@ -9,8 +9,10 @@ AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, Proces
 {
     setAcceptDrops(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+    setMinimumSize(sizeHint());
+    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(options.data(), SIGNAL(valueChanged(ProcessOptionPtr, QVariant)), SLOT(valueChange(ProcessOptionPtr, QVariant)));
-    qDebug() << "invoke" << QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection); // Set the current value, when the object is constructed
+    QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection);
 }
 
 void AbstractDataFileWidget::refresh() {

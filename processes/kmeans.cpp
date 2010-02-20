@@ -27,9 +27,9 @@ ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options) const {
     return ProcessPtr(p);
 }
 
-QList<ProcessOptionPtr> opts;
+static ProcessOptionList opts;
 
-ProcessOptionsPtr KMeansFactory::getOptions() const {
+ProcessOptionsPtr KMeansFactory::newOptions() const {
     if(!opts.size()) {
         opts.append((new TrainingSetOption("input", "Input training data"))->pointer());
 
@@ -47,47 +47,40 @@ ProcessOptionsPtr KMeansFactory::getOptions() const {
 
         opts.append((new IntOption("cb_size", "No. of clusters", 256))->pointer());
     }
-    return ProcessOptions::newOptions(this->pointer(), opts);
+    return createNewOptions(opts);
 
 }
 
-bool KMeansFactory::validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged) {
+ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged) {
     TSDataPtr input = options->get<TSDataPtr>("input");
     InitType init_type = (InitType) options->get<int>("init_type");
     CBDataPtr initial_cb = options->get<CBDataPtr>("initial_cb");
 
+    ValidationResult result;
+
     // Check init_type is inside bounds
     if(init_type < 0 || init_type >= INIT_COUNT) {
         // Bad initialization type
-        if(lastChanged->name == "init") return options->setDefault(lastChanged);
-        return false;
+        if(lastChanged->name == "init" && options->setDefault(lastChanged)) return true;
+        return options->validationError(result, tr("Bad initialization method"), "init_type");
     }
 
     // Check for valid initialization type (INIT_CB with a codebook, or something else without one)
     if(initial_cb) {
         if(init_type != INIT_CB) {
-            if(lastChanged->name == "init_type") {
-                return options->set("initial_cb", QVariant());
-            }else if(lastChanged->name == "initial_cb") {
-                return options->set("init_type", INIT_CB);
-            }else{
-                return false;
-            }
+            if(lastChanged->name == "init_type" && options->set("initial_cb", QVariant())) return true;
+            if(lastChanged->name == "initial_cb" && options->set("init_type", INIT_CB)) return true;
+            return options->validationError(result, tr("The given initial codebook will be unused!"), "init_type initial_cb");
         }
     }else{
         if(init_type == INIT_CB) {
-            if(lastChanged->name == "init_type") {
-                return false;
-            }else if(lastChanged->name == "initial_cb") {
-                return options->setDefault("init_type");
-            }else{
-                return false;
-            }
+            if(lastChanged->name == "initial_cb" && options->setDefault("init_type")) return true;
+            return options->validationError(result, tr("No initial codebook given!"), "init_type initial_cb");;
         }
     }
 
     // Check that we have input
-    if(!input) return false;
+    if(!input) return options->validationError(result, tr("No training data given!"), "input");
 
     // All OK
     return true;

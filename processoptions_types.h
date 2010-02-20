@@ -17,6 +17,7 @@ public:
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
 public:
     QString specialValueText, suffix;
+    int step;
 protected:
     int _min, _max;
 };
@@ -29,6 +30,14 @@ public:
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
 protected:
     QStringList values;
+};
+
+/** A boolean option. The GUI for this is a QCheckBox.
+  */
+class BoolOption: public ProcessOption {
+public:
+    BoolOption(QString name, QString label, QVariant defaultValue);
+    QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
 };
 
 /** A training set option. The GUI for this is a place to drop training sets.
@@ -56,10 +65,14 @@ public:
 private slots:
     void setStoredValue();
     void setValue(int);
+    void setValue(bool);
+    void setValue(QString);
     void valueChange(ProcessOptionPtr, QVariant);
+    void refresh();
 signals:
     void valueChanged(QVariant);
     void valueChanged(int);
+    void valueChanged(bool);
     void valueChanged(QString);
 private:
     ProcessOptionsPtr options;

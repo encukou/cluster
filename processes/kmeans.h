@@ -21,9 +21,9 @@ public:
         INIT_COUNT ///< number of the options
     };
     QString name() const;
-    virtual QSharedPointer<ProcessOptions> getOptions() const;
+    ProcessOptionsPtr newOptions() const;
     ProcessPtr newProcess(const ProcessOptionsPtr) const;
-    bool validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged);
+    ValidationResult validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged);
 };
 
 #endif // KMEANS_H

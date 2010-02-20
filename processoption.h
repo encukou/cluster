@@ -39,4 +39,6 @@ private:
     mutable QWeakPointer<ProcessOption> _ptr;
 };
 
+typedef QList<ProcessOptionPtr> ProcessOptionList;
+
 #endif // PROCESSOPTION_H

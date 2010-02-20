@@ -1,4 +1,5 @@
 #include "process.h"
+#include "processoptions.h"
 
 
 ProcessFactoryPtr ProcessFactory::pointer() {
@@ -15,3 +16,6 @@ const ProcessFactoryPtr ProcessFactory::pointer() const {
     return const_cast<ProcessFactory*>(this)->pointer();
 }
 
+ProcessOptionsPtr ProcessFactory::createNewOptions(ProcessOptionList opts) const {
+    return ProcessOptions::newOptions(this->pointer().dynamicCast<ProcessOptionsValidator>(), opts);
+}

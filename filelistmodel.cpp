@@ -17,9 +17,9 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
     switch(index.internalId()) {
         case FL_PARENT: {
             switch(index.row()) {
-                case FL_TRAININGSET: return QVariant("Training sets");
-                case FL_CODEBOOK: return QVariant("Codebooks");
-                case FL_PARTITIONING: return QVariant("Partitionings");
+                case FL_TRAININGSET: return QVariant(tr("Training sets"));
+                case FL_CODEBOOK: return QVariant(tr("Codebooks"));
+                case FL_PARTITIONING: return QVariant(tr("Partitionings"));
                 default: return QVariant("(error)");
             }
         } break;

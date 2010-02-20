@@ -10,7 +10,7 @@ ProcessOptions::ProcessOptions(QSharedPointer<ProcessOptionsValidator> validator
         validator(validator)
 {}
 
-bool ProcessOptionsValidator::validateOptions(QSharedPointer<ProcessOptions>, ProcessOptionPtr) {
+ValidationResult ProcessOptionsValidator::validateOptions(ProcessOptionsPtr, ProcessOptionPtr) {
     return true;
 }
 
@@ -18,11 +18,13 @@ const QList<QSharedPointer<ProcessOption> > ProcessOptions::options() const {
     return _options;
 }
 
-ProcessOptionsPtr ProcessOptions::newOptions(QSharedPointer<ProcessOptionsValidator> validator, QList<ProcessOptionPtr> options) {
+ProcessOptionsPtr ProcessOptions::newOptions(QSharedPointer<ProcessOptionsValidator> validator, ProcessOptionList options) {
     ProcessOptionsPtr rv = (new ProcessOptions(validator))->pointer();
     foreach(ProcessOptionPtr opt, options) {
         rv->_options.append(opt);
     }
+    rv->validate();
+    QMetaObject::invokeMethod(rv.data(), "validate", Qt::QueuedConnection);
     return rv;
 }
 
@@ -39,7 +41,6 @@ QWidget* ProcessOptions::newOptionsWidget(QWidget* parent) {
         i++;
     }
     l->setRowStretch(i, 1);
-    l->setColumnStretch(2, 1);
     return w;
 }
 
@@ -49,6 +50,7 @@ bool ProcessOptions::set(QString key, QVariant value, bool force) {
 
 bool ProcessOptions::set(ProcessOptionPtr key, QVariant value, bool force) {
     QVariant before = getVariant(key);
+    if(before == value) return true;
     qDebug() << "try to set" << key->name << before << "-->" << value;
     _values[key] = value;
     if(force || validate(key)) {
@@ -86,7 +88,7 @@ const QVariant ProcessOptions::getVariant(const ProcessOptionPtr key) const {
     }
 }
 
-ProcessOptionPtr ProcessOptions::getOption(QString key) const {
+const ProcessOptionPtr ProcessOptions::getOption(QString key) const {
     // TODO: Can be made faster with lookup table; probably not worth it
     foreach(const ProcessOptionPtr opt, options()) {
         if(opt->name == key) return opt;
@@ -95,12 +97,25 @@ ProcessOptionPtr ProcessOptions::getOption(QString key) const {
     return ProcessOptionPtr(new ProcessOption("", "", QVariant::Invalid, QVariant()));
 }
 
-bool ProcessOptions::validate(QString lastChange) {
+ValidationResult ProcessOptions::validate(QString lastChange) {
     return validate(getOption(lastChange));
 }
 
-bool ProcessOptions::validate(ProcessOptionPtr lastChange) {
-    return validator->validateOptions(this->pointer(), lastChange);
+ValidationResult ProcessOptions::validate(ProcessOptionPtr lastChange) {
+    ValidationResult result = validator->validateOptions(this->pointer(), lastChange);
+    m_valid = result;
+    emit validChanged(m_valid);
+    emit validationMessage(result.message);
+    qDebug() << "Valid" << result.valid << result.message;
+    return result;
+}
+
+ValidationResult ProcessOptions::validate() {
+    return validate(ProcessOptionPtr());
+}
+
+bool ProcessOptions::isValid() {
+    return m_valid;
 }
 
 ProcessOptionsPtr ProcessOptions::pointer() {
@@ -115,6 +130,41 @@ ProcessOptionsPtr ProcessOptions::pointer() {
 
 const ProcessOptionsPtr ProcessOptions::pointer() const {
     return const_cast<ProcessOptions*>(this)->pointer();
+}
+
+ValidationResult::ValidationResult(QString message, ProcessOptionList badElements):
+        valid(false), message(message), badElements(badElements)
+{}
+
+ValidationResult::ValidationResult(QString message, ProcessOptionPtr badElement):
+        valid(false), message(message)
+{
+    badElements << badElement;
+}
+
+ValidationResult::ValidationResult(bool valid): valid(valid) {
+    if(valid) {
+        message = ProcessOptions::tr("OK");
+    }else{
+        message = ProcessOptions::tr("Something is wrong with your options");
+    }
+}
+
+ValidationResult::operator bool() {
+    return valid;
+}
+
+ValidationResult ProcessOptions::validationError(ValidationResult& resultToUpdate, QString message, QString badElements) {
+    resultToUpdate.message = message;
+    ProcessOptionList l;
+    foreach(QString s, badElements.split(" ")) {
+        ProcessOptionPtr opt = getOption(s);
+        if(!resultToUpdate.badElements.contains(opt)) {
+            resultToUpdate.badElements << opt;
+        }
+    }
+    resultToUpdate.valid = false;
+    return resultToUpdate;
 }
 
 bool operator< (const ProcessOptionPtr& key1, const ProcessOptionPtr& key2) {

@@ -11,7 +11,6 @@
   */
 class Process: public QObject {
     Q_OBJECT
-    // TODO
 };
 
 class ProcessFactory;
@@ -21,15 +20,17 @@ typedef QSharedPointer<ProcessFactory> ProcessFactoryPtr;
 /** Gives information about a certain process class' options,
   * and allows creating new processes with these parameters.
   */
-class ProcessFactory: public ProcessOptionsValidator {
+class ProcessFactory: public QObject, public ProcessOptionsValidator {
+    Q_OBJECT
 public:
     virtual QString name() const=0;
-    virtual ProcessOptionsPtr getOptions() const=0;
+    virtual ProcessOptionsPtr newOptions() const=0;
     virtual ProcessPtr newProcess(const ProcessOptionsPtr) const=0;
 
     ProcessFactoryPtr pointer();
     const ProcessFactoryPtr pointer() const;
 protected:
+    ProcessOptionsPtr createNewOptions(ProcessOptionList) const;
     QWeakPointer<ProcessFactory> _ptr;
 };
 

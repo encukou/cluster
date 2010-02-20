@@ -27,7 +27,7 @@ public:
     ProcessFactoryPtr processFactory(const QModelIndex&);
 
 private:
-    QList<QSharedPointer<ProcessFactory> > processes;
+    QList<ProcessFactoryPtr> processes;
 };
 
 #endif // PROCESSFACTORYMODEL_H
