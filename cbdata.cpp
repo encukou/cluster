@@ -40,7 +40,7 @@ void CBData::paintToScene(QGraphicsScene &scene)
                                 range / 75.,
                                 pen,
                                 brush);
-        //item->setZValue(1);
+        item->setZValue(1);
     }
 
     if (!bounds.contains(scene.itemsBoundingRect()))

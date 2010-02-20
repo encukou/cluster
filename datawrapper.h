@@ -4,6 +4,8 @@
 #include <QString>
 #include <QtCore/QSharedPointer>
 #include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QGraphicsEllipseItem>
 
 extern "C" {
     #include "modules/cb.h"
