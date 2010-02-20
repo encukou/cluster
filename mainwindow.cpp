@@ -48,7 +48,6 @@ void MainWindow::on_actionOpen_triggered()
             {
                 QGraphicsEllipseItem *item;
                 item = scene.addEllipse(VectorScalar(cb, i, 0), VectorScalar(cb, i, 1), 1000.0, 1000.0);
-                qDebug() << VectorScalar(cb, i, 0) << VectorScalar(cb, i, 1);
                 item->setVisible(true);
                 item->setBrush(QColor(0, 0, 0));
                 item->setPen(QColor(0, 0, 0));

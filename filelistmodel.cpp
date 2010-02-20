@@ -77,16 +77,17 @@ int FileListModel::columnCount(const QModelIndex &) const {
 QModelIndex FileListModel::addDataFile(DataWrapper* file) {
     switch(file->getType()) {
         case TSFILE: {
-            beginInsertRows(index(FL_TRAININGSET, 1), tsData.size(), tsData.size());
+            beginInsertRows(index(FL_TRAININGSET, 0), tsData.size(), tsData.size());
             tsData.append(TSDataPtr(dynamic_cast<TSData*>(file)));
             endInsertRows();
-            return createIndex(tsData.size()-1, 1, FL_TRAININGSET);
+            qDebug() << "New Size:" << tsData.size();
+            return createIndex(tsData.size()-1, 0, FL_TRAININGSET);
         } break;
         case CBFILE: {
-            beginInsertRows(index(FL_CODEBOOK, 1), cbData.size(), cbData.size());
+            beginInsertRows(index(FL_CODEBOOK, 0), cbData.size(), cbData.size());
             cbData.append(CBDataPtr(dynamic_cast<CBData*>(file)));
             endInsertRows();
-            return createIndex(cbData.size()-1, 1, FL_CODEBOOK);
+            return createIndex(cbData.size()-1, 0, FL_CODEBOOK);
         } break;
         default: return QModelIndex();
     }
