@@ -54,20 +54,10 @@ void MainWindow::on_actionOpen_triggered()
 
             if (data->getType() == CBFILE || data->getType() == TSFILE)
             {
-                scene.clear();
-                CODEBOOK *cb = static_cast<CODEBOOK*>(data->getData());
-                for (int i=0; i<data->getDataSize(); i++)
-                {
-                    QGraphicsEllipseItem *item;
-                    item = scene.addEllipse(VectorScalar(cb, i, 0), VectorScalar(cb, i, 1), 1000.0, 1000.0);
-                    item->setVisible(true);
-                    item->setBrush(QColor(0, 0, 0));
-                    item->setPen(QColor(0, 0, 0));
-                }
+                //scene.clear();
+                data->paintToScene(scene);
                 ui->gvView->setScene(&scene);
-                ui->gvView->fitInView(scene.sceneRect());
-                qDebug() << cb->MinValue << cb->MaxValue;
-                qDebug() << "Done";
+                ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
             }
         }else{
             // File was not recognized

@@ -15,6 +15,8 @@ public:
     void* getData();
     int getDataSize();
     int getVectorSize();
+
+    void paintToScene(QGraphicsScene &scene);
 };
 
 
