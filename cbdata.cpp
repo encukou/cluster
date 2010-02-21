@@ -5,7 +5,6 @@ CBData::CBData(QString &fileName)
 {
     this->dataType = CBFILE;
     ReadCodebook(fileName.toLatin1().data(), &this->codebook);
-    _name = fileName;
     _name = QFileInfo(fileName).fileName();
 }
 
@@ -19,7 +18,7 @@ int CBData::getDataSize()
     return BookSize(&this->codebook);
 }
 
-void CBData::paintToScene(QGraphicsScene &scene)
+void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 {
     CODEBOOK *cb = &this->codebook;
 
@@ -40,7 +39,7 @@ void CBData::paintToScene(QGraphicsScene &scene)
                                 range / 75.,
                                 pen,
                                 brush);
-        item->setZValue(1);
+        if (group) group->addToGroup(item);
     }
 
     if (!bounds.contains(scene.itemsBoundingRect()))

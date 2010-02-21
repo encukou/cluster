@@ -20,7 +20,7 @@ public:
     CBFILETYPE getType() { return dataType; }
     virtual void* getData() = 0;
     virtual int getDataSize() = 0;
-    virtual void paintToScene(QGraphicsScene &scene) = 0;
+    virtual void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0) = 0;
 
     QString name();
 

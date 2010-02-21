@@ -25,7 +25,7 @@ int TSData::getVectorSize()
     return VectorSize(&this->trainingSet);
 }
 
-void TSData::paintToScene(QGraphicsScene &scene)
+void TSData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 {
     CODEBOOK *cb = &this->trainingSet;
 
@@ -43,6 +43,7 @@ void TSData::paintToScene(QGraphicsScene &scene)
                                 range / 1000.,
                                 QPen(),
                                 brush);
+        if (group) group->addToGroup(item);
     }
     scene.setSceneRect(min, min, max, max);
 }

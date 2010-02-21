@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QGraphicsScene>
+#include "clusteringscene.h"
 
 namespace Ui
 {
@@ -21,7 +22,7 @@ private:
     Ui::MainWindow *ui;
     class ProcessFactoryModel* processFactoryModel;
     class FileListModel* fileListModel;
-    QGraphicsScene scene;
+    ClusteringScene scene;
 
 private slots:
     void on_actionAbout_triggered();
