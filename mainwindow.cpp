@@ -69,8 +69,8 @@ void MainWindow::on_actionOpen_triggered()
 
             if (data->getType() == CBFILE || data->getType() == TSFILE)
             {
-                //scene.clear();
-                data->paintToScene(scene);
+                scene.setItemIndexMethod(QGraphicsScene::NoIndex);
+                scene.displayData(data);
                 ui->gvView->setScene(&scene);
                 ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
             }

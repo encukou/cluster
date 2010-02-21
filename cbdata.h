@@ -15,7 +15,7 @@ public:
     void* getData();
     int getDataSize();
 
-    void paintToScene(QGraphicsScene &scene);
+    void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
 };
 
 // Make CBDataPtr usable in a QVariant

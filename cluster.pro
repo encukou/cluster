@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     datafilewidget.cpp \
     animation.cpp \
     aboutdialog.cpp \
-    processdock.cpp
+    processdock.cpp \
+    clusteringscene.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -43,7 +44,8 @@ HEADERS += mainwindow.h \
     animation.h \
     aboutdialog.h \
     iconhelper.h \
-    processdock.h
+    processdock.h \
+    clusteringscene.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
