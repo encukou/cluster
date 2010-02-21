@@ -5,6 +5,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QGroupBox>
 #include <QtGui/QMainWindow>
+#include <QtGui/QToolButton>
+#include <QtGui/QSpinBox>
+#include <QtGui/QSlider>
 #include <QtDebug>
 #include "iconhelper.h"
 
@@ -75,10 +78,103 @@ void ProcessDock::optionValidationChanged(ValidationResult result) {
 
 void ProcessDock::start() {
     if(!processOptions->isValid()) return;
+    if(process) return;
+    process = factory->newProcess(processOptions, this);
+    animation = AnimationPtr(new ProcessAnimation(process, animationOptions, this));
+    ///// Make the process widget ////
     processWidget = new QWidget();
+    QGridLayout* layout = new QGridLayout(processWidget);
+
+    // Process Results (left)
+    QGroupBox* processGroup = new QGroupBox(tr("Process results"));
+    // TODO
+    layout->addWidget(processGroup, 0, 0);
+
+    // Blank middle column
+    layout->setColumnStretch(0, 1);
+    layout->setColumnStretch(1, 0);
+    layout->setColumnStretch(2, 1);
+
+    // Animation Controls (right)
+    QGroupBox* animGroup = new QGroupBox(tr("Animation Controls"));
+    QBoxLayout* animLayout = new QVBoxLayout(animGroup);
+    QBoxLayout* insideLayout = new QHBoxLayout();
+    insideLayout->addStretch(1);
+    btnPlay = new QToolButton();
+    btnPlay->setMinimumSize(32, 32);
+    btnPlay->setAutoRaise(true);
+    btnPlay->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    animation->connect(btnPlay, SIGNAL(clicked()), SLOT(playPause()));
+    insideLayout->addWidget(btnPlay);
+    insideLayout->addStretch(1);
+    animLayout->addLayout(insideLayout);
+    insideLayout = new QHBoxLayout();
+    QLabel* l = new QLabel(tr("Iteration"));
+    l->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    insideLayout->addWidget(l);
+    sbIteration = new QSpinBox();
+    sbIteration->setMaximum(animation->lastLoadedFrame());
+    sbIteration->setValue(animation->frame());
+    sbIteration->setMinimum(0);
+    sbIteration->connect(animation.data(), SIGNAL(frameChanged(int)), SLOT(setValue(int)));
+    animation->connect(sbIteration, SIGNAL(valueChanged(int)), SLOT(setFrame(int)));
+    insideLayout->addWidget(sbIteration);
+    lblOfX = new QLabel();
+    updateOfXLabel();
+    insideLayout->addWidget(lblOfX);
+    insideLayout->setStretch(0, 1);
+    insideLayout->setStretch(1, 1);
+    insideLayout->setStretch(2, 1);
+    layout->addWidget(animGroup, 0, 2);
+    animLayout->addLayout(insideLayout);
+    slider = new QSlider(Qt::Horizontal);
+    slider->setMaximum(animation->lastLoadedFrame());
+    slider->setValue(animation->frame());
+    slider->setMinimum(0);
+    slider->connect(animation.data(), SIGNAL(frameChanged(int)), SLOT(setValue(int)));
+    animation->connect(slider, SIGNAL(valueChanged(int)), SLOT(setFrame(int)));
+    animation->connect(slider, SIGNAL(sliderMoved(int)), SLOT(pause()));
+    animLayout->addWidget(slider);
+    animLayout->addStretch(1);
+
+    connect(animation.data(), SIGNAL(lastLoadedFrameChanged(int)), SLOT(updateIterationMaximum(int)));
+    connect(animation.data(), SIGNAL(stateChanged()), SLOT(updatePlayState()));
+    updatePlayState();
+
+
     this->setWidget(processWidget);
 
     // TODO: Shrink the dock
 
     // TODO: Start process
+    process->start();
+}
+
+void ProcessDock::updateOfXLabel() {
+    int max = animation->lastFrame();
+    if(max == -1) {
+        lblOfX->setText(tr("(Processing...)"));
+    }else if(animation->waiting()) {
+        lblOfX->setText(tr("(Processing...)"));
+    }else if(animation->isLoadingDone()) {
+        lblOfX->setText(tr("of %1").arg(max));
+    }else{
+        lblOfX->setText(tr("of %1+").arg(max));
+    }
+}
+
+void ProcessDock::updateIterationMaximum(int newMax) {
+    sbIteration->setMaximum(newMax);
+    slider->setMaximum(newMax);
+}
+
+void ProcessDock::updatePlayState() {
+    if(animation->playing()) {
+        btnPlay->setText(tr("Pause"));
+        btnPlay->setIcon(loadIcon("actions", "media-playback-pause"));
+    }else{
+        btnPlay->setText(tr("Play"));
+        btnPlay->setIcon(loadIcon("actions", "media-playback-start"));
+    }
+    updateOfXLabel();
 }

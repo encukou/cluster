@@ -1,10 +1,12 @@
 #include "kmeans.h"
 
 #include <QtGui/QWidget>
-#include <QtGui/QWidget>
+#include <QtDebug>
 #include "processoptions_types.h"
 
-KMeans::KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters) {
+KMeans::KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters, QObject* parent):
+        Process(parent)
+{
     // TODO!
     (void) trainingset;
     (void) initial_codebook;
@@ -12,16 +14,38 @@ KMeans::KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initializa
     (void) no_clusters;
 }
 
+void KMeans::process() {
+    // TODO
+
+    // dummy process:
+    reportIterationResult(ProcessResults());
+    reportIterationResult(ProcessResults());
+    reportIterationResult(ProcessResults());
+    sleep(1);
+    reportIterationResult(ProcessResults());
+}
+
+static ProcessResultTypeList types;
+
+ProcessResultTypeList KMeans::resultTypes() const {
+    if(types.empty()) {
+        types.append(ProcessResultTypePtr(new ProcessResultType("codebook", (QVariant::Type) QVariant::nameToType("CBDataPtr"))));
+        types.append(ProcessResultTypePtr(new ProcessResultType("mse", QVariant::Int)));
+    }
+    return types;
+}
+
 QString KMeansFactory::name() const {
     return "K-means";
 }
 
-ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options) const {
+ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options, QObject* parent) const {
     KMeans* p = new KMeans(
             options->get<QSharedPointer<TSData> >("input"),
             options->get<QSharedPointer<CBData> >("initial_cb"),
             options->get<int>("init_type"),
-            options->get<int>("cb_size")
+            options->get<int>("cb_size"),
+            parent
         );
 
     return ProcessPtr(p);
@@ -30,7 +54,7 @@ ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options) const {
 static ProcessOptionList opts;
 
 ProcessOptionsPtr KMeansFactory::newOptions() const {
-    if(!opts.size()) {
+    if(opts.empty()) {
         opts.append((new TrainingSetOption("input", "Input training data"))->pointer());
 
         QStringList choices;

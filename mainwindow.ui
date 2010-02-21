@@ -105,7 +105,7 @@
   </widget>
   <widget class="QDockWidget" name="dwProcessChooser">
    <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Choose a Clustering Process</string>

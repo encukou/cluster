@@ -1,6 +1,54 @@
 #include "process.h"
 #include "processoptions.h"
 
+ProcessResultType::ProcessResultType(QString name, QVariant::Type type):
+        name(name), type(type)
+{}
+
+Process::Process(QObject* parent):
+        QThread(parent), m_mutex(QMutex::Recursive)
+{
+    m_numIterations = -1;
+    m_currentIteration = 0;
+}
+
+void Process::run() {
+    resultTypes();
+    process();
+    QMutexLocker(&this->m_mutex);
+    m_currentIteration--;
+    if(m_numIterations != m_currentIteration) {
+        setNumIterations(m_currentIteration);
+    }
+    emit processDone(m_lastResults);
+}
+
+int Process::numIterations() {
+    QMutexLocker(&this->m_mutex);
+    return m_numIterations;
+}
+
+int Process::currentIteration() {
+    QMutexLocker(&this->m_mutex);
+    return m_currentIteration;
+}
+
+void Process::setNumIterations(int numIterations) {
+    QMutexLocker(&this->m_mutex);
+    if(m_numIterations == numIterations) return;
+    m_numIterations = numIterations;
+    emit numIterationsChanged(m_numIterations);
+}
+
+void Process::reportIterationResult(ProcessResults results) {
+    QMutexLocker(&this->m_mutex);
+    if(m_currentIteration > m_numIterations) {
+        setNumIterations(m_currentIteration);
+    }
+    emit iterationDone(m_currentIteration, results);
+    m_currentIteration++;
+    m_lastResults = results;
+}
 
 ProcessFactoryPtr ProcessFactory::pointer() {
     if(_ptr) {

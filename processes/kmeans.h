@@ -7,7 +7,9 @@
 
 class KMeans: public Process {
 public:
-    KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters);
+    KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters, QObject* parent);
+    ProcessResultTypeList resultTypes() const;
+    void process();
 };
 
 class KMeansFactory: public ProcessFactory {
@@ -20,9 +22,10 @@ public:
 
         INIT_COUNT ///< number of the options
     };
+public:
     QString name() const;
     ProcessOptionsPtr newOptions() const;
-    ProcessPtr newProcess(const ProcessOptionsPtr) const;
+    ProcessPtr newProcess(const ProcessOptionsPtr, QObject* parent) const;
     ValidationResult validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged);
 };
 
