@@ -1,9 +1,10 @@
 #ifndef TSDATA_H
 #define TSDATA_H
 
-#include "datawrapper.h"
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedPointer>
+#include "datawrapper.h"
+#include "datasetgraphicsitem.h"
 
 class TSData : public DataWrapper
 {
