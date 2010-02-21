@@ -48,5 +48,5 @@ FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
-OTHER_FILES += 
+OTHER_FILES += TODO.txt
 RESOURCES += resources/cluster.qrc

@@ -1,9 +1,14 @@
 #include "animation.h"
 #include "processoptions_types.h"
 
-static ProcessOptionList opts;
+Animation::Animation(QObject* parent): QObject(parent) {
+}
 
-ProcessOptionsPtr Animation::newOptions() const {
+static ProcessOptionList opts;
+static ProcessOptionsValidator dummyValidator;
+static QSharedPointer<ProcessOptionsValidator> dummyValidatorPtr(&dummyValidator);
+
+ProcessOptionsPtr Animation::newOptions() {
     if(!opts.size()) {
         opts.append((new BoolOption("on", "Enable animation", true))->pointer());
 
@@ -16,8 +21,7 @@ ProcessOptionsPtr Animation::newOptions() const {
         opt->step = 100;
         opts.append(opt->pointer());
     }
-    if(!m_ptr) m_ptr = QSharedPointer<Animation>((Animation*)this);
-    return ProcessOptions::newOptions(m_ptr.dynamicCast<ProcessOptionsValidator>(), opts);
+    return ProcessOptions::newOptions(dummyValidatorPtr, opts);
 }
 
 ValidationResult Animation::validateOptions(ProcessOptionsPtr, ProcessOptionPtr) {

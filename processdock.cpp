@@ -4,22 +4,27 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QGroupBox>
-#include "animation.h"
+#include <QtGui/QMainWindow>
+#include <QtDebug>
 #include "iconhelper.h"
 
 ProcessDock::ProcessDock(ProcessFactoryPtr factory, QWidget* parent):
         QDockWidget(factory->name(), parent), factory(factory)
 {
-    ProcessOptionsPtr options = factory->newOptions();
+    static int counter=0;
+    setObjectName("ProcessDock_" + QString::number(counter++));
 
-    QStackedWidget* sw = new QStackedWidget(this);
-    QWidget* optionsWidget = new QWidget();
+    processWidget = optionsWidget = NULL;
+
+    processOptions = factory->newOptions();
+
+    optionsWidget = new QWidget();
     QGridLayout* layout = new QGridLayout(optionsWidget);
 
     // Process Options (left)
     QGroupBox* optionsGroupBox = new QGroupBox(tr("Process Options"));
-    QWidget* optionWidget = options->newOptionsWidget(&optionValidationIconMap);
-    connect(options.data(), SIGNAL(validChanged(ValidationResult)), SLOT(optionValidationChanged(ValidationResult)));
+    QWidget* optionWidget = processOptions->newOptionsWidget(&optionValidationIconMap);
+    connect(processOptions.data(), SIGNAL(validChanged(ValidationResult)), SLOT(optionValidationChanged(ValidationResult)));
     (new QHBoxLayout(optionsGroupBox))->addWidget(optionWidget);
     layout->addWidget(optionsGroupBox, 0, 0);
 
@@ -29,28 +34,28 @@ ProcessDock::ProcessDock(ProcessFactoryPtr factory, QWidget* parent):
     layout->setColumnStretch(2, 1);
 
     // Animation Options (right)
-    Animation* anim = new Animation();
+    animationOptions = Animation::newOptions();
     QGroupBox* animGroupBox = new QGroupBox(tr("Animation Options"));
-    (new QHBoxLayout(animGroupBox))->addWidget(anim->newOptions()->newOptionsWidget());
+    (new QHBoxLayout(animGroupBox))->addWidget(animationOptions->newOptionsWidget());
     layout->addWidget(animGroupBox, 0, 2);
 
     // Status Message & Run Button (bottom)
     QBoxLayout* runControlsLayout = new QHBoxLayout();
     runControlsLayout->addStretch(1);
     QLabel* validationResult = new QLabel();
-    validationResult->connect(options.data(), SIGNAL(validationMessage(QString)), SLOT(setText(QString)));
-    validationResult->connect(options.data(), SIGNAL(validChanged(bool)), SLOT(setHidden(bool)));
+    validationResult->connect(processOptions.data(), SIGNAL(validationMessage(QString)), SLOT(setText(QString)));
+    validationResult->connect(processOptions.data(), SIGNAL(validChanged(bool)), SLOT(setHidden(bool)));
     runControlsLayout->addWidget(validationResult);
     QPushButton* runButton = new QPushButton(tr("Run!"));
     runButton->setDefault(true);
-    runButton->setEnabled(options->validate());
-    runButton->connect(options.data(), SIGNAL(validChanged(bool)), SLOT(setEnabled(bool)));
+    runButton->setEnabled(processOptions->validate());
+    runButton->connect(processOptions.data(), SIGNAL(validChanged(bool)), SLOT(setEnabled(bool)));
+    connect(runButton, SIGNAL(clicked()), SLOT(start()));
     runControlsLayout->addWidget(runButton);
     layout->addLayout(runControlsLayout, 1, 0, 1, 3);
 
     // Done
-    sw->addWidget(optionsWidget);
-    this->setWidget(sw);
+    this->setWidget(optionsWidget);
 }
 
 void ProcessDock::optionValidationChanged(ValidationResult result) {
@@ -66,4 +71,14 @@ void ProcessDock::optionValidationChanged(ValidationResult result) {
             invalidIcons.append(l);
         }
     }
+}
+
+void ProcessDock::start() {
+    if(!processOptions->isValid()) return;
+    processWidget = new QWidget();
+    this->setWidget(processWidget);
+
+    // TODO: Shrink the dock
+
+    // TODO: Start process
 }

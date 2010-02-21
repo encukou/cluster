@@ -4,12 +4,13 @@
 #include <QObject>
 #include "processoptions.h"
 
-class Animation: public QObject, public ProcessOptionsValidator {
+class Animation: public QObject {
 public:
-    ProcessOptionsPtr newOptions() const;
+    Animation(QObject* parent=0);
+    static ProcessOptionsPtr newOptions();
     ValidationResult validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged);
-private:
-    mutable QSharedPointer<Animation> m_ptr;
 };
+
+typedef QSharedPointer<Animation> AnimationPtr;
 
 #endif // ANIMATION_H

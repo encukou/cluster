@@ -2,6 +2,7 @@
 #define DATAFILEWIDGET_H
 
 #include <QtGui/QDropEvent>
+#include <QtDebug>
 #include "processoptions_types.h"
 
 /** Base class for widgets that accept dropped DataWrappers (TrainingSets, Codebooks etc.)
@@ -72,7 +73,7 @@ protected:
                     event->acceptProposedAction();
                 }
             }else{
-                qDebug() << ptr;
+                qDebug() << "Something went wrong in drag&drop, got pointer" << ptr;
             }
         }
     }

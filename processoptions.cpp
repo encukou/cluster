@@ -34,7 +34,8 @@ QWidget* ProcessOptions::newOptionsWidget(QMap<ProcessOptionPtr, QLabel*>* optio
     ProcessOptionsPtr self = pointer();
     foreach(const ProcessOptionPtr opt, options()) {
         ProcessOption* o = opt.data();
-        l->addWidget(new QLabel(opt->label), i, 0, Qt::AlignRight);
+        QLabel* label = new QLabel(opt->label);
+        l->addWidget(label, i, 0, Qt::AlignRight);
         if(optionValidationIconMap) {
             QLabel* validationIcon = new QLabel;
             validationIcon->setFixedSize(16, 16); // TODO: a better size? Has to be fixed, so the layout doesn't jump around
@@ -42,6 +43,7 @@ QWidget* ProcessOptions::newOptionsWidget(QMap<ProcessOptionPtr, QLabel*>* optio
             optionValidationIconMap->insert(opt, validationIcon);
         }
         QWidget* nw = o->newWidget(self, w);
+        label->setBuddy(nw);
         l->addWidget(nw, i, 2, Qt::AlignLeft);
         i++;
     }
@@ -59,7 +61,6 @@ bool ProcessOptions::set(QString key, QVariant value, bool force) {
 bool ProcessOptions::set(ProcessOptionPtr key, QVariant value, bool force) {
     QVariant before = getVariant(key);
     if(before == value) return true;
-    qDebug() << "try to set" << key->name << before << "-->" << value;
     _values[key] = value;
     if(force || validate(key)) {
         emit valueChanged(key, _values[key]);
@@ -115,7 +116,6 @@ ValidationResult ProcessOptions::validate(ProcessOptionPtr lastChange) {
     emit validChanged(result);
     emit validChanged(bool(m_valid));
     emit validationMessage(result.message);
-    qDebug() << "Valid" << result.valid << result.message;
     return result;
 }
 

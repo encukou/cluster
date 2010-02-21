@@ -3,6 +3,7 @@
 
 #include <QtGui/QDockWidget>
 #include "process.h"
+#include "animation.h"
 
 class ProcessDock : public QDockWidget {
     Q_OBJECT
@@ -11,11 +12,17 @@ public:
 private:
     ProcessFactoryPtr factory;
     ProcessPtr process;
+    AnimationPtr animation;
 private slots:
     void optionValidationChanged(ValidationResult);
+    void start();
 protected:
     QMap<ProcessOptionPtr, QLabel*> optionValidationIconMap;
     QList<QLabel*> invalidIcons;
+    ProcessOptionsPtr processOptions;
+    ProcessOptionsPtr animationOptions;
+    QWidget* optionsWidget;
+    QWidget* processWidget;
 };
 
 #endif // PROCESSDOCK_H
