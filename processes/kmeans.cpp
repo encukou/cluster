@@ -62,7 +62,7 @@ ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, Proce
     if(init_type < 0 || init_type >= INIT_COUNT) {
         // Bad initialization type
         if(lastChanged->name == "init" && options->setDefault(lastChanged)) return true;
-        return options->validationError(result, tr("Bad initialization method"), "init_type");
+        options->validationError(result, tr("Bad initialization method"), "init_type");
     }
 
     // Check for valid initialization type (INIT_CB with a codebook, or something else without one)
@@ -70,20 +70,20 @@ ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, Proce
         if(init_type != INIT_CB) {
             if(lastChanged->name == "init_type" && options->set("initial_cb", QVariant())) return true;
             if(lastChanged->name == "initial_cb" && options->set("init_type", INIT_CB)) return true;
-            return options->validationError(result, tr("The given initial codebook will be unused!"), "init_type initial_cb");
+            options->validationError(result, tr("The given initial codebook will be unused!"), "init_type initial_cb");
         }
     }else{
         if(init_type == INIT_CB) {
             if(lastChanged->name == "initial_cb" && options->setDefault("init_type")) return true;
-            return options->validationError(result, tr("No initial codebook given!"), "init_type initial_cb");;
+            options->validationError(result, tr("No initial codebook given!"), "init_type initial_cb");;
         }
     }
 
     // TODO: Check that the number of clusters (cb_size) is consistent with initial_cb
 
     // Check that we have input
-    if(!input) return options->validationError(result, tr("No training data given!"), "input");
+    if(!input) options->validationError(result, tr("No training data given!"), "input");
 
     // All OK
-    return true;
+    return result;
 }

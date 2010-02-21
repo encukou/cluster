@@ -11,7 +11,7 @@ class QLabel;
 struct ValidationResult {
     ValidationResult(QString message, ProcessOptionList badElements);
     ValidationResult(QString message, ProcessOptionPtr badElement);
-    ValidationResult(bool valid=false);
+    ValidationResult(bool valid=true);
     operator bool();
     bool valid;
     QString message;
