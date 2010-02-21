@@ -1,7 +1,7 @@
 ui_*.h
 moc_*.cpp
 Makefile
-cluster
+./cluster
 cluster.pro.user
 *.o
 *.cb
