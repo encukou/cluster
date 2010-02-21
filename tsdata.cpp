@@ -29,21 +29,10 @@ void TSData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 {
     CODEBOOK *cb = &this->trainingSet;
 
-    int min = cb->MinValue, max = cb->MaxValue;
-    int range = max - min;
+    QGraphicsItem *item = new DataSetGraphicsItem(cb);
 
-    QBrush brush = QBrush(Qt::SolidPattern);
+    if (group) group->addToGroup(item);
+    else scene.addItem(item);
 
-    for (int i=0; i<this->getDataSize(); i++)
-    {
-        QGraphicsEllipseItem *item;
-        item = scene.addEllipse(VectorScalar(cb, i, 0),
-                                VectorScalar(cb, i, 1),
-                                range / 1000.,
-                                range / 1000.,
-                                QPen(),
-                                brush);
-        if (group) group->addToGroup(item);
-    }
-    scene.setSceneRect(min, min, max, max);
+    scene.setSceneRect(scene.itemsBoundingRect());
 }

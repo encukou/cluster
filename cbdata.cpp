@@ -25,8 +25,6 @@ void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
     int min = cb->MinValue, max = cb->MaxValue;
     int range = max - min;
 
-    QRectF bounds = scene.sceneRect();
-
     QPen pen = QPen(Qt::red);
     QBrush brush = QBrush(Qt::red, Qt::SolidPattern);
 
@@ -42,8 +40,5 @@ void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
         if (group) group->addToGroup(item);
     }
 
-    if (!bounds.contains(scene.itemsBoundingRect()))
-    {
-        scene.setSceneRect(scene.itemsBoundingRect());
-    }
+    scene.setSceneRect(scene.itemsBoundingRect());
 }
