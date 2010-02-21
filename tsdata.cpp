@@ -33,6 +33,4 @@ void TSData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 
     if (group) group->addToGroup(item);
     else scene.addItem(item);
-
-    scene.setSceneRect(scene.itemsBoundingRect());
 }

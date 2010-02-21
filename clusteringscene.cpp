@@ -51,6 +51,8 @@ void ClusteringScene::displayData(DataWrapper *data)
             this->addItem(this->partitionItem);
             break;
         default:
-            break;
+            return;
     }
+
+    this->setSceneRect(this->itemsBoundingRect());
 }
