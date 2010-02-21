@@ -1,4 +1,3 @@
-
 #include "processoptions.h"
 
 #include <QtGui/QWidget>
@@ -28,18 +27,27 @@ ProcessOptionsPtr ProcessOptions::newOptions(QSharedPointer<ProcessOptionsValida
     return rv;
 }
 
-QWidget* ProcessOptions::newOptionsWidget(QWidget* parent) {
+QWidget* ProcessOptions::newOptionsWidget(QMap<ProcessOptionPtr, QLabel*>* optionValidationIconMap, QWidget* parent) {
     QWidget* w = new QWidget(parent);
     QGridLayout* l = new QGridLayout(w);
     int i = 0;
     ProcessOptionsPtr self = pointer();
     foreach(const ProcessOptionPtr opt, options()) {
         ProcessOption* o = opt.data();
-        QWidget* nw = o->newWidget(self, w);
-        l->addWidget(nw, i, 1, Qt::AlignLeft);
         l->addWidget(new QLabel(opt->label), i, 0, Qt::AlignRight);
+        if(optionValidationIconMap) {
+            QLabel* validationIcon = new QLabel;
+            validationIcon->setFixedSize(16, 16); // TODO: a better size? Has to be fixed, so the layout doesn't jump around
+            l->addWidget(validationIcon, i, 1);
+            optionValidationIconMap->insert(opt, validationIcon);
+        }
+        QWidget* nw = o->newWidget(self, w);
+        l->addWidget(nw, i, 2, Qt::AlignLeft);
         i++;
     }
+    l->setColumnStretch(0, 0);
+    l->setColumnStretch(1, 0);
+    l->setColumnStretch(2, 1);
     l->setRowStretch(i, 1);
     return w;
 }
@@ -104,7 +112,8 @@ ValidationResult ProcessOptions::validate(QString lastChange) {
 ValidationResult ProcessOptions::validate(ProcessOptionPtr lastChange) {
     ValidationResult result = validator->validateOptions(this->pointer(), lastChange);
     m_valid = result;
-    emit validChanged(m_valid);
+    emit validChanged(result);
+    emit validChanged(bool(m_valid));
     emit validationMessage(result.message);
     qDebug() << "Valid" << result.valid << result.message;
     return result;

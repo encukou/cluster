@@ -4,6 +4,7 @@
 #include "processoption.h"
 
 class ProcessOptions;
+class QLabel;
 
 /** The result of option validation
   */
@@ -36,7 +37,7 @@ public:
     ProcessOptions(QSharedPointer<ProcessOptionsValidator> validator);
     static ProcessOptionsPtr newOptions(QSharedPointer<ProcessOptionsValidator> validator, ProcessOptionList options);
     const QList<ProcessOptionPtr> options() const;
-    virtual QWidget* newOptionsWidget(QWidget* parent=0);
+    virtual QWidget* newOptionsWidget(QMap<ProcessOptionPtr, QLabel*>* optionValidationIconMap=0, QWidget* parent=0);
     const QVariant getVariant(const QString key) const;
     const QVariant getVariant(const ProcessOptionPtr key) const;
     const QVariant getVariant(const ProcessOption& key) const;
@@ -57,6 +58,7 @@ public slots:
     ValidationResult validate();
 signals:
     void valueChanged(ProcessOptionPtr key, QVariant value);
+    void validChanged(ValidationResult result);
     void validChanged(bool valid);
     void validationMessage(QString message);
 public:

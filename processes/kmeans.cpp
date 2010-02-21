@@ -79,6 +79,8 @@ ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, Proce
         }
     }
 
+    // TODO: Check that the number of clusters (cb_size) is consistent with initial_cb
+
     // Check that we have input
     if(!input) return options->validationError(result, tr("No training data given!"), "input");
 

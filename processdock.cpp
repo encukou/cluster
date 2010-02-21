@@ -5,11 +5,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QGroupBox>
 #include "animation.h"
+#include "iconhelper.h"
 
 ProcessDock::ProcessDock(ProcessFactoryPtr factory, QWidget* parent):
         QDockWidget(factory->name(), parent), factory(factory)
 {
-    ///// Set the contents of the new dock /////
     ProcessOptionsPtr options = factory->newOptions();
 
     QStackedWidget* sw = new QStackedWidget(this);
@@ -18,7 +18,9 @@ ProcessDock::ProcessDock(ProcessFactoryPtr factory, QWidget* parent):
 
     // Process Options (left)
     QGroupBox* optionsGroupBox = new QGroupBox(tr("Process Options"));
-    (new QHBoxLayout(optionsGroupBox))->addWidget(options->newOptionsWidget());
+    QWidget* optionWidget = options->newOptionsWidget(&optionValidationIconMap);
+    connect(options.data(), SIGNAL(validChanged(ValidationResult)), SLOT(optionValidationChanged(ValidationResult)));
+    (new QHBoxLayout(optionsGroupBox))->addWidget(optionWidget);
     layout->addWidget(optionsGroupBox, 0, 0);
 
     // Blank middle column
@@ -49,4 +51,19 @@ ProcessDock::ProcessDock(ProcessFactoryPtr factory, QWidget* parent):
     // Done
     sw->addWidget(optionsWidget);
     this->setWidget(sw);
+}
+
+void ProcessDock::optionValidationChanged(ValidationResult result) {
+    foreach(QLabel* l, invalidIcons) {
+        l->setText(" ");
+    }
+    invalidIcons.clear();
+    foreach(ProcessOptionPtr o, result.badElements) {
+        QMap<ProcessOptionPtr, QLabel*>::iterator it = optionValidationIconMap.find(o);
+        if(it != optionValidationIconMap.end()) {
+            QLabel* l = it.value();
+            l->setPixmap(loadIcon("cluster", "validation-fail").pixmap(l->width(), l->height()));
+            invalidIcons.append(l);
+        }
+    }
 }
