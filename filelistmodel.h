@@ -46,8 +46,11 @@ public:
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 
 private:
-    QList<TSDataPtr> tsData;
-    QList<CBDataPtr> cbData;
+    QList<DataWrapperPtr> m_data[FL_COUNT];
+    DataWrapperPtr getDataFile(ItemType type, int i) const;
+    template<class T> T getConcreteFile(ItemType type, int i) const {
+        return getDataFile(type, i).dynamicCast<T>();
+    }
 };
 
 #endif // FILELISTMODEL_H

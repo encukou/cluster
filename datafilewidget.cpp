@@ -4,8 +4,8 @@
 
 #include "processoptions_types.h"
 
-AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent):
-        QLabel(parent), options(options), option(option)
+AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, CBFILETYPE myFileType, QWidget* parent):
+        QLabel(parent), options(options), option(option), myFileType(myFileType)
 {
     setAcceptDrops(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
@@ -13,6 +13,7 @@ AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, Proces
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(options.data(), SIGNAL(valueChanged(ProcessOptionPtr, QVariant)), SLOT(valueChange(ProcessOptionPtr, QVariant)));
     QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection);
+    my_mimetype = "application/x-clustering-datawrapper-pointer-" + QString::number(myFileType);
 }
 
 void AbstractDataFileWidget::refresh() {
@@ -20,7 +21,7 @@ void AbstractDataFileWidget::refresh() {
 }
 
 void AbstractDataFileWidget::dragEnterEvent(QDragEnterEvent* event) {
-    if(event->mimeData()->hasFormat(my_mimetype)) {
+    if(event->mimeData()->hasFormat(my_mimetype) && event->source()) {
         event->acceptProposedAction();
     }
 }

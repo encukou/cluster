@@ -90,11 +90,11 @@ TrainingSetOption::TrainingSetOption(QString name, QString label):
 QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
     QWidget* container = new QWidget(parent);
     QBoxLayout* layout = new QHBoxLayout(container);
-    AbstractDataFileWidget* tsw = new DataFileWidget<TSDataPtr>(
+    AbstractDataFileWidget* tsw = new DataFileWidget<TSData>(
             options,
             this->pointer(),
             container,
-            "application/x-clustering-trainingset-pointer",
+            TSFILE,
             tsw->tr("training set")
         );
     layout->addWidget(tsw);
@@ -112,11 +112,11 @@ CodebookOption::CodebookOption(QString name, QString label):
 QWidget* CodebookOption::newWidget(ProcessOptionsPtr options, QWidget* parent) const {
     QWidget* container = new QWidget(parent);
     QBoxLayout* layout = new QHBoxLayout(container);
-    AbstractDataFileWidget* tsw = new DataFileWidget<CBDataPtr>(
+    AbstractDataFileWidget* tsw = new DataFileWidget<CBData>(
             options,
             this->pointer(),
             container,
-            "application/x-clustering-codebook-pointer",
+            CBFILE,
             tsw->tr("codebook")
         );
     layout->addWidget(tsw);

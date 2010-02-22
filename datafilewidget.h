@@ -10,7 +10,7 @@
 class AbstractDataFileWidget: public QLabel {
     Q_OBJECT
 public:
-    AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent);
+    AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, CBFILETYPE myFileType, QWidget* parent);
     QString caption();
 signals:
     void captionChanged(QString);
@@ -26,6 +26,7 @@ protected:
     DataWrapperPtr data;
     ProcessOptionsPtr options;
     ProcessOptionPtr option;
+    CBFILETYPE myFileType;
     QString m_caption;
 };
 
@@ -33,13 +34,13 @@ protected:
   *
   * (Signals & slots don't work with template classes, hence the need for this)
   */
-template<class DataPtr>
+template<class DataType>
 class DataFileWidget: public AbstractDataFileWidget {
+    typedef QSharedPointer<DataType> DataPtr;
 public:
-    DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent, QString my_mimetype, QString fileDescription):
-        AbstractDataFileWidget(options, option, parent)
+    DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent, CBFILETYPE myFileType, QString fileDescription):
+        AbstractDataFileWidget(options, option, myFileType, parent)
     {
-        this->my_mimetype = my_mimetype;
         this->fileDescription = fileDescription;
     }
 
@@ -63,13 +64,18 @@ protected:
 protected:
     void dropEvent(QDropEvent* event) {
         if(event->mimeData()->hasFormat(my_mimetype)) {
+            if(event->source() == NULL) {
+                // Don't accept pointers from another application, that doesn't make sense
+                return;
+            }
             QByteArray encodedData = event->mimeData()->data(my_mimetype);
             QDataStream stream(&encodedData, QIODevice::ReadOnly);
-            DataPtr* ptr = NULL;
-            int bytesRead = stream.readRawData((char*)(&ptr), sizeof(DataPtr*));
-            if(bytesRead == sizeof(DataPtr*) && ptr && *ptr) {
-                DataPtr data = *ptr;
-                if(options->set(option, QVariant::fromValue<DataPtr>(data))) {
+            DataWrapperPtr* ptr = NULL;
+            int bytesRead = stream.readRawData((char*)(&ptr), sizeof(DataWrapperPtr*));
+            if(bytesRead == sizeof(DataWrapperPtr*) && ptr && *ptr) {
+                DataWrapperPtr dataWrapper = *ptr;
+                DataPtr data = dataWrapper.dynamicCast<DataType>();
+                if(data && options->set(option, QVariant::fromValue<DataPtr>(data))) {
                     event->acceptProposedAction();
                 }
             }else{

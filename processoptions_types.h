@@ -46,6 +46,8 @@ class TrainingSetOption: public ProcessOption {
 public:
     TrainingSetOption(QString name, QString label);
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
+protected:
+    CBFILETYPE myFileType();
 };
 
 /** A codebook option. The GUI for this is a place to drop codebooks.
@@ -54,6 +56,8 @@ class CodebookOption: public ProcessOption {
 public:
     CodebookOption(QString name, QString label);
     QWidget* newWidget(ProcessOptionsPtr options, QWidget* parent=0) const;
+protected:
+    CBFILETYPE myFileType();
 };
 
 /** Helper class for synchronizing a widget to ProcessOptions
