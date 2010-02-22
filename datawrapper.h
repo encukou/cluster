@@ -15,7 +15,6 @@ class DataWrapper
 {
 protected:
     CBFILETYPE dataType;
-    QString _name;
 public:
     CBFILETYPE getType() { return dataType; }
     virtual void* getData() = 0;
@@ -23,8 +22,14 @@ public:
     virtual void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0) = 0;
 
     QString name();
+    QString filePath();
 
     static DataWrapper* fromFile(QString fileName);
+
+protected:
+    void setFileName(QString fileName, QString stdExtension=QString());
+    QString m_fileName;
+    QString m_filePath;
 };
 
 typedef QSharedPointer<DataWrapper> DataWrapperPtr;

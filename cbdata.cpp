@@ -5,7 +5,7 @@ CBData::CBData(QString &fileName)
 {
     this->dataType = CBFILE;
     ReadCodebook(fileName.toLatin1().data(), &this->codebook);
-    _name = QFileInfo(fileName).fileName();
+    setFileName(fileName, "cb");
 }
 
 void* CBData::getData()

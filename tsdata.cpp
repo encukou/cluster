@@ -7,7 +7,7 @@ TSData::TSData(QString &fileName)
 {
     this->dataType = TSFILE;
     ReadTrainingSet(fileName.toLatin1().data(), &this->trainingSet);
-    _name = QFileInfo(fileName).fileName();
+    setFileName(fileName, "ts");
 }
 
 void* TSData::getData()
