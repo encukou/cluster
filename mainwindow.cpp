@@ -61,22 +61,26 @@ void MainWindow::on_actionOpen_triggered()
 
     if (!fileName.isNull())
     {
-        DataWrapper *data = DataWrapper::fromFile(fileName);
-        if(data) {
-            QModelIndex index = fileListModel->addDataFile(data);
-            ui->tvFiles->expand(index.parent());
-            ui->tvFiles->scrollTo(index);
+        QFileInfo info(fileName);
+        QModelIndex index = fileListModel->indexForFile(info);
+        if(!index.isValid()) {
+            DataWrapper *data = DataWrapper::fromFile(fileName);
+            if(data) {
+                index = fileListModel->addDataFile(data);
+                ui->tvFiles->expand(index.parent());
+                ui->tvFiles->scrollTo(index);
 
-            if (data->getType() == CBFILE || data->getType() == TSFILE)
-            {
-                scene.setItemIndexMethod(QGraphicsScene::NoIndex);
-                scene.displayData(data);
-                ui->gvView->setScene(&scene);
-                ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+            }else{
+                // File was not recognized
+                // TODO: Display a warning message
             }
-        }else{
-            // File was not recognized
-            // TODO: Display a warning message
+        }
+        DataWrapperPtr ptr = fileListModel->fileForIndex(index);
+        if(ptr) {
+            scene.setItemIndexMethod(QGraphicsScene::NoIndex);
+            scene.displayData(ptr.data());
+            ui->gvView->setScene(&scene);
+            ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
         }
     }
 }

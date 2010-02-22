@@ -1,5 +1,6 @@
 #include "filelistmodel.h"
 #include "tsdata.h"
+#include <QFileInfo>
 
 #include <QtCore/QStringList>
 #include <QtCore/QMimeData>
@@ -86,6 +87,26 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
     }else{
         return QModelIndex();
     }
+}
+
+QModelIndex FileListModel::indexForFile(QFileInfo& fileInfo) {
+    QString path = fileInfo.absoluteFilePath();
+    for(int type=0; type < FL_COUNT; type++) {
+        for(int i=0; i < m_data[type].size(); i++) {
+            if(m_data[type][i]->filePath() == fileInfo.absoluteFilePath()) {
+                return createIndex(i, 0, type);
+            }
+        }
+    }
+    return QModelIndex();
+}
+
+DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) {
+    ItemType type = ItemType(index.internalId());
+    if(type != FL_PARENT) {
+        return m_data[type][index.row()];
+    }
+    return DataWrapperPtr();
 }
 
 DataWrapperPtr FileListModel::getDataFile(ItemType type, int i) const {

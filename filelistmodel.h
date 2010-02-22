@@ -28,6 +28,8 @@ public:
       * The model takes ownership of the file.
       */
     QModelIndex addDataFile(DataWrapper* file);
+    QModelIndex indexForFile(class QFileInfo& fileInfo);
+    DataWrapperPtr fileForIndex(QModelIndex index);
 
 public:
     // Model API (Inherited from QAbstractItemModel)
