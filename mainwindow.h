@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QGraphicsScene>
+#include <QtCore/QModelIndex>
 #include "clusteringscene.h"
 
 namespace Ui
@@ -25,6 +26,7 @@ private:
     ClusteringScene scene;
 
 private slots:
+    void on_tvFiles_doubleClicked(QModelIndex index);
     void on_actionAbout_triggered();
     void on_btnStartProcess_clicked();
     void on_actionOpen_triggered();

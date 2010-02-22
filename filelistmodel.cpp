@@ -1,12 +1,19 @@
 #include "filelistmodel.h"
-#include "tsdata.h"
+#include "clusteringscene.h"
+#include "iconhelper.h"
 #include <QFileInfo>
 
 #include <QtCore/QStringList>
 #include <QtCore/QMimeData>
 #include <QtDebug>
 
-FileListModel::FileListModel(QObject *parent): QAbstractItemModel(parent) {
+FileListModel::FileListModel(ClusteringScene* displayingScene, QObject *parent):
+        QAbstractItemModel(parent), displayingScene(displayingScene)
+{
+    if(displayingScene) {
+        connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(handleDataChange(DataWrapperPtr)));
+        connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(handleDataChange(DataWrapperPtr)));
+    }
 }
 
 FileListModel::~FileListModel() {
@@ -14,17 +21,39 @@ FileListModel::~FileListModel() {
 
 QVariant FileListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) return QVariant();
-    if (role != Qt::DisplayRole) return QVariant();
-    if(index.internalId() == FL_PARENT) {
-        switch(index.row()) {
-            case FL_TRAININGSET: return QVariant(tr("Training sets"));
-            case FL_CODEBOOK: return QVariant(tr("Codebooks"));
-            case FL_PARTITIONING: return QVariant(tr("Partitionings"));
-            default: return QVariant("(error)");
+    switch(role) {
+        case Qt::DisplayRole: {
+            if(index.internalId() == FL_PARENT) {
+                switch(index.row()) {
+                    case FL_TRAININGSET: return QVariant(tr("Training sets"));
+                    case FL_CODEBOOK: return QVariant(tr("Codebooks"));
+                    case FL_PARTITIONING: return QVariant(tr("Partitionings"));
+                    default: return QVariant("(error)");
+                }
+            }else{
+                DataWrapperPtr p = getDataFile(ItemType(index.internalId()), index.row());
+                if(p) return p->name();
+            }
+        } break;
+        case Qt::DecorationRole: {
+            if(index.internalId() != FL_PARENT) {
+                if(displayingScene->isDataDisplayed(fileForIndex(index))) {
+                    return loadIcon("cluster", "visible");
+                }else{
+                    return QColor(0, 0, 0, 0);
+                }
+            }
         }
-    }else{
-        DataWrapperPtr p = getDataFile(ItemType(index.internalId()), index.row());
-        if(p) return p->name();
+        case Qt::FontRole: {
+            if(index.internalId() != FL_PARENT) {
+                if(displayingScene->isDataDisplayed(fileForIndex(index))) {
+                    QFont font;
+                    font.setBold(true);
+                    return font;
+                }
+            }
+        }
+        default: QVariant();
     }
     return QVariant();
 }
@@ -87,9 +116,23 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
     }else{
         return QModelIndex();
     }
+
 }
 
-QModelIndex FileListModel::indexForFile(QFileInfo& fileInfo) {
+QModelIndex FileListModel::indexForFile(DataWrapperPtr file) const {
+    // TODO: Could be sped up... is it worth it?
+    for(int type=0; type < FL_COUNT; type++) {
+        for(int i=0; i < m_data[type].size(); i++) {
+            if(m_data[type][i] == file) {
+                return createIndex(i, 0, type);
+            }
+        }
+    }
+    return QModelIndex();
+}
+
+QModelIndex FileListModel::indexForFile(QFileInfo& fileInfo) const {
+    // TODO: Could be sped up... is it worth it?
     QString path = fileInfo.absoluteFilePath();
     for(int type=0; type < FL_COUNT; type++) {
         for(int i=0; i < m_data[type].size(); i++) {
@@ -101,7 +144,7 @@ QModelIndex FileListModel::indexForFile(QFileInfo& fileInfo) {
     return QModelIndex();
 }
 
-DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) {
+DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) const {
     ItemType type = ItemType(index.internalId());
     if(type != FL_PARENT) {
         return m_data[type][index.row()];
@@ -112,6 +155,11 @@ DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) {
 DataWrapperPtr FileListModel::getDataFile(ItemType type, int i) const {
     if(i < 0 || i >= m_data[type].size()) return DataWrapperPtr();
     return m_data[type][i];
+}
+
+void FileListModel::handleDataChange(DataWrapperPtr data) {
+    QModelIndex index = indexForFile(data);
+    if(index.isValid()) emit dataChanged(index, index);
 }
 
 QStringList FileListModel::mimeTypes() const {

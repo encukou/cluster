@@ -6,6 +6,8 @@
 #include "tsdata.h"
 #include "cbdata.h"
 
+class ClusteringScene;
+
 class FileListModel: public QAbstractItemModel {
      Q_OBJECT
 
@@ -20,7 +22,7 @@ class FileListModel: public QAbstractItemModel {
     } type;
 
 public:
-    FileListModel(QObject *parent = 0);
+    FileListModel(ClusteringScene* displayingScene=0, QObject *parent = 0);
     ~FileListModel();
 
     /** Add a file to the model
@@ -28,8 +30,9 @@ public:
       * The model takes ownership of the file.
       */
     QModelIndex addDataFile(DataWrapper* file);
-    QModelIndex indexForFile(class QFileInfo& fileInfo);
-    DataWrapperPtr fileForIndex(QModelIndex index);
+    QModelIndex indexForFile(DataWrapperPtr file) const;
+    QModelIndex indexForFile(class QFileInfo& fileInfo) const;
+    DataWrapperPtr fileForIndex(QModelIndex index) const;
 
 public:
     // Model API (Inherited from QAbstractItemModel)
@@ -47,12 +50,15 @@ public:
     QMimeData* mimeData(const QModelIndexList &indexes) const;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 
+protected slots:
+    void handleDataChange(DataWrapperPtr);
 private:
     QList<DataWrapperPtr> m_data[FL_COUNT];
     DataWrapperPtr getDataFile(ItemType type, int i) const;
     template<class T> T getConcreteFile(ItemType type, int i) const {
         return getDataFile(type, i).dynamicCast<T>();
     }
+    ClusteringScene* displayingScene;
 };
 
 #endif // FILELISTMODEL_H

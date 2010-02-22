@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    fileListModel = new FileListModel(this);
+    fileListModel = new FileListModel(&scene, this);
     ui->tvFiles->setModel(fileListModel);
 
     processFactoryModel = new ProcessFactoryModel(this);
@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
             ui->tvFiles->expand(index.parent());
         }
     }
+
+    ui->gvView->setScene(&scene);
 
     // File
     ui->actionOpen->setIcon(loadIcon("actions", "document-open"));
@@ -78,8 +80,7 @@ void MainWindow::on_actionOpen_triggered()
         DataWrapperPtr ptr = fileListModel->fileForIndex(index);
         if(ptr) {
             scene.setItemIndexMethod(QGraphicsScene::NoIndex);
-            scene.displayData(ptr.data());
-            ui->gvView->setScene(&scene);
+            scene.displayData(ptr);
             ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
         }
     }
@@ -136,4 +137,12 @@ void MainWindow::on_btnStartProcess_clicked() {
 void MainWindow::on_actionAbout_triggered() {
     AboutDialog* dlg = new AboutDialog(this);
     dlg->show();
+}
+
+void MainWindow::on_tvFiles_doubleClicked(QModelIndex index) {
+    qDebug() << index;
+    DataWrapperPtr ptr = fileListModel->fileForIndex(index);
+    qDebug() << ptr;
+    if(ptr) scene.displayData(ptr);
+    ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
 }
