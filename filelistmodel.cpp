@@ -130,7 +130,8 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
         // TODO: a function that maps filetype to itemtype
         case TSFILE: type = FL_TRAININGSET; break;
         case CBFILE: type = FL_CODEBOOK; break;
-        default: return QModelIndex();
+        case PAFILE: type = FL_PARTITIONING; break;
+        case NOTFOUND: return QModelIndex();
     }
     if(type < FL_COUNT) {
         beginInsertRows(index(type, 0), m_data[type].size(), m_data[type].size());

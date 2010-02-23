@@ -59,6 +59,10 @@ int PAData::getDataSize()
     return this->partition.TSsize;
 }
 
+int PAData::getVectorSize() {
+    return associatedData->getVectorSize();
+}
+
 int PAData::getPartitionCount()
 {
     return this->partition.PartitionCount;
@@ -78,6 +82,7 @@ void PAData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
     for (int index=0; index < CHS_size(hull); index++ )
     {
         CV = CHS_hullfirst(hull, index);
+        if(!CV) continue;
 
         QPointF start_point = QPointF(VectorScalar(ts, CV->index, 0), VectorScalar(ts, CV->index, 1));
         QPainterPath path = QPainterPath(start_point);

@@ -74,11 +74,6 @@ void MainWindow::on_actionOpen_triggered()
                 case CBFILE:
                 case TSFILE:
                     data = DataWrapper::fromFile(fileName);
-                    if (data) {
-                        index = fileListModel->addDataFile(data);
-                        ui->tvFiles->expand(index.parent());
-                        ui->tvFiles->scrollTo(index);
-                    }
                     break;
                 case PAFILE:
                     if (PAData::isValidForDataset(fileName, scene.getData(TSFILE).data()))
@@ -89,9 +84,11 @@ void MainWindow::on_actionOpen_triggered()
                 default:
                     break;
             }
-
-            if (data == NULL)
-            {
+            if(data) {
+                index = fileListModel->addDataFile(data);
+                ui->tvFiles->expand(index.parent());
+                ui->tvFiles->scrollTo(index);
+            }else{
                 // File was not recognized
                 QMessageBox::warning(this, "Error!", "There was an error reading the file!");
                 return;
