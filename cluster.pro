@@ -24,7 +24,9 @@ SOURCES += main.cpp \
     aboutdialog.cpp \
     processdock.cpp \
     clusteringscene.cpp \
-    datasetgraphicsitem.cpp
+    datasetgraphicsitem.cpp \
+    modules/cnvxhull.c \
+    padata.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -47,7 +49,9 @@ HEADERS += mainwindow.h \
     iconhelper.h \
     processdock.h \
     clusteringscene.h \
-    datasetgraphicsitem.h
+    datasetgraphicsitem.h \
+    modules/cnvxhull.h \
+    padata.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
