@@ -76,6 +76,15 @@ void ProcessDock::optionValidationChanged(ValidationResult result) {
     }
 }
 
+static QToolButton* makePlaybackButton(QString text, QString iconName) {
+    QToolButton* btn = new QToolButton();
+    btn->setMinimumSize(32, 32);
+    btn->setAutoRaise(true);
+    btn->setText(text);
+    btn->setIcon(loadIcon("actions", iconName));
+    return btn;
+}
+
 void ProcessDock::start() {
     if(!processOptions->isValid()) return;
     if(process) return;
@@ -85,29 +94,69 @@ void ProcessDock::start() {
     processWidget = new QWidget();
     QGridLayout* layout = new QGridLayout(processWidget);
 
-    // Process Results (left)
+    //// Process Results (left)
     QGroupBox* processGroup = new QGroupBox(tr("Process results"));
     // TODO
     layout->addWidget(processGroup, 0, 0);
 
-    // Blank middle column
+    //// Blank middle column
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(1, 0);
     layout->setColumnStretch(2, 1);
 
-    // Animation Controls (right)
+    //// Animation Controls (right)
     QGroupBox* animGroup = new QGroupBox(tr("Animation Controls"));
     QBoxLayout* animLayout = new QVBoxLayout(animGroup);
-    QBoxLayout* insideLayout = new QHBoxLayout();
+    QBoxLayout* insideLayout;
+
+    // UI notes:
+    // I'm still not sure about the layout here, but having Previous and Next
+    // right next to each other seems very useful to me (going back and forth
+    // between two frames quickly is a valid use case here, as opposed to
+    // a media player). Hence the line with (|<) (<<) (>>) (>|).
+    // Play/Pause should have the text displayed, both to make it look bigger
+    // and look important and to clearly say what the button does.
+    // Also, Play/Pause seems important enough to have its own line (besides,
+    // there's no better place to put it).
+    // The main text for the label after the spinbox ("/ X total") is chosen
+    // to be about the same length as the text before the spinbox ("Iteration"),
+    // making the whole control area visually balanced. Better strings for
+    // other situations ("(Processing...)" and "/ X so far") would be nice.
+    // Having the slider at the very bottom seems natural to me.
+    // ~PV
+
+    // Play button
+    insideLayout = new QHBoxLayout();
     insideLayout->addStretch(1);
-    btnPlay = new QToolButton();
+    btnPlay = makePlaybackButton("Play", "media-control-start");
     btnPlay->setMinimumSize(32, 32);
     btnPlay->setAutoRaise(true);
     btnPlay->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     animation->connect(btnPlay, SIGNAL(clicked()), SLOT(playPause()));
     insideLayout->addWidget(btnPlay);
+    insideLayout->setStretch(1, 1);
     insideLayout->addStretch(1);
     animLayout->addLayout(insideLayout);
+
+    // Media control buttons
+    insideLayout = new QHBoxLayout();
+    insideLayout->addStretch(1);
+    QToolButton* btn = makePlaybackButton("Initial iteration", "media-seek-start");
+    animation->connect(btn, SIGNAL(clicked()), SLOT(toFirstFrame()));
+    insideLayout->addWidget(btn);
+    btn = makePlaybackButton("Previous iteration", "media-seek-backward");
+    animation->connect(btn, SIGNAL(clicked()), SLOT(toPreviousFrame()));
+    insideLayout->addWidget(btn);
+    btn = makePlaybackButton("Next iteration", "media-seek-forward");
+    animation->connect(btn, SIGNAL(clicked()), SLOT(toNextFrame()));
+    insideLayout->addWidget(btn);
+    btn = makePlaybackButton("Last iteration", "media-seek-end");
+    animation->connect(btn, SIGNAL(clicked()), SLOT(toLastFrame()));
+    insideLayout->addWidget(btn);
+    insideLayout->addStretch(1);
+    animLayout->addLayout(insideLayout);
+
+    // Iteration spinbox
     insideLayout = new QHBoxLayout();
     QLabel* l = new QLabel(tr("Iteration"));
     l->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -122,11 +171,13 @@ void ProcessDock::start() {
     lblOfX = new QLabel();
     updateOfXLabel();
     insideLayout->addWidget(lblOfX);
-    insideLayout->setStretch(0, 1);
+    insideLayout->setStretch(0, 2);
     insideLayout->setStretch(1, 1);
-    insideLayout->setStretch(2, 1);
+    insideLayout->setStretch(2, 2);
     layout->addWidget(animGroup, 0, 2);
     animLayout->addLayout(insideLayout);
+
+    // Slider
     slider = new QSlider(Qt::Horizontal);
     slider->setMaximum(animation->lastLoadedFrame());
     slider->setValue(animation->frame());
@@ -135,8 +186,11 @@ void ProcessDock::start() {
     animation->connect(slider, SIGNAL(valueChanged(int)), SLOT(setFrame(int)));
     animation->connect(slider, SIGNAL(sliderMoved(int)), SLOT(pause()));
     animLayout->addWidget(slider);
+
+    // Stretch at end
     animLayout->addStretch(1);
 
+    //// Connect signals
     connect(animation.data(), SIGNAL(lastLoadedFrameChanged(int)), SLOT(updateIterationMaximum(int)));
     connect(animation.data(), SIGNAL(stateChanged()), SLOT(updatePlayState()));
     updatePlayState();
@@ -144,22 +198,20 @@ void ProcessDock::start() {
 
     this->setWidget(processWidget);
 
-    // TODO: Shrink the dock
+    //// TODO: Shrink the dock
 
-    // TODO: Start process
+    //// TODO: Start process
     process->start();
 }
 
 void ProcessDock::updateOfXLabel() {
     int max = animation->lastFrame();
-    if(max == -1) {
-        lblOfX->setText(tr("(Processing...)"));
-    }else if(animation->waiting()) {
+    if(max == -1 || animation->waiting()) {
         lblOfX->setText(tr("(Processing...)"));
     }else if(animation->isLoadingDone()) {
-        lblOfX->setText(tr("of %1").arg(max));
+        lblOfX->setText(tr("/ %1 total").arg(max));
     }else{
-        lblOfX->setText(tr("of %1+").arg(max));
+        lblOfX->setText(tr("/ %1 so far").arg(max));
     }
 }
 
