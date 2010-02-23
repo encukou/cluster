@@ -2,6 +2,33 @@
 
 extern "C" {
     #include "modules/cnvxhull.h"
+    #include "modules/file.h"
+}
+
+bool PAData::isValidForDataset(QString &fileName, DataWrapper *ts)
+{
+    if (ts == NULL || ts->getType() != TSFILE) return false;
+
+    // taken from ReadPartitioningFileHeader
+    int dummy, expectedDataSize;
+    FILE* f;
+    char versionStr[MaxVersionLength];
+
+    f = FileOpen(fileName.toLatin1().data(), INPUT, NO);
+
+    fgets(versionStr, MaxVersionLength, f);
+
+    fscanf(f, "%i\n", &dummy); // partitionCount
+    fscanf(f, "%i\n", &expectedDataSize);
+
+    fclose(f);
+
+    return ts->getDataSize() == expectedDataSize;
+}
+
+bool PAData::isValidForDataset(QString &fileName, DataWrapperPtr ts_ptr)
+{
+    return !ts_ptr.isNull() && isValidForDataset(fileName, ts_ptr.data());
 }
 
 PAData::PAData(QString &fileName, TSDataPtr ts_ptr)

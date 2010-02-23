@@ -21,6 +21,7 @@ public slots:
 
 public:
     bool isDataDisplayed(DataWrapperPtr data);
+    DataWrapperPtr getData(CBFILETYPE type);
 signals:
     void dataDisplayed(DataWrapperPtr data);
     void dataRemoved(DataWrapperPtr data);

@@ -17,9 +17,13 @@ public:
 
     void* getData();
     int getDataSize();
+    int getVectorSize() { return rand(); }
     int getPartitionCount();
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
+
+    static bool isValidForDataset(QString &fileName, DataWrapperPtr ts_ptr);
+    static bool isValidForDataset(QString &fileName, DataWrapper* ts);
 };
 
 

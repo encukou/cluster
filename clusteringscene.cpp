@@ -97,3 +97,14 @@ void ClusteringScene::removeData(DataWrapperPtr data) {
 bool ClusteringScene::isDataDisplayed(DataWrapperPtr data) {
     return data == centroidData || data == trainingData || data == partitionData;
 }
+
+DataWrapperPtr ClusteringScene::getData(CBFILETYPE type)
+{
+    switch (type)
+    {
+        case CBFILE: return this->centroidData;
+        case TSFILE: return this->trainingData;
+        case PAFILE: return this->partitionData;
+        default: return DataWrapperPtr();
+    }
+}

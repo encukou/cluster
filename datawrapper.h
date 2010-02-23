@@ -13,8 +13,6 @@ extern "C" {
 
 class DataWrapper
 {
-protected:
-    CBFILETYPE dataType;
 public:
     CBFILETYPE getType() { return dataType; }
     virtual void* getData() = 0;
@@ -26,8 +24,10 @@ public:
     QString filePath();
 
     static DataWrapper* fromFile(QString fileName);
+    static CBFILETYPE getFileType(QString fileName);
 
 protected:
+    CBFILETYPE dataType;
     void setFileName(QString fileName, QString stdExtension=QString());
     QString m_fileName;
     QString m_filePath;

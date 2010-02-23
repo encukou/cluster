@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QGraphicsEllipseItem>
 #include <QDir>
+#include <QMessageBox>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/kmeans.h"
@@ -12,6 +13,7 @@
 #include "aboutdialog.h"
 #include "iconhelper.h"
 #include "processdock.h"
+#include "padata.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -65,15 +67,34 @@ void MainWindow::on_actionOpen_triggered()
         QFileInfo info(fileName);
         QModelIndex index = fileListModel->indexForFile(info);
         if(!index.isValid()) {
-            DataWrapper *data = DataWrapper::fromFile(fileName);
-            if(data) {
-                index = fileListModel->addDataFile(data);
-                ui->tvFiles->expand(index.parent());
-                ui->tvFiles->scrollTo(index);
+            DataWrapper *data = NULL;
+            CBFILETYPE type = DataWrapper::getFileType(fileName);
+            switch (type)
+            {
+                case CBFILE:
+                case TSFILE:
+                    data = DataWrapper::fromFile(fileName);
+                    if (data) {
+                        index = fileListModel->addDataFile(data);
+                        ui->tvFiles->expand(index.parent());
+                        ui->tvFiles->scrollTo(index);
+                    }
+                    break;
+                case PAFILE:
+                    if (PAData::isValidForDataset(fileName, scene.getData(TSFILE).data()))
+                    {
+                        data = new PAData(fileName, scene.getData(TSFILE).dynamicCast<TSData>());
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-            }else{
+            if (data == NULL)
+            {
                 // File was not recognized
-                // TODO: Display a warning message
+                QMessageBox::warning(this, "Error!", "There was an error reading the file!");
+                return;
             }
         }
         DataWrapperPtr ptr = fileListModel->fileForIndex(index);

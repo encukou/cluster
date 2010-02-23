@@ -1,6 +1,7 @@
 #include "datawrapper.h"
 #include "tsdata.h"
 #include "cbdata.h"
+#include "padata.h"
 #include <QFileInfo>
 
 DataWrapper* DataWrapper::fromFile(QString fileName)
@@ -12,13 +13,18 @@ DataWrapper* DataWrapper::fromFile(QString fileName)
             return new TSData(fileName);
         case CBFILE:
             return new CBData(fileName);
-        /*case PAFILE:
-            return new PAData(fileName);*/
+        case PAFILE:
         case NOTFOUND:
         default:
             return NULL;
      }
 }
+
+CBFILETYPE DataWrapper::getFileType(QString fileName)
+{
+    return DetermineCBFileType(fileName.toLatin1().data());
+}
+
 
 void DataWrapper::setFileName(QString fileName, QString stdExtension) {
     QFileInfo fi(fileName);
