@@ -5,10 +5,12 @@
 #include "process.h"
 #include "animation.h"
 
+class ClusteringScene;
+
 class ProcessDock : public QDockWidget {
     Q_OBJECT
 public:
-    ProcessDock(ProcessFactoryPtr factory, QWidget* parent=0);
+    ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingScene, QWidget* parent=0);
 private:
     ProcessFactoryPtr factory;
     ProcessPtr process;
@@ -30,6 +32,7 @@ protected:
     class QSpinBox* sbIteration;
     class QSlider* slider;
     class QToolButton* btnPlay;
+    ClusteringScene* displayingScene;
 };
 
 #endif // PROCESSDOCK_H

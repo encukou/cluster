@@ -119,7 +119,7 @@ void MainWindow::on_btnStartProcess_clicked() {
     QModelIndex index = ui->lvNewProcess->selectionModel()->currentIndex();
     if(!index.isValid()) return;
     ProcessFactoryPtr factory = processFactoryModel->processFactory(index);
-    ProcessDock* dock = new ProcessDock(factory, this);
+    ProcessDock* dock = new ProcessDock(factory, &scene, this);
     dock->setAllowedAreas(ui->dwProcessChooser->allowedAreas());
     dock->setFeatures(ui->dwProcessChooser->features() | QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
