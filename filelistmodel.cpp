@@ -63,8 +63,8 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
                     return font;
                 }
             }
-        }
-        default: QVariant();
+        } break;
+        default: return QVariant();
     }
     return QVariant();
 }
@@ -209,7 +209,6 @@ QStringList FileListModel::mimeTypes() const {
 
 QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
     QMimeData *mimeData = new QMimeData();
-    if(indexes.size() != 1) return mimeData;
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
     QModelIndex index = indexes[0];
