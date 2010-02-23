@@ -27,8 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     processFactoryModel->addFactory(new KMeansFactory);
 
     // Open files in the current directory, for convenience
-    // TODO: What's the standard file extension for a partitioning?
-    foreach(const QFileInfo& fi, QDir::current().entryInfoList(QStringList() << "*.ts" << "*.cb", QDir::Files | QDir::Readable, QDir::Time)) {
+    foreach(const QFileInfo& fi, QDir::current().entryInfoList(QStringList() << "*.ts" << "*.cb" << "*.pa", QDir::Files | QDir::Readable, QDir::Time)) {
         DataWrapper *data = DataWrapper::fromFile(fi.filePath());
         if(data) {
             QModelIndex index = fileListModel->addDataFile(data);
