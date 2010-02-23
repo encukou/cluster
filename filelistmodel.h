@@ -3,8 +3,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QList>
-#include "tsdata.h"
-#include "cbdata.h"
+#include "datawrapper.h"
 
 class ClusteringScene;
 
@@ -33,6 +32,7 @@ public:
     QModelIndex indexForFile(DataWrapperPtr file) const;
     QModelIndex indexForFile(class QFileInfo& fileInfo) const;
     DataWrapperPtr fileForIndex(QModelIndex index) const;
+    CBFILETYPE dataTypeForIndex(QModelIndex index) const;
 
 public:
     // Model API (Inherited from QAbstractItemModel)

@@ -152,6 +152,20 @@ DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) const {
     return DataWrapperPtr();
 }
 
+CBFILETYPE FileListModel::dataTypeForIndex(QModelIndex index) const {
+    ItemType type = ItemType(index.internalId());
+    if(type == FL_PARENT) type = ItemType(index.row());
+    switch(type) {
+        case FL_TRAININGSET: return TSFILE;
+        case FL_CODEBOOK: return CBFILE;
+        case FL_PARTITIONING: return PAFILE;
+        case FL_PARENT: case FL_COUNT:
+            // we want the compiler warning if more items are added...
+            return NOTFOUND;
+    }
+    return NOTFOUND;
+}
+
 DataWrapperPtr FileListModel::getDataFile(ItemType type, int i) const {
     if(i < 0 || i >= m_data[type].size()) return DataWrapperPtr();
     return m_data[type][i];

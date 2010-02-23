@@ -16,6 +16,8 @@ public:
     ClusteringScene();
 public slots:
     void displayData(DataWrapperPtr data);
+    void removeData(CBFILETYPE type);
+    void removeData(DataWrapperPtr data);
 
 public:
     bool isDataDisplayed(DataWrapperPtr data);

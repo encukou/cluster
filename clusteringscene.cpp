@@ -13,12 +13,8 @@ void ClusteringScene::displayData(DataWrapperPtr data)
     switch (type)
     {
         case CBFILE:
-            if (this->centroidItem)
-            {
-                this->removeItem(this->centroidItem);
-                delete this->centroidItem;
-                emit dataRemoved(centroidData);
-            }
+            removeData(CBFILE);
+
             this->centroidItem = new QGraphicsItemGroup();
             this->centroidItem->setZValue(1);
 
@@ -30,12 +26,8 @@ void ClusteringScene::displayData(DataWrapperPtr data)
             dataDisplayed(centroidData);
             break;
         case TSFILE:
-            if (this->dataItem)
-            {
-                this->removeItem(this->dataItem);
-                delete this->dataItem;
-                emit dataRemoved(trainingData);
-            }
+            removeData(TSFILE);
+
             this->dataItem = new QGraphicsItemGroup();
             this->dataItem->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(1024, 1024));
 
@@ -47,12 +39,8 @@ void ClusteringScene::displayData(DataWrapperPtr data)
             dataDisplayed(trainingData);
             break;
         case PAFILE:
-            if (this->partitionItem)
-            {
-                this->removeItem(this->partitionItem);
-                delete this->partitionItem;
-                emit dataRemoved(partitionData);
-            }
+            removeData(PAFILE);
+
             this->partitionItem = new QGraphicsItemGroup();
 
             data->paintToScene(*this, this->partitionItem);
@@ -67,6 +55,43 @@ void ClusteringScene::displayData(DataWrapperPtr data)
     }
 
     this->setSceneRect(this->itemsBoundingRect());
+}
+
+void ClusteringScene::removeData(CBFILETYPE type) {
+    switch (type) {
+        case CBFILE: {
+            if (this->centroidItem) {
+                this->removeItem(this->centroidItem);
+                delete this->centroidItem;
+                this->centroidItem = NULL;
+                emit dataRemoved(centroidData);
+                centroidData = (DataWrapperPtr)NULL;
+            }
+        } break;
+        case TSFILE: {
+            if (this->dataItem) {
+                this->removeItem(this->dataItem);
+                delete this->dataItem;
+                this->dataItem = NULL;
+                emit dataRemoved(trainingData);
+                trainingData = (DataWrapperPtr)NULL;
+            }
+        } break;
+        case PAFILE: {
+            if (this->partitionItem) {
+                this->removeItem(this->partitionItem);
+                delete this->partitionItem;
+                this->partitionItem = NULL;
+                emit dataRemoved(partitionData);
+                partitionData = (DataWrapperPtr)NULL;
+            }
+        } break;
+        case NOTFOUND: return;
+    }
+}
+
+void ClusteringScene::removeData(DataWrapperPtr data) {
+    if(isDataDisplayed(data)) removeData(data->getType());
 }
 
 bool ClusteringScene::isDataDisplayed(DataWrapperPtr data) {

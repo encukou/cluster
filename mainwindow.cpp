@@ -139,9 +139,14 @@ void MainWindow::on_actionAbout_triggered() {
 }
 
 void MainWindow::on_tvFiles_doubleClicked(QModelIndex index) {
-    qDebug() << index;
     DataWrapperPtr ptr = fileListModel->fileForIndex(index);
-    qDebug() << ptr;
-    if(ptr) scene.displayData(ptr);
-    ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+    if(ptr) {
+        scene.displayData(ptr);
+        ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+    }else{
+        // TODO: Double-clicking the filetype header will remove the file from
+        // the view. This is not intuitive at all; figure out better way!
+        CBFILETYPE type = fileListModel->dataTypeForIndex(index);
+        scene.removeData(type);
+    }
 }
