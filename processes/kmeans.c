@@ -27,10 +27,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cb.h"
-#include "random.h"
-#include "interfc.h"
-#include "reporting.h"
+#include "modules/cb.h"
+#include "modules/random.h"
+#include "modules/interfc.h"
 #include "rls.h"
 
 
@@ -70,7 +69,7 @@ int PerformKMeans(TRAININGSET *pTS, CODEBOOK *pCB, PARTITIONING *pP,
   double        totalTime, error, currError;
   int           i, better, iter, totalIter;
 
-  SetClock(&totalTime);
+  //SetClock(&totalTime);
   totalIter = 0;
   currError = error = 0;
 
@@ -82,7 +81,7 @@ int PerformKMeans(TRAININGSET *pTS, CODEBOOK *pCB, PARTITIONING *pP,
   InitializeSolutions(pTS, pCB, pP, &CBnew, &Pnew, &CBinit, &Pinit, 
       distanceInit, clus, useInitial);
 
-  PrintHeader(quietLevel);
+  //PrintHeader(quietLevel);
 
   /* perform repeats time full K-means */
   for (i = 0; i < repeats; i++)
@@ -105,10 +104,10 @@ int PerformKMeans(TRAININGSET *pTS, CODEBOOK *pCB, PARTITIONING *pP,
       better = 1;
     }
 
-    PrintRepeat(quietLevel, repeats, i, iter, error, GetClock(totalTime), better);
+    //PrintRepeat(quietLevel, repeats, i, iter, error, GetClock(totalTime), better);
   }
 
-  PrintFooterKM(quietLevel, currError, repeats, GetClock(totalTime), totalIter);
+  //PrintFooterKM(quietLevel, currError, repeats, GetClock(totalTime), totalIter);
 
   FreeCodebook(&CBnew);
   FreePartitioning(&Pnew);
@@ -212,7 +211,7 @@ double *time, double *error, int initial)
 
   *iter  = 0;
   *error = AverageErrorForSolution(pTS, pCBnew, pPnew, MSE);
-  PrintIterationKM(quietLevel, i, *iter, *error, GetClock(*time));
+  //PrintIterationKM(quietLevel, i, *iter, *error, GetClock(*time));
 
   /* K-means iterations */
   do 

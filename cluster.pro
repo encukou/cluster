@@ -13,7 +13,7 @@ SOURCES += main.cpp \
     modules/file.c \
     process.cpp \
     processfactorymodel.cpp \
-    #processes/kmeans.c \
+    processes/kmeans.c \
     processoptions.cpp \
     tsdata.cpp \
     cbdata.cpp \
@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     modules/cnvxhull.c \
     padata.cpp \
     modules/random.c \
-    processes/proc_kmeans.cpp
+    processes/proc_kmeans.cpp \
+    processes/rls.c
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -39,7 +40,7 @@ HEADERS += mainwindow.h \
     modules/file.h \
     process.h \
     processfactorymodel.h \
-    #processes/kmeans.h \
+    processes/kmeans.h \
     processoptions.h \
     tsdata.h \
     cbdata.h \
@@ -55,7 +56,8 @@ HEADERS += mainwindow.h \
     modules/cnvxhull.h \
     padata.h \
     modules/random.h \
-    processes/proc_kmeans.h
+    processes/proc_kmeans.h \
+    processes/rls.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
