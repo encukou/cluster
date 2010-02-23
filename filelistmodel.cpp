@@ -24,26 +24,37 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
     switch(role) {
         case Qt::DisplayRole: {
             if(index.internalId() == FL_PARENT) {
-                switch(index.row()) {
-                    case FL_TRAININGSET: return QVariant(tr("Training sets"));
-                    case FL_CODEBOOK: return QVariant(tr("Codebooks"));
-                    case FL_PARTITIONING: return QVariant(tr("Partitionings"));
-                    default: return QVariant("(error)");
+                if(index.column() == 0) {
+                    switch(index.row()) {
+                        case FL_TRAININGSET: return QVariant(tr("Training sets"));
+                        case FL_CODEBOOK: return QVariant(tr("Codebooks"));
+                        case FL_PARTITIONING: return QVariant(tr("Partitionings"));
+                        default: return QVariant("(error)");
+                    }
                 }
             }else{
                 DataWrapperPtr p = getDataFile(ItemType(index.internalId()), index.row());
-                if(p) return p->name();
+                if(p) {
+                    switch((ColumnIndex)index.column()) {
+                        case FLC_NAME: return p->name();
+                        case FLC_SIZE: return p->getDataSize();
+                        case FLC_DIMENSIONS: return p->getVectorSize();
+                        case FLC_COUNT: return QVariant();
+                    }
+                }
             }
         } break;
         case Qt::DecorationRole: {
-            if(index.internalId() != FL_PARENT) {
-                if(displayingScene->isDataDisplayed(fileForIndex(index))) {
-                    return loadIcon("cluster", "visible");
-                }else{
-                    return QColor(0, 0, 0, 0);
+            if(index.column() == 0) {
+                if(index.internalId() != FL_PARENT) {
+                    if(displayingScene->isDataDisplayed(fileForIndex(index))) {
+                        return loadIcon("cluster", "visible");
+                    }else{
+                        return QColor(0, 0, 0, 0);
+                    }
                 }
             }
-        }
+        } break;
         case Qt::FontRole: {
             if(index.internalId() != FL_PARENT) {
                 if(displayingScene->isDataDisplayed(fileForIndex(index))) {
@@ -68,12 +79,19 @@ Qt::ItemFlags FileListModel::flags(const QModelIndex &index) const {
     }
 }
 
-QVariant FileListModel::headerData(int, Qt::Orientation, int) const {
+QVariant FileListModel::headerData(int section, Qt::Orientation orientation, int role) const {
+    if(orientation != Qt::Horizontal) QVariant();
+    if(role != Qt::DisplayRole) return QVariant();
+    switch((ColumnIndex)section) {
+        case FLC_NAME: return tr("Name");
+        case FLC_SIZE: return tr("Vectors");
+        case FLC_DIMENSIONS: return tr("Dimensionality");
+        case FLC_COUNT: return QVariant();
+    }
     return QVariant();
 }
 
-QModelIndex FileListModel::index(int row, int column,
-                                 const QModelIndex &parent) const {
+QModelIndex FileListModel::index(int row, int column, const QModelIndex &parent) const {
     if(parent.isValid()) {
         return createIndex(row, column, parent.row());
     }else{
@@ -96,8 +114,14 @@ int FileListModel::rowCount(const QModelIndex &parent) const {
     return 0;
 }
 
-int FileListModel::columnCount(const QModelIndex &) const {
-    return 1;
+int FileListModel::columnCount(const QModelIndex &parent) const {
+    if(!parent.isValid()) {
+        return 3;
+    }else if(parent.internalId() == FL_PARENT) {
+        return 3;
+    }else{
+        return 0;
+    }
 }
 
 QModelIndex FileListModel::addDataFile(DataWrapper* file) {
@@ -173,7 +197,7 @@ DataWrapperPtr FileListModel::getDataFile(ItemType type, int i) const {
 
 void FileListModel::handleDataChange(DataWrapperPtr data) {
     QModelIndex index = indexForFile(data);
-    if(index.isValid()) emit dataChanged(index, index);
+    if(index.isValid()) emit dataChanged(index, index.sibling(index.row(), FLC_COUNT-1));
 }
 
 QStringList FileListModel::mimeTypes() const {

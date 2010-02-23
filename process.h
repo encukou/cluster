@@ -76,6 +76,4 @@ protected:
     QWeakPointer<ProcessFactory> _ptr;
 };
 
-
-
 #endif // PROCESS_H

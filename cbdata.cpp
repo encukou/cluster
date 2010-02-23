@@ -18,6 +18,10 @@ int CBData::getDataSize()
     return BookSize(&this->codebook);
 }
 
+int CBData::getVectorSize() {
+    return VectorSize(&this->codebook);
+}
+
 void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 {
     CODEBOOK *cb = &this->codebook;

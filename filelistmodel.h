@@ -20,6 +20,14 @@ class FileListModel: public QAbstractItemModel {
         FL_COUNT
     } type;
 
+    enum ColumnIndex {
+        FLC_NAME,
+        FLC_SIZE,
+        FLC_DIMENSIONS,
+
+        FLC_COUNT
+    };
+
 public:
     FileListModel(ClusteringScene* displayingScene=0, QObject *parent = 0);
     ~FileListModel();

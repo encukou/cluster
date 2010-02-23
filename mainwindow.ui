@@ -104,9 +104,6 @@
        <property name="allColumnsShowFocus">
         <bool>true</bool>
        </property>
-       <property name="headerHidden">
-        <bool>true</bool>
-       </property>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>

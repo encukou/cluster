@@ -20,6 +20,7 @@ public:
     virtual void* getData() = 0;
     virtual int getDataSize() = 0;
     virtual void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0) = 0;
+    virtual int getVectorSize() = 0;
 
     QString name();
     QString filePath();

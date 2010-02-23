@@ -200,7 +200,7 @@ void ProcessDock::start() {
 
     //// TODO: Shrink the dock
 
-    //// TODO: Start process
+    //// Start process
     process->start();
 }
 
