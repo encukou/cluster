@@ -1,32 +1,22 @@
-#ifndef KMEANS_H
-#define KMEANS_H
+/*
+$Revision: 1.2 $
+$Date: 2005/06/27 11:18:17 $
+$Author: mtuonone $
+$Name:  $
+$Id: kmeans.h,v 1.2 2005/06/27 11:18:17 mtuonone Exp $
+*/
 
-#include "process.h"
-#include "tsdata.h"
-#include "cbdata.h"
+#if ! defined(__KMEANS_H)
+#define __KMEANS_H
 
-class KMeans: public Process {
-public:
-    KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters, QObject* parent);
-    ProcessResultTypeList resultTypes() const;
-    void process();
-};
 
-class KMeansFactory: public ProcessFactory {
-public:
-    enum InitType {
-        INIT_RANDOM,
-        INIT_KMEANS,
-        INIT_MARKO,
-        INIT_CB,
+int PerformKMeans(TRAININGSET *pTS, CODEBOOK *pCB, PARTITIONING *pP,
+		  int clus, int repeats, int InitMethod, 
+		  int quietLevel, int useInitial);
 
-        INIT_COUNT ///< number of the options
-    };
-public:
-    QString name() const;
-    ProcessOptionsPtr newOptions() const;
-    ProcessPtr newProcess(const ProcessOptionsPtr, QObject* parent) const;
-    ValidationResult validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged);
-};
+char* KMeansInfo(void);
 
-#endif // KMEANS_H
+
+#endif /* __KMEANS_H */
+
+

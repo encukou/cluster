@@ -1,4 +1,4 @@
-#include "kmeans.h"
+#include "proc_kmeans.h"
 
 #include <QtGui/QWidget>
 #include <QtDebug>

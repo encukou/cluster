@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
-#include "processes/kmeans.h"
+#include "processes/proc_kmeans.h"
 #include "datawrapper.h"
 #include "aboutdialog.h"
 #include "iconhelper.h"
