@@ -77,6 +77,7 @@ protected:
                 DataPtr data = dataWrapper.dynamicCast<DataType>();
                 if(data && options->set(option, QVariant::fromValue<DataPtr>(data))) {
                     event->acceptProposedAction();
+                    qDebug() << ((TRAININGSET*)(data)->getData())->BlockSizeX;
                 }
             }else{
                 qDebug() << "Something went wrong in drag&drop, got pointer" << ptr;

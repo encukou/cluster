@@ -9,7 +9,7 @@
 class TSData : public DataWrapper
 {
 private:
-    CODEBOOK trainingSet;
+    TRAININGSET trainingSet;
 public:
     TSData(QString &fileName);
 
@@ -18,6 +18,8 @@ public:
     int getVectorSize();
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
+
+    TRAININGSET* getDataCopy();
 };
 
 

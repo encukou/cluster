@@ -12,9 +12,12 @@ private:
 public:
     CBData(QString &fileName);
 
+    CBData(CODEBOOK* source); // takes a COPY of the given data
+
     void* getData();
     int getDataSize();
     int getVectorSize();
+    CODEBOOK* getDataCopy();
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
 };

@@ -1,7 +1,6 @@
-#include "tsdata.h"
-#undef Node
 #include <QtDebug>
 #include <QFileInfo>
+#include "tsdata.h"
 
 TSData::TSData(QString &fileName)
 {
@@ -33,4 +32,11 @@ void TSData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
 
     if (group) group->addToGroup(item);
     else scene.addItem(item);
+}
+
+TRAININGSET* TSData::getDataCopy() {
+    CODEBOOK* rv = new CODEBOOK;
+    CreateNewCodebook(rv, BookSize((&trainingSet)), (&trainingSet));
+    CopyCodebook((&trainingSet), rv);
+    return rv;
 }

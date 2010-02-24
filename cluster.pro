@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     padata.cpp \
     modules/random.c \
     processes/proc_kmeans.cpp \
-    processes/rls.c
+    processes/rls.c \
+    reporting.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -57,10 +58,12 @@ HEADERS += mainwindow.h \
     padata.h \
     modules/random.h \
     processes/proc_kmeans.h \
-    processes/rls.h
+    processes/rls.h \
+    reporting.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
+QMAKE_CFLAGS += -g -Imodules/
 OTHER_FILES += TODO.txt
 RESOURCES += resources/cluster.qrc

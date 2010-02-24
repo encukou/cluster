@@ -98,7 +98,7 @@ void ProcessDock::start() {
     if(!processOptions->isValid()) return;
     if(process) return;
     process = factory->newProcess(processOptions, this);
-    animation = AnimationPtr(new ProcessAnimation(process, animationOptions, this));
+    animation = ProcessAnimationPtr(new ProcessAnimation(process, animationOptions, this));
     ///// Make the process widget ////
     processWidget = new QWidget();
     QGridLayout* layout = new QGridLayout(processWidget);
@@ -202,6 +202,7 @@ void ProcessDock::start() {
     //// Connect signals
     connect(animation.data(), SIGNAL(lastLoadedFrameChanged(int)), SLOT(updateIterationMaximum(int)));
     connect(animation.data(), SIGNAL(stateChanged()), SLOT(updatePlayState()));
+    connect(animation.data(), SIGNAL(frameChanged(int)), SLOT(frameChanged(int)));
     updatePlayState();
 
 
@@ -238,4 +239,13 @@ void ProcessDock::updatePlayState() {
         btnPlay->setIcon(loadIcon("actions", "media-playback-start"));
     }
     updateOfXLabel();
+}
+
+void ProcessDock::frameChanged(int frame) {
+    qDebug() << frame;
+    if(!displayingScene->isDataDisplayed(processOptions->get<TSDataPtr>("input"))) return;
+    qDebug() << animation->resultsOfIteration(frame);
+    CBDataPtr cb = animation->resultsOfIteration(frame).value("output_cb").value<CBDataPtr>();
+    qDebug() << cb;
+    if(cb) displayingScene->displayData(cb);
 }

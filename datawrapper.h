@@ -8,7 +8,7 @@
 #include <QGraphicsEllipseItem>
 
 extern "C" {
-    #include "modules/cb.h"
+#include "modules/cb.h"
 }
 
 class DataWrapper

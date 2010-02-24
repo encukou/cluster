@@ -62,6 +62,7 @@ bool Animation::playPause() {
     if(playing()) {
         return pause();
     }else{
+        if(atLastFrame()) toFirstFrame();
         return play();
     }
 }
@@ -168,12 +169,12 @@ ProcessAnimation::ProcessAnimation(ProcessPtr process, ProcessOptionsPtr animOpt
     if(!QMetaType::type("ProcessResults")) {
         qRegisterMetaType<ProcessResults>("ProcessResults");
     }
-    connect(process.data(), SIGNAL(iterationDone(int, ProcessResults)), SLOT(iterationDone(int, ProcessResults)));
-    connect(process.data(), SIGNAL(processDone(ProcessResults)), SLOT(processDone()));
+    connect(process.data(), SIGNAL(iterationDone(int, QVariantMap)), SLOT(iterationDone(int, QVariantMap)));
+    connect(process.data(), SIGNAL(processDone(QVariantMap)), SLOT(processDone()));
     connect(process.data(), SIGNAL(numIterationsChanged(int)), SLOT(numIterationsChanged(int)));
 }
 
-void ProcessAnimation::iterationDone(int iterationNumber, ProcessResults results) {
+void ProcessAnimation::iterationDone(int iterationNumber, QVariantMap results) {
     Q_ASSERT(iterationNumber == m_results.size());
     m_results.append(results);
     setLastLoadedFrame(iterationNumber);
@@ -193,3 +194,6 @@ bool ProcessAnimation::moreFramesExpected() {
     return !m_done;
 }
 
+QVariantMap ProcessAnimation::resultsOfIteration(int iteration) {
+    return m_results.value(iteration);
+}

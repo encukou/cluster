@@ -61,6 +61,7 @@
 #include "random.h"
 #include "interfc.h"
 #include "reporting.h"
+#include "rls.h"
 
 
 /* ========================== PROTOTYPES ============================= */

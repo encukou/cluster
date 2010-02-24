@@ -32,6 +32,8 @@ public:
 public:
     // Methods that are run in the process thread:
     void run();
+    virtual void c_report(QVariantMap results); ///< Reimplement this to get notifications from C code
+    static void c_report_static(QVariantMap results); ///< calls c_report() on the current object
 public:
     // Thread-safe methods:
     int numIterations();
@@ -42,16 +44,16 @@ public:
 protected:
     // Thread-safe methods:
     void setNumIterations(int numIterations);
-    void reportIterationResult(ProcessResults results);
+    void reportIterationResult(QVariantMap results);
 signals:
-    // Emitting signals is thread-safe
-    void iterationDone(int iterationNumber, ProcessResults results);
-    void processDone(ProcessResults results);
+    // Emitting signals is thread-safe (with a queued connection, the interthread default)
+    void iterationDone(int iterationNumber, QVariantMap results);
+    void processDone(QVariantMap results);
     void numIterationsChanged(int newNumIterations);
 private:
     int m_numIterations;
     int m_currentIteration;
-    ProcessResults m_lastResults;
+    QVariantMap m_lastResults;
     QMutex m_mutex;
 };
 

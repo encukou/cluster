@@ -23,6 +23,16 @@ void Process::run() {
     emit processDone(m_lastResults);
 }
 
+void Process::c_report(QVariantMap results) {
+    reportIterationResult(results);
+}
+
+void Process::c_report_static(QVariantMap results){
+    Process* currentProcess = qobject_cast<Process*>(currentThread());
+    Q_ASSERT(currentProcess);
+    if(currentProcess) currentProcess->c_report(results);
+}
+
 int Process::numIterations() {
     QMutexLocker(&this->m_mutex);
     return m_numIterations;
@@ -40,7 +50,7 @@ void Process::setNumIterations(int numIterations) {
     emit numIterationsChanged(m_numIterations);
 }
 
-void Process::reportIterationResult(ProcessResults results) {
+void Process::reportIterationResult(QVariantMap results) {
     QMutexLocker(&this->m_mutex);
     if(m_currentIteration > m_numIterations) {
         setNumIterations(m_currentIteration);

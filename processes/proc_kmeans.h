@@ -7,9 +7,12 @@
 
 class KMeans: public Process {
 public:
-    KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters, QObject* parent);
+    KMeans(const ProcessOptionsPtr options, QObject* parent);
     ProcessResultTypeList resultTypes() const;
     void process();
+protected:
+    const ProcessOptionsPtr options;
+    CODEBOOK* codebook;
 };
 
 class KMeansFactory: public ProcessFactory {

@@ -43,3 +43,17 @@ void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
         if (group) group->addToGroup(item);
     }
 }
+
+TRAININGSET* CBData::getDataCopy() {
+    CODEBOOK* rv = new CODEBOOK;
+    CreateNewCodebook(rv, BookSize((&codebook)), (&codebook));
+    CopyCodebook((&codebook), rv);
+    return rv;
+}
+
+CBData::CBData(CODEBOOK* source) {
+    this->dataType = CBFILE;
+    m_fileName = "(Generated codebook)";
+    CreateNewCodebook((&codebook), BookSize(source), source);
+    CopyCodebook(source, (&codebook));
+}

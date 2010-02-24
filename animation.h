@@ -20,7 +20,7 @@ public slots:
     // These return true iff the state is changed
     bool play();
     bool pause();
-    bool playPause();
+    bool playPause(); // also re-starts animation if on last frame
 signals:
     void playbackStarted();
     void playbackEnded();
@@ -67,8 +67,9 @@ class ProcessAnimation: public Animation {
     Q_OBJECT
 public:
     ProcessAnimation(ProcessPtr process, ProcessOptionsPtr animOptions, QObject* parent=0);
+    QVariantMap resultsOfIteration(int iteration);
 private slots:
-    void iterationDone(int iterationNumber, ProcessResults results);
+    void iterationDone(int iterationNumber, QVariantMap results);
     void processDone();
     void numIterationsChanged(int newNumIterations);
 protected:
@@ -76,9 +77,10 @@ protected:
 private:
     bool m_done;
 private:
-    QList<ProcessResults> m_results;
+    QList<QVariantMap> m_results;
 };
 
 typedef QSharedPointer<Animation> AnimationPtr;
+typedef QSharedPointer<ProcessAnimation> ProcessAnimationPtr;
 
 #endif // ANIMATION_H

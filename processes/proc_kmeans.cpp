@@ -4,25 +4,52 @@
 #include <QtDebug>
 #include "processoptions_types.h"
 
-KMeans::KMeans(TSDataPtr trainingset, CBDataPtr initial_codebook, int initialization, int no_clusters, QObject* parent):
-        Process(parent)
-{
-    // TODO!
-    (void) trainingset;
-    (void) initial_codebook;
-    (void) initialization;
-    (void) no_clusters;
+extern "C" {
+#include "kmeans.h"
+#include "modules/memctrl.h"
 }
+
+KMeans::KMeans(const ProcessOptionsPtr options, QObject* parent):
+        Process(parent), options(options)
+{}
 
 void KMeans::process() {
     // TODO
 
-    // dummy process:
-    reportIterationResult(ProcessResults());
-    reportIterationResult(ProcessResults());
-    reportIterationResult(ProcessResults());
-    sleep(1);
-    reportIterationResult(ProcessResults());
+    TSDataPtr ts = options->get<TSDataPtr>("input");
+    CBDataPtr cb = options->get<CBDataPtr>("initial_cb");
+
+    if(!ts) return;
+    TRAININGSET* trainingset = ts->getDataCopy();
+
+    int num_clusters = options->get<int>("cb_size");
+
+    int useInitial;
+    if(cb) {
+        codebook = cb->getDataCopy();
+        useInitial = 1; // 1 = use initial codebook, apparently
+    }else{
+        codebook = (CODEBOOK*)allocate(sizeof(CODEBOOK));
+        CreateNewCodebook(codebook, num_clusters, trainingset);
+        useInitial = 0; // 0 = use initial partitioning, apparently
+    }
+
+    PARTITIONING* partitioning = (PARTITIONING*)allocate(sizeof(PARTITIONING));
+    CreateNewPartitioning(partitioning, trainingset, num_clusters);
+
+    PerformKMeans(
+            trainingset,                    // training set
+            codebook,                       // codebook
+            partitioning,                   // partitioning
+            num_clusters,                   // clus
+            1,                              // repeats
+            options->get<int>("init_type"), // init method
+            0,                              // quiet level
+            useInitial                      // useInitial
+        );
+
+    // TODO: The function returns 0 on success and 1 on failure. Take that into account.
+
 }
 
 static ProcessResultTypeList types;
@@ -40,15 +67,7 @@ QString KMeansFactory::name() const {
 }
 
 ProcessPtr KMeansFactory::newProcess(const ProcessOptionsPtr options, QObject* parent) const {
-    KMeans* p = new KMeans(
-            options->get<QSharedPointer<TSData> >("input"),
-            options->get<QSharedPointer<CBData> >("initial_cb"),
-            options->get<int>("init_type"),
-            options->get<int>("cb_size"),
-            parent
-        );
-
-    return ProcessPtr(p);
+    return ProcessPtr(new KMeans(options, parent));
 }
 
 static ProcessOptionList opts;
