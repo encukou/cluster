@@ -1,0 +1,36 @@
+#include "reporting.h"
+#include "process.h"
+#include "cbdata.h"
+
+#if defined __GNUC__
+// There are lots of unused parameters here, and leaving out their names
+// would just result in confusion. I think this is a sufficient reason
+// to disable the unused-parameter warning
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+
+void PrintHeader(int quietLevel) {}
+
+void PrintIterationKM(int quietLevel, int i, int iter, double error,
+                      double time, void* codebook) {
+    QVariantMap results;
+    results["MSE"] = error;
+    results["output_cb"] = QVariant::fromValue<CBDataPtr>(CBDataPtr(new CBData((CODEBOOK*)codebook)));
+    Process::c_report_static(results);
+}
+
+void PrintRepeat(int quietLevel, int repeats, int i, int iter, double error,
+                 double time, int better) {}
+
+void PrintFooterKM(int quietLevel, double error, int repeats,
+                   double totalTime, int totalIter) {}
+
+void PrintIterationRLS(int quietLevel, int iter, double error, double time,
+                       int better) {
+    Q_ASSERT_X(false, __FILE__, "// TODO: RLS reporting");
+}
+
+void PrintFooterRLS(int quietLevel, int iter, double error, double time) {
+    Q_ASSERT_X(false, __FILE__, "// TODO: RLS reporting");
+}
+
