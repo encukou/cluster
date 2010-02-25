@@ -10,16 +10,16 @@ bool PAData::isValidForDataset(QString &fileName, DataWrapper *ts)
     if (ts == NULL || ts->getType() != TSFILE) return false;
 
     // taken from ReadPartitioningFileHeader
-    int dummy, expectedDataSize;
+    int dummy, expectedDataSize, result;
     FILE* f;
-    char versionStr[MaxVersionLength];
+    char versionStr[MaxVersionLength], *fgets_res;
 
     f = FileOpen(fileName.toLatin1().data(), INPUT, NO);
 
-    fgets(versionStr, MaxVersionLength, f);
+    fgets_res = fgets(versionStr, MaxVersionLength, f);
 
-    fscanf(f, "%i\n", &dummy); // partitionCount
-    fscanf(f, "%i\n", &expectedDataSize);
+    result = fscanf(f, "%i\n", &dummy); // partitionCount
+    result = fscanf(f, "%i\n", &expectedDataSize);
 
     fclose(f);
 
