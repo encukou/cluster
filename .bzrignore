@@ -3,7 +3,8 @@ moc_*.cpp
 Makefile
 ./cluster
 cluster.pro.user
-*.o
-*.cb
-*.ts
+./*.o
+./*.cb
+./*.ts
+./*.pa
 qrc_*.cpp

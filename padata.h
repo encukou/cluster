@@ -17,7 +17,7 @@ public:
 
     void* getData();
     int getDataSize();
-    int getVectorSize() { return rand(); }
+    int getVectorSize();
     int getPartitionCount();
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
