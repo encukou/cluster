@@ -11,7 +11,8 @@ private:
     QGraphicsItemGroup *dataItem;
     QGraphicsItemGroup *centroidItem;
     QGraphicsItemGroup *partitionItem;
-
+    QGraphicsItemGroup *voronoiItem;
+    bool showingVoronoi;
 public:
     ClusteringScene();
 public slots:
@@ -23,6 +24,7 @@ public:
     bool isDataDisplayed(DataWrapperPtr data) const;
     DataWrapperPtr getData(CBFILETYPE type) const;
     QVariant decorationForData(DataWrapperPtr data) const;
+    void setShowingVoronoi(bool visible);
 signals:
     void dataDisplayed(DataWrapperPtr data);
     void dataRemoved(DataWrapperPtr data);

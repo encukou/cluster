@@ -1,6 +1,10 @@
 #include "cbdata.h"
 #include <QFileInfo>
 
+extern "C" {
+#include "modules/voronoi.h"
+}
+
 CBData::CBData(QString &fileName)
 {
     this->dataType = CBFILE;
@@ -44,7 +48,29 @@ void CBData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
     }
 }
 
-TRAININGSET* CBData::getDataCopy() {
+void CBData::paintVoronoi(QGraphicsScene &scene, QGraphicsItemGroup *group)
+{
+    CODEBOOK *cb = &this->codebook;
+
+    VoronoiGraph *voronoi = VG_make(cb);
+    VG_generate(voronoi, cb);
+
+    for (int i=0; i<VG_nEdge(voronoi); i++)
+    {
+        Vertex *v1 = &voronoi->vertex[voronoi->edge[i].vertex[0]];
+        Vertex *v2 = &voronoi->vertex[voronoi->edge[i].vertex[1]];
+        QPointF point1 = QPoint(v1->coord.x, v1->coord.y);
+        QPointF point2 = QPoint(v2->coord.x, v2->coord.y);
+        QLineF line = QLineF(point1, point2);
+
+        if (group) group->addToGroup(new QGraphicsLineItem(line));
+        else scene.addLine(line);
+    }
+
+    VG_kill(voronoi);
+}
+
+CODEBOOK* CBData::getDataCopy() {
     CODEBOOK* rv = new CODEBOOK;
     CreateNewCodebook(rv, BookSize((&codebook)), (&codebook));
     CopyCodebook((&codebook), rv);

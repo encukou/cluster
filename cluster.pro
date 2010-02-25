@@ -33,7 +33,10 @@ SOURCES += main.cpp \
     reporting.cpp \
     datawrappermime.cpp \
     processresultsmodel.cpp \
-    clusteringitemdelegate.cpp
+    clusteringitemdelegate.cpp \
+    modules/voronoi.c \
+    modules/stack.c \
+    modules/sort.c
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -65,7 +68,10 @@ HEADERS += mainwindow.h \
     reporting.h \
     datawrappermime.h \
     processresultsmodel.h \
-    clusteringitemdelegate.h
+    clusteringitemdelegate.h \
+    modules/voronoi.h \
+    modules/stack.h \
+    modules/sort.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \

@@ -70,7 +70,9 @@ void MainWindow::on_actionOpen_triggered()
         QModelIndex index = fileListModel->indexForFile(info);
         if(!index.isValid()) {
             DataWrapper *data = NULL;
+            bool errorShown = false;
             CBFILETYPE type = DataWrapper::getFileType(fileName);
+
             switch (type)
             {
                 case CBFILE:
@@ -82,17 +84,26 @@ void MainWindow::on_actionOpen_triggered()
                     {
                         data = new PAData(fileName, scene.getData(TSFILE).dynamicCast<TSData>());
                     }
+                    else
+                    {
+                        errorShown = true;
+                        QMessageBox::warning(this, "Error!",
+                                             "First you need to open corresponding .ts file for this partition!");
+                    }
                     break;
                 default:
                     break;
             }
-            if(data) {
+            if (data) {
                 index = fileListModel->addDataFile(data);
                 ui->tvFiles->expand(index.parent());
                 ui->tvFiles->scrollTo(index);
-            }else{
+            } else {
                 // File was not recognized
-                QMessageBox::warning(this, "Error!", "There was an error reading the file!");
+                if (!errorShown)
+                {
+                    QMessageBox::warning(this, "Error!", "There was an error reading the file!");
+                }
                 return;
             }
         }
@@ -169,4 +180,9 @@ void MainWindow::on_tvFiles_doubleClicked(QModelIndex index) {
         CBFILETYPE type = fileListModel->dataTypeForIndex(index);
         scene.removeData(type);
     }
+}
+
+void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)
+{
+    scene.setShowingVoronoi(checked);
 }

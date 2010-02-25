@@ -19,6 +19,7 @@ public:
     int getDataSize();
     int getVectorSize();
     int getPartitionCount();
+    TSDataPtr getTrainingSet() { return associatedData; }
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
 

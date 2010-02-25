@@ -20,6 +20,7 @@ public:
     CODEBOOK* getDataCopy();
 
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
+    void paintVoronoi(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
 };
 
 // Make CBDataPtr usable in a QVariant
