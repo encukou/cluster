@@ -1,6 +1,5 @@
 #include "filelistmodel.h"
 #include "clusteringscene.h"
-#include "iconhelper.h"
 #include "datawrappermime.h"
 #include <QFileInfo>
 
@@ -23,9 +22,10 @@ FileListModel::~FileListModel() {
 QVariant FileListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) return QVariant();
     switch(role) {
+        case Qt::DecorationRole:
         case Qt::DisplayRole: {
             if(index.internalId() == FL_PARENT) {
-                if(index.column() == 0) {
+                if(index.column() == 0 && role == Qt::DisplayRole) {
                     switch(index.row()) {
                         case FL_TRAININGSET: return QVariant(tr("Training sets"));
                         case FL_CODEBOOK: return QVariant(tr("Codebooks"));
@@ -35,23 +35,17 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
                 }
             }else{
                 DataWrapperPtr p = getDataFile(ItemType(index.internalId()), index.row());
+                QVariant rv;
                 if(p) {
-                    switch((ColumnIndex)index.column()) {
-                        case FLC_NAME: return QVariant::fromValue<DataWrapperPtr>(p);
-                        case FLC_SIZE: return p->getDataSize();
-                        case FLC_DIMENSIONS: return p->getVectorSize();
-                        case FLC_COUNT: return QVariant();
-                    }
-                }
-            }
-        } break;
-        case Qt::DecorationRole: {
-            if(index.column() == 0) {
-                if(index.internalId() != FL_PARENT) {
-                    if(displayingScene->isDataDisplayed(fileForIndex(index))) {
-                        return loadIcon("cluster", "visible");
-                    }else{
-                        return QColor(0, 0, 0, 0);
+                    if(role == Qt::DisplayRole) {
+                        switch((ColumnIndex)index.column()) {
+                            case FLC_NAME: return QVariant::fromValue<DataWrapperPtr>(p);
+                            case FLC_SIZE: return p->getDataSize();
+                            case FLC_DIMENSIONS: return p->getVectorSize();
+                            case FLC_COUNT: return QVariant();
+                        }
+                    }else if(index.column() ==0 && role == Qt::DecorationRole) {
+                        return displayingScene->decorationForData(p);
                     }
                 }
             }
@@ -199,7 +193,13 @@ DataWrapperPtr FileListModel::getDataFile(ItemType type, int i) const {
 
 void FileListModel::handleDataChange(DataWrapperPtr data) {
     QModelIndex index = indexForFile(data);
-    if(index.isValid()) emit dataChanged(index, index.sibling(index.row(), FLC_COUNT-1));
+    if(index.isValid()) {
+        emit dataChanged(index, index.sibling(index.row(), FLC_COUNT-1));
+    }
+    if(data->getType() == TSFILE) {
+        // Also change all partitionings, since their link symbols could have changed
+        emit dataChanged(createIndex(0, 0, FL_PARTITIONING), createIndex(m_data[FL_PARTITIONING].size() - 1, 0, FL_PARTITIONING));
+    }
 }
 
 QStringList FileListModel::mimeTypes() const {

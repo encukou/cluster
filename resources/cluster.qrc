@@ -19,6 +19,7 @@
         <file>icons/silk/16x16/cluster/accept.png</file>
         <file>icons/silk/16x16/cluster/cancel.png</file>
         <file>icons/silk/16x16/cluster/hourglass.png</file>
+	<file>icons/silk/16x16/cluster/link.png</file>
         <file>icons/silk/16x16/cluster/settings.png</file>
         <file>icons/silk/16x16/cluster/validation-fail.png</file>
         <file>icons/silk/16x16/mimetypes/video.png</file>

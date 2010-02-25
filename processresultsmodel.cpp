@@ -1,4 +1,6 @@
 #include "processresultsmodel.h"
+#include "datawrapper.h"
+#include "clusteringscene.h"
 #include <QtDebug>
 
 ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultTypes, ClusteringScene* displayingScene, QObject* parent):
@@ -10,6 +12,8 @@ ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultT
     while(registeredResults.size() < registeredResultTypes.size()) {
         registeredResults.append(QVariant());
     }
+    connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
+    connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
 }
 
 void ProcessResultsModel::setResults(QVariantMap results) {
@@ -60,7 +64,8 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
                 return Qt::AlignLeft;
             }
         } break;
-        default: {
+        case Qt::DecorationRole:
+        case Qt::DisplayRole: {
             int row = index.row();
             int unregRow = row - registeredResultTypes.size();
             QVariant rv;
@@ -68,24 +73,33 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
                 // Result name
                 if(unregRow < 0) {
                     // registered
-                    if(role == Qt::DisplayRole) rv = registeredResultTypes[row]->label;
+                    rv = registeredResultTypes[row]->label;
                 }else{
                     // unregistered
-                    if(role == Qt::DisplayRole) rv = (unregisteredResults.constBegin() + unregRow).key();
+                    rv = (unregisteredResults.constBegin() + unregRow).key();
                 }
             }else{
                 // Result value
                 if(unregRow < 0) {
                     // registered
-                    if(role == Qt::DisplayRole) rv = registeredResults[row];
+                    rv = registeredResults[row];
                 }else{
                     // unregistered
-                    if(role == Qt::DisplayRole) rv = (unregisteredResults.constBegin() + unregRow).value();
+                    rv = (unregisteredResults.constBegin() + unregRow).value();
                 }
             }
-            return rv;
-        } break;
-    }    
+            if((role == Qt::DecorationRole) && displayingScene) {
+                DataWrapperPtr data = rv.value<DataWrapperPtr>();
+                if(data) {
+                    // We have a dataset, let's give it an icon
+                    return displayingScene->decorationForData(data);
+                }
+            }else if(role == Qt::DisplayRole) {
+                return rv;
+            }
+        } // fall through (!!)
+        default: return QVariant();
+    }
 }
 
 QVariant ProcessResultsModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -96,4 +110,8 @@ QVariant ProcessResultsModel::headerData(int section, Qt::Orientation orientatio
     }else{
         return tr("Value");
     }
+}
+
+void ProcessResultsModel::datasetVisibilityChanged() {
+    emit dataChanged(createIndex(0, 1), createIndex(rowCount() - 1, 1));
 }

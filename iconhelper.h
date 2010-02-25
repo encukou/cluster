@@ -3,7 +3,7 @@
 
 #include <QtGui/QIcon>
 
-static QIcon loadIcon(QString category, QString name) {
+static inline QIcon loadIcon(QString category, QString name) {
     // Qt 4.6 includes loading standard system icons on Linux
     // (http://doc.trolltech.com/4.6/qicon.html#fromTheme)
     //

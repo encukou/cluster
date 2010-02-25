@@ -1,4 +1,5 @@
 #include "clusteringscene.h"
+#include "iconhelper.h"
 #include "tsdata.h"
 #include "padata.h"
 #include "cbdata.h"
@@ -145,4 +146,20 @@ void ClusteringScene::setShowingVoronoi(bool visible)
     {
         this->displayData(this->centroidData);
     }
+}
+
+QVariant ClusteringScene::decorationForData(DataWrapperPtr data) const {
+    // Currently visible datasets get the "eye" icon
+    if(isDataDisplayed(data)) return loadIcon("cluster", "visible");
+    // Unsaved datasets get the "floppy" icon
+    if(data->filePath().isEmpty()) {
+        return loadIcon("actions", "document-save");
+    }
+    // Partitions linked to the current training set get the "link" icon
+    PADataPtr partition = data.dynamicCast<PAData>();
+    if(partition && isDataDisplayed(partition->getTrainingSet())) {
+        return loadIcon("cluster", "link");
+    }
+    // Everything else gets the transparent icon of nothingness
+    return QColor(0, 0, 0, 0);
 }

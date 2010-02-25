@@ -24,14 +24,15 @@ void ClusteringItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem
 QSize ClusteringItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
     DataWrapperPtr data = dataFromIndex(index);
     if(data) {
-        return QFontMetrics(QFont()).size(Qt::TextSingleLine, data->name());
+        QSize size = QFontMetrics(QFont()).size(Qt::TextSingleLine, data->name());
+        size.setHeight(qMax(size.height(), 18));
+        size.setWidth(size.height() + size.width()); // Allow for icon
+        return size;
     }else{
         return QStyledItemDelegate::sizeHint(option, index);
     }
 }
 
-// TODO: Most of this function should be moved to the DataWrapper class
-// Maybe storing only DataWrapperPtr in QVariant is a better design...
 DataWrapperPtr ClusteringItemDelegate::dataFromIndex(const QModelIndex &index) const {
     return index.data().value<DataWrapperPtr>();
 }
