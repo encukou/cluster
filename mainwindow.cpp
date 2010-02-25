@@ -186,3 +186,20 @@ void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)
 {
     scene.setShowingVoronoi(checked);
 }
+
+void MainWindow::on_actionSaveImage_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "PNG image (*.png)");
+
+    if (!fileName.isNull())
+    {
+        int width = 800; // TODO: make configurable
+        int height = scene.height() / (qreal)scene.width() * width;
+        QImage image(width, height, QImage::Format_RGB32);
+        image.fill(0xffffffff);
+
+        QPainter painter(&image);
+        scene.render(&painter);
+        image.save(fileName, "PNG");
+    }
+}

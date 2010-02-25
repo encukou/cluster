@@ -26,6 +26,7 @@ private:
     ClusteringScene scene;
 
 private slots:
+    void on_actionSaveImage_triggered();
     void on_actionDisplayVoronoi_triggered(bool checked);
     void on_tvFiles_doubleClicked(QModelIndex index);
     void on_actionAbout_triggered();
