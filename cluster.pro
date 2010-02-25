@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     modules/random.c \
     processes/proc_kmeans.cpp \
     processes/rls.c \
-    reporting.cpp
+    reporting.cpp \
+    datawrappermime.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -59,11 +60,13 @@ HEADERS += mainwindow.h \
     modules/random.h \
     processes/proc_kmeans.h \
     processes/rls.h \
-    reporting.h
+    reporting.h \
+    datawrappermime.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
-QMAKE_CFLAGS += -g -Imodules/
+QMAKE_CFLAGS += -g \
+    -Imodules/
 OTHER_FILES += TODO.txt
 RESOURCES += resources/cluster.qrc

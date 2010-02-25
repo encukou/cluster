@@ -30,7 +30,7 @@ ProcessOptionsPtr Animation::newOptions() {
         opts.append((new BoolOption("start_stopped", "Stop at first frame", false))->pointer());
 
         IntOption* opt;
-        opt = new IntOption("timeout_value", tr("Animation timer"), 100, 0, 100000);
+        opt = new IntOption("timeout_value", tr("Animation timer"), 200, 0, 100000);
         opt->specialValueText = "(None)";
         opt->suffix = " ms";
         opt->step = 100;

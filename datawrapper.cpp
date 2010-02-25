@@ -6,6 +6,7 @@
 
 DataWrapper* DataWrapper::fromFile(QString fileName)
 {
+    // TODO: If the file is already opened, don't open it again!
     CBFILETYPE type = DetermineCBFileType(fileName.toLatin1().data());
     switch (type)
     {

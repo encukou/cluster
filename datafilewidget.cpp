@@ -21,8 +21,18 @@ void AbstractDataFileWidget::refresh() {
 }
 
 void AbstractDataFileWidget::dragEnterEvent(QDragEnterEvent* event) {
-    if(event->mimeData()->hasFormat(my_mimetype) && event->source()) {
-        event->acceptProposedAction();
+    if(DataWrapperMime::canDrop(event->mimeData(), myFileType)) {
+        event->setDropAction(Qt::CopyAction);
+        event->accept();
+    }
+}
+
+void AbstractDataFileWidget::mousePressEvent(QMouseEvent* event) {
+    if(data && event->button() == Qt::LeftButton) {
+        QDrag *drag = new QDrag(this);
+        drag->setMimeData(new DataWrapperMime(data));
+        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+        (void) dropAction;
     }
 }
 

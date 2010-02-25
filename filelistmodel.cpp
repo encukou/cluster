@@ -1,6 +1,7 @@
 #include "filelistmodel.h"
 #include "clusteringscene.h"
 #include "iconhelper.h"
+#include "datawrappermime.h"
 #include <QFileInfo>
 
 #include <QtCore/QStringList>
@@ -202,26 +203,17 @@ void FileListModel::handleDataChange(DataWrapperPtr data) {
 
 QStringList FileListModel::mimeTypes() const {
     QStringList types;
-    types << "application/x-clustering-datawrapper-pointer";
-    types << "inode/file";
+    types << "text/uri-list";
     return types;
 }
 
 QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
-    QMimeData *mimeData = new QMimeData();
-    QByteArray encodedData;
-    QDataStream stream(&encodedData, QIODevice::WriteOnly);
-    QModelIndex index = indexes[0];
+    QModelIndex index = indexes.value(0);
     ItemType type = ItemType(index.internalId());
     if(type != FL_PARENT) {
-        const DataWrapperPtr* ptr = &m_data[type][index.row()];
-        int bytesWritten = stream.writeRawData((const char*)(&ptr), sizeof(DataWrapperPtr*));
-        if(bytesWritten == sizeof(DataWrapperPtr*)) {
-            mimeData->setData("application/x-clustering-datawrapper-pointer", encodedData);
-            mimeData->setData("application/x-clustering-datawrapper-pointer-" + QString::number((*ptr)->getType()), encodedData);
-        }
+        return new DataWrapperMime(fileForIndex(index));
     }
-    return mimeData;
+    return new QMimeData();
 }
 
 bool FileListModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int, int, const QModelIndex&) {

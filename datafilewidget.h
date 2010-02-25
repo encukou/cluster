@@ -2,8 +2,10 @@
 #define DATAFILEWIDGET_H
 
 #include <QtGui/QDropEvent>
+#include <QtGui/QMouseEvent>
 #include <QtDebug>
 #include "processoptions_types.h"
+#include "datawrappermime.h"
 
 /** Base class for widgets that accept dropped DataWrappers (TrainingSets, Codebooks etc.)
   */
@@ -19,6 +21,7 @@ protected slots:
     void refresh();
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
+    void mousePressEvent(QMouseEvent* event);
     void setCaption(QString);
     QSize sizeHint() const;
     QString my_mimetype;
@@ -63,24 +66,12 @@ protected:
 
 protected:
     void dropEvent(QDropEvent* event) {
-        if(event->mimeData()->hasFormat(my_mimetype)) {
-            if(event->source() == NULL) {
-                // Don't accept pointers from another application, that doesn't make sense
-                return;
-            }
-            QByteArray encodedData = event->mimeData()->data(my_mimetype);
-            QDataStream stream(&encodedData, QIODevice::ReadOnly);
-            DataWrapperPtr* ptr = NULL;
-            int bytesRead = stream.readRawData((char*)(&ptr), sizeof(DataWrapperPtr*));
-            if(bytesRead == sizeof(DataWrapperPtr*) && ptr && *ptr) {
-                DataWrapperPtr dataWrapper = *ptr;
-                DataPtr data = dataWrapper.dynamicCast<DataType>();
-                if(data && options->set(option, QVariant::fromValue<DataPtr>(data))) {
-                    event->acceptProposedAction();
-                    qDebug() << ((TRAININGSET*)(data)->getData())->BlockSizeX;
-                }
-            }else{
-                qDebug() << "Something went wrong in drag&drop, got pointer" << ptr;
+        DataWrapperPtr newData = DataWrapperMime::getData<DataType>(event->mimeData());
+        if(newData) {
+            data = newData;
+            if(options->set(option, QVariant::fromValue<DataPtr>(data.dynamicCast<DataType>()))) {
+            event->setDropAction(Qt::CopyAction);
+            event->accept();
             }
         }
     }
