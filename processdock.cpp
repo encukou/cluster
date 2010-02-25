@@ -64,10 +64,8 @@ ProcessDock::ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingS
     // Done
     this->setWidget(optionsWidget);
 
-    // Set someinitial process options... It's up to the process if it uses them or not
+    // Set process input automatically...
     if(displayingScene->getData(TSFILE)) processOptions->set("input", QVariant::fromValue<TSDataPtr>(displayingScene->getData(TSFILE).dynamicCast<TSData>()));
-    if(displayingScene->getData(CBFILE)) processOptions->set("initial_cb", QVariant::fromValue<CBDataPtr>(displayingScene->getData(CBFILE).dynamicCast<CBData>()));
-    if(displayingScene->getData(PAFILE)) processOptions->set("initial_partition", QVariant::fromValue<PADataPtr>(displayingScene->getData(PAFILE).dynamicCast<PAData>()));
 }
 
 void ProcessDock::optionValidationChanged(ValidationResult result) {
