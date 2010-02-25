@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     processes/rls.c \
     reporting.cpp \
     datawrappermime.cpp \
-    processresultsmodel.cpp
+    processresultsmodel.cpp \
+    clusteringitemdelegate.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -63,7 +64,8 @@ HEADERS += mainwindow.h \
     processes/rls.h \
     reporting.h \
     datawrappermime.h \
-    processresultsmodel.h
+    processresultsmodel.h \
+    clusteringitemdelegate.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \

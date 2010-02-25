@@ -18,6 +18,7 @@
 #include "cbdata.h"
 #include "padata.h"
 #include "processresultsmodel.h"
+#include "clusteringitemdelegate.h"
 
 ProcessDock::ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingScene, QWidget* parent):
         QDockWidget(factory->name(), parent), factory(factory), displayingScene(displayingScene)
@@ -109,9 +110,10 @@ void ProcessDock::start() {
     //// Process Results (left)
     QGroupBox* processGroup = new QGroupBox(tr("Process results"));
     QTreeView *tvResults = new QTreeView; // QTreeView looks better than a QTableView here
-    tvResults->setRootIsDecorated(false);
     resultsModel = new ProcessResultsModel(process->resultTypes(), this);
+    tvResults->setRootIsDecorated(false);
     tvResults->setModel(resultsModel);
+    tvResults->setItemDelegate(new ClusteringItemDelegate);
     insideLayout = new QHBoxLayout(processGroup);
     insideLayout->addWidget(tvResults);
     layout->addWidget(processGroup, 0, 0);
