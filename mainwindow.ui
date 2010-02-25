@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>812</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -181,6 +181,7 @@
    </attribute>
    <addaction name="actionZoomIn"/>
    <addaction name="actionZoomOut"/>
+   <addaction name="actionDisplayVoronoi"/>
    <addaction name="actionViewSettings"/>
    <addaction name="actionSaveImage"/>
   </widget>
@@ -258,6 +259,17 @@
   <action name="actionAutoZoom">
    <property name="text">
     <string>Auto Zoom</string>
+   </property>
+  </action>
+  <action name="actionDisplayVoronoi">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Display Voronoi</string>
+   </property>
+   <property name="toolTip">
+    <string>Display Voronoi graph</string>
    </property>
   </action>
  </widget>

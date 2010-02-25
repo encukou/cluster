@@ -179,3 +179,8 @@ void MainWindow::on_tvFiles_doubleClicked(QModelIndex index) {
         scene.removeData(type);
     }
 }
+
+void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)
+{
+    scene.setShowingVoronoi(checked);
+}

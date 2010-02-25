@@ -9,6 +9,8 @@ ClusteringScene::ClusteringScene()
     this->centroidItem = NULL;
     this->partitionItem = NULL;
     this->voronoiItem = NULL;
+
+    this->showingVoronoi = false;
 }
 
 void ClusteringScene::displayData(DataWrapperPtr data)
@@ -24,10 +26,12 @@ void ClusteringScene::displayData(DataWrapperPtr data)
 
             data->paintToScene(*this, this->centroidItem);
 
-            // TODO: if (displaying voronoi)
-            this->voronoiItem = new QGraphicsItemGroup();
-            data.dynamicCast<CBData>()->paintVoronoi(*this, this->voronoiItem);
-            this->addItem(this->voronoiItem);
+            if (this->showingVoronoi)
+            {
+                this->voronoiItem = new QGraphicsItemGroup();
+                data.dynamicCast<CBData>()->paintVoronoi(*this, this->voronoiItem);
+                this->addItem(this->voronoiItem);
+            }
 
             this->addItem(this->centroidItem);
 
@@ -37,9 +41,10 @@ void ClusteringScene::displayData(DataWrapperPtr data)
         case TSFILE:
             removeData(TSFILE);
             // remove also partition if it doesn't belong to this data
-            if (this->partitionData.data() != data.data())
+            if (this->partitionData)
             {
-                removeData(PAFILE);
+                if (this->partitionData.dynamicCast<PAData>()->getTrainingSet().data() != data.data())
+                    removeData(PAFILE);
             }
 
             this->dataItem = new QGraphicsItemGroup();
@@ -101,7 +106,7 @@ void ClusteringScene::removeData(CBFILETYPE type) {
                 emit dataRemoved(trainingData);
                 trainingData = (DataWrapperPtr)NULL;
             }
-        } break;
+        } // no break !!!
         case PAFILE: {
             if (this->partitionItem) {
                 this->removeItem(this->partitionItem);
@@ -131,5 +136,14 @@ DataWrapperPtr ClusteringScene::getData(CBFILETYPE type)
         case TSFILE: return this->trainingData;
         case PAFILE: return this->partitionData;
         default: return DataWrapperPtr();
+    }
+}
+
+void ClusteringScene::setShowingVoronoi(bool visible)
+{
+    this->showingVoronoi = visible;
+    if (this->centroidData)
+    {
+        this->displayData(this->centroidData);
     }
 }
