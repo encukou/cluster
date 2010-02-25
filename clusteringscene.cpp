@@ -1,4 +1,6 @@
 #include "clusteringscene.h"
+#include "tsdata.h"
+#include "padata.h"
 
 ClusteringScene::ClusteringScene()
 {
@@ -27,6 +29,11 @@ void ClusteringScene::displayData(DataWrapperPtr data)
             break;
         case TSFILE:
             removeData(TSFILE);
+            // remove also partition if it doesn't belong to this data
+            if (this->partitionData.data() != data.data())
+            {
+                removeData(PAFILE);
+            }
 
             this->dataItem = new QGraphicsItemGroup();
             this->dataItem->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(1024, 1024));
@@ -40,6 +47,12 @@ void ClusteringScene::displayData(DataWrapperPtr data)
             break;
         case PAFILE:
             removeData(PAFILE);
+            // display also training set which belongs to this partition
+            if (data.data() != NULL)
+            {
+                TSDataPtr ts_ptr = static_cast<PAData*>(data.data())->getTrainingSet();
+                displayData(ts_ptr);
+            }
 
             this->partitionItem = new QGraphicsItemGroup();
 
