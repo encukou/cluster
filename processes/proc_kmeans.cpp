@@ -50,6 +50,10 @@ void KMeans::process() {
 
     // TODO: The function returns 0 on success and 1 on failure. Take that into account.
 
+    FreeCodebook(codebook);
+    deallocate(codebook);
+    FreePartitioning(partitioning);
+    deallocate(partitioning);
 }
 
 static ProcessResultTypeList types;
