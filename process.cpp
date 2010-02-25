@@ -1,4 +1,4 @@
-#include "process.h"
+#include "process_h.h"
 #include "processoptions.h"
 
 ProcessResultType::ProcessResultType(QString name, QString label, QVariant::Type type):

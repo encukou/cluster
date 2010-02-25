@@ -4,7 +4,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QList>
 
-#include "process.h"
+#include "process_h.h"
 
 class ProcessFactoryModel: public QAbstractItemModel {
      Q_OBJECT

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QBasicTimer>
-#include "process.h"
+#include "process_h.h"
 
 class Animation: public QObject {
     Q_OBJECT

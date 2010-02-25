@@ -2,7 +2,7 @@
 #define PROCESSRESULTSMODEL_H
 
 #include <QtCore/QAbstractTableModel>
-#include "process.h"
+#include "process_h.h"
 
 class ClusteringScene;
 

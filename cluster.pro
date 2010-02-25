@@ -45,7 +45,7 @@ HEADERS += mainwindow.h \
     modules/memctrl.h \
     modules/interfc.h \
     modules/file.h \
-    process.h \
+    process_h.h \
     processfactorymodel.h \
     processes/kmeans.h \
     processoptions.h \
