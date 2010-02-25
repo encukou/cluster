@@ -14,6 +14,7 @@
 #include "iconhelper.h"
 #include "processdock.h"
 #include "padata.h"
+#include "clusteringitemdelegate.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     fileListModel = new FileListModel(&scene, this);
     ui->tvFiles->setModel(fileListModel);
+    ui->tvFiles->setItemDelegate(new ClusteringItemDelegate(this));
 
     processFactoryModel = new ProcessFactoryModel(this);
     ui->lvNewProcess->setModel(processFactoryModel);

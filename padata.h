@@ -29,6 +29,5 @@ public:
 
 // Make PADataPtr usable in a QVariant
 typedef QSharedPointer<PAData> PADataPtr;
-Q_DECLARE_METATYPE(PADataPtr);
 
 #endif // PADATA_H

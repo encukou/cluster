@@ -15,7 +15,7 @@ void PrintIterationKM(int quietLevel, int i, int iter, double error,
                       double time, void* codebook) {
     QVariantMap results;
     results["error"] = error;
-    results["output_cb"] = QVariant::fromValue<CBDataPtr>(CBDataPtr(new CBData((CODEBOOK*)codebook)));
+    results["output"] = QVariant::fromValue<DataWrapperPtr>(DataWrapperPtr(new CBData((CODEBOOK*)codebook)));
     Process::c_report_static(results);
 }
 

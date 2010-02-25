@@ -34,5 +34,6 @@ protected:
 };
 
 typedef QSharedPointer<DataWrapper> DataWrapperPtr;
+Q_DECLARE_METATYPE(DataWrapperPtr);
 
 #endif // DATAWRAPPER_H

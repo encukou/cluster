@@ -25,6 +25,5 @@ public:
 
 // Make TSDataPtr usable in a QVariant
 typedef QSharedPointer<TSData> TSDataPtr;
-Q_DECLARE_METATYPE(TSDataPtr);
 
 #endif // TSDATA_H

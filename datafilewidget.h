@@ -53,7 +53,9 @@ protected:
             if(!value.isValid()) {
                 setCaption(tr("(Drag a %1 here)").arg(fileDescription));
             }else{
-                DataPtr ptr = value.value<DataPtr>();
+                DataWrapperPtr p = value.value<DataWrapperPtr>();
+                DataPtr ptr;
+                if(p) ptr = value.value<DataWrapperPtr>().dynamicCast<DataType>();
                 if(ptr) {
                     this->data = ptr;
                     setCaption(this->data->name());
@@ -69,7 +71,7 @@ protected:
         DataWrapperPtr newData = DataWrapperMime::getData<DataType>(event->mimeData());
         if(newData) {
             data = newData;
-            if(options->set(option, QVariant::fromValue<DataPtr>(data.dynamicCast<DataType>()))) {
+            if(options->set(option, QVariant::fromValue<DataWrapperPtr>(data))) {
             event->setDropAction(Qt::CopyAction);
             event->accept();
             }

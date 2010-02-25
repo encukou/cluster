@@ -16,8 +16,8 @@ KMeans::KMeans(const ProcessOptionsPtr options, QObject* parent):
 void KMeans::process() {
     // TODO
 
-    TSDataPtr ts = options->get<TSDataPtr>("input");
-    CBDataPtr cb = options->get<CBDataPtr>("initial_cb");
+    TSDataPtr ts = options->get<DataWrapperPtr>("input").dynamicCast<TSData>();
+    CBDataPtr cb = options->get<DataWrapperPtr>("initial_cb").dynamicCast<CBData>();
 
     if(!ts) return;
     TRAININGSET* trainingset = ts->getDataCopy();
@@ -61,7 +61,7 @@ static ProcessResultTypeList types;
 ProcessResultTypeList KMeans::resultTypes() const {
     if(types.empty()) {
         // TODO: Nicer API
-        types.append(ProcessResultTypePtr(new ProcessResultType("output_cb", tr("Codebook"), (QVariant::Type) QVariant::nameToType("CBDataPtr"))));
+        types.append(ProcessResultTypePtr(new ProcessResultType("output", tr("Codebook"), (QVariant::Type) QVariant::nameToType("CBDataPtr"))));
         types.append(ProcessResultTypePtr(new ProcessResultType("error", tr("Error"), QVariant::Int)));
     }
     return types;
@@ -100,9 +100,9 @@ ProcessOptionsPtr KMeansFactory::newOptions() const {
 }
 
 ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, ProcessOptionPtr lastChanged) {
-    TSDataPtr input = options->get<TSDataPtr>("input");
+    TSDataPtr input = options->get<DataWrapperPtr>("input").dynamicCast<TSData>(); // TODO: Better API
     InitType init_type = (InitType) options->get<int>("init_type");
-    CBDataPtr initial_cb = options->get<CBDataPtr>("initial_cb");
+    CBDataPtr initial_cb = options->get<DataWrapperPtr>("initial_cb").dynamicCast<CBData>();
 
     ValidationResult result;
 

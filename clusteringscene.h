@@ -20,8 +20,9 @@ public slots:
     void removeData(DataWrapperPtr data);
 
 public:
-    bool isDataDisplayed(DataWrapperPtr data);
-    DataWrapperPtr getData(CBFILETYPE type);
+    bool isDataDisplayed(DataWrapperPtr data) const;
+    DataWrapperPtr getData(CBFILETYPE type) const;
+    QVariant decorationForData(DataWrapperPtr data) const;
 signals:
     void dataDisplayed(DataWrapperPtr data);
     void dataRemoved(DataWrapperPtr data);

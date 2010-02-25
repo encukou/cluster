@@ -70,7 +70,7 @@ ProcessDock::ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingS
     this->setWidget(optionsWidget);
 
     // Set process input automatically...
-    if(displayingScene->getData(TSFILE)) processOptions->set("input", QVariant::fromValue<TSDataPtr>(displayingScene->getData(TSFILE).dynamicCast<TSData>()));
+    if(displayingScene->getData(TSFILE)) processOptions->set("input", QVariant::fromValue<DataWrapperPtr>(displayingScene->getData(TSFILE)));
 }
 
 void ProcessDock::optionValidationChanged(ValidationResult result) {
@@ -110,7 +110,7 @@ void ProcessDock::start() {
     //// Process Results (left)
     QGroupBox* processGroup = new QGroupBox(tr("Process results"));
     QTreeView *tvResults = new QTreeView; // QTreeView looks better than a QTableView here
-    resultsModel = new ProcessResultsModel(process->resultTypes(), this);
+    resultsModel = new ProcessResultsModel(process->resultTypes(), displayingScene, this);
     tvResults->setRootIsDecorated(false);
     tvResults->setModel(resultsModel);
     tvResults->setItemDelegate(new ClusteringItemDelegate);
@@ -253,7 +253,7 @@ void ProcessDock::updatePlayState() {
 void ProcessDock::frameChanged(int frame) {
     QVariantMap results = animation->resultsOfIteration(frame);
     resultsModel->setResults(animation->resultsOfIteration(frame));
-    if(!displayingScene->isDataDisplayed(processOptions->get<TSDataPtr>("input"))) return;
-    CBDataPtr cb = results.value("output_cb").value<CBDataPtr>();
+    if(!displayingScene->isDataDisplayed(processOptions->get<DataWrapperPtr>("input"))) return;
+    DataWrapperPtr cb = results.value("output").value<DataWrapperPtr>();
     if(cb) displayingScene->displayData(cb);
 }

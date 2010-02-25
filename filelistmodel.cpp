@@ -37,7 +37,7 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
                 DataWrapperPtr p = getDataFile(ItemType(index.internalId()), index.row());
                 if(p) {
                     switch((ColumnIndex)index.column()) {
-                        case FLC_NAME: return p->name();
+                        case FLC_NAME: return QVariant::fromValue<DataWrapperPtr>(p);
                         case FLC_SIZE: return p->getDataSize();
                         case FLC_DIMENSIONS: return p->getVectorSize();
                         case FLC_COUNT: return QVariant();

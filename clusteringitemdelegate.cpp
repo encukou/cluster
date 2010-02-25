@@ -33,12 +33,5 @@ QSize ClusteringItemDelegate::sizeHint(const QStyleOptionViewItem &option, const
 // TODO: Most of this function should be moved to the DataWrapper class
 // Maybe storing only DataWrapperPtr in QVariant is a better design...
 DataWrapperPtr ClusteringItemDelegate::dataFromIndex(const QModelIndex &index) const {
-    DataWrapperPtr ptr;
-    { TSDataPtr p = index.data().value<TSDataPtr>(); if(p) ptr = p.dynamicCast<DataWrapper>(); }
-    if(ptr) return ptr;
-    { CBDataPtr p = index.data().value<CBDataPtr>(); if(p) ptr = p.dynamicCast<DataWrapper>(); }
-    if(ptr) return ptr;
-    { PADataPtr p = index.data().value<PADataPtr>(); if(p) ptr = p.dynamicCast<DataWrapper>(); }
-    if(ptr) return ptr;
-    return DataWrapperPtr();
+    return index.data().value<DataWrapperPtr>();
 }

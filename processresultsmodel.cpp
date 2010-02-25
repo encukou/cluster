@@ -1,9 +1,10 @@
 #include "processresultsmodel.h"
 #include <QtDebug>
 
-ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultTypes, QObject* parent):
+ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultTypes, ClusteringScene* displayingScene, QObject* parent):
         QAbstractTableModel(parent),
         registeredResultTypes(registeredResultTypes),
+        displayingScene(displayingScene),
         ready(false)
 {
     while(registeredResults.size() < registeredResultTypes.size()) {
@@ -59,30 +60,31 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
                 return Qt::AlignLeft;
             }
         } break;
-        case Qt::DisplayRole: {
+        default: {
             int row = index.row();
             int unregRow = row - registeredResultTypes.size();
+            QVariant rv;
             if(index.column() == 0) {
                 // Result name
                 if(unregRow < 0) {
                     // registered
-                    return registeredResultTypes[row]->label;
+                    if(role == Qt::DisplayRole) rv = registeredResultTypes[row]->label;
                 }else{
                     // unregistered
-                    return (unregisteredResults.constBegin() + unregRow).key();
+                    if(role == Qt::DisplayRole) rv = (unregisteredResults.constBegin() + unregRow).key();
                 }
             }else{
                 // Result value
                 if(unregRow < 0) {
                     // registered
-                    return registeredResults[row];
+                    if(role == Qt::DisplayRole) rv = registeredResults[row];
                 }else{
                     // unregistered
-                    return (unregisteredResults.constBegin() + unregRow).value();
+                    if(role == Qt::DisplayRole) rv = (unregisteredResults.constBegin() + unregRow).value();
                 }
             }
+            return rv;
         } break;
-        default: return QVariant();
     }    
 }
 

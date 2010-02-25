@@ -4,10 +4,12 @@
 #include <QtCore/QAbstractTableModel>
 #include "process.h"
 
+class ClusteringScene;
+
 class ProcessResultsModel: public QAbstractTableModel {
     Q_OBJECT
 public:
-    ProcessResultsModel(ProcessResultTypeList registeredResultTypes, QObject* parent=NULL);
+    ProcessResultsModel(ProcessResultTypeList registeredResultTypes, ClusteringScene* displayingScene=NULL, QObject* parent=NULL);
 public slots:
     void setResults(QVariantMap results);
 public:
@@ -19,6 +21,7 @@ protected:
     QList<QVariant> registeredResults;
     QVariantMap unregisteredResults;
     ProcessResultTypeList registeredResultTypes;
+    ClusteringScene* displayingScene;
     bool ready;
 };
 

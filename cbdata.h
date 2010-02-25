@@ -24,6 +24,5 @@ public:
 
 // Make CBDataPtr usable in a QVariant
 typedef QSharedPointer<CBData> CBDataPtr;
-Q_DECLARE_METATYPE(CBDataPtr);
 
 #endif // CBDATA_H

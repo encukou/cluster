@@ -94,12 +94,11 @@ void ClusteringScene::removeData(DataWrapperPtr data) {
     if(isDataDisplayed(data)) removeData(data->getType());
 }
 
-bool ClusteringScene::isDataDisplayed(DataWrapperPtr data) {
+bool ClusteringScene::isDataDisplayed(DataWrapperPtr data) const {
     return data == centroidData || data == trainingData || data == partitionData;
 }
 
-DataWrapperPtr ClusteringScene::getData(CBFILETYPE type)
-{
+DataWrapperPtr ClusteringScene::getData(CBFILETYPE type) const {
     switch (type)
     {
         case CBFILE: return this->centroidData;
