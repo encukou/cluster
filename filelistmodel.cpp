@@ -217,8 +217,8 @@ QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
     return new QMimeData();
 }
 
-bool FileListModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int, int, const QModelIndex&) {
+bool FileListModel::dropMimeData(const QMimeData*, Qt::DropAction action, int, int, const QModelIndex&) {
     if (action == Qt::IgnoreAction) return true;
-    qDebug() << data->formats();
+    // TODO
     return false;
 }

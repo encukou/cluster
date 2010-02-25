@@ -60,8 +60,9 @@ static ProcessResultTypeList types;
 
 ProcessResultTypeList KMeans::resultTypes() const {
     if(types.empty()) {
-        types.append(ProcessResultTypePtr(new ProcessResultType("codebook", (QVariant::Type) QVariant::nameToType("CBDataPtr"))));
-        types.append(ProcessResultTypePtr(new ProcessResultType("mse", QVariant::Int)));
+        // TODO: Nicer API
+        types.append(ProcessResultTypePtr(new ProcessResultType("output_cb", tr("Codebook"), (QVariant::Type) QVariant::nameToType("CBDataPtr"))));
+        types.append(ProcessResultTypePtr(new ProcessResultType("error", tr("Error"), QVariant::Int)));
     }
     return types;
 }

@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     processes/proc_kmeans.cpp \
     processes/rls.c \
     reporting.cpp \
-    datawrappermime.cpp
+    datawrappermime.cpp \
+    processresultsmodel.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -61,7 +62,8 @@ HEADERS += mainwindow.h \
     processes/proc_kmeans.h \
     processes/rls.h \
     reporting.h \
-    datawrappermime.h
+    datawrappermime.h \
+    processresultsmodel.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \

@@ -10,8 +10,9 @@
 #include "processoptions.h"
 
 struct ProcessResultType {
-    ProcessResultType(QString name, QVariant::Type type);
+    ProcessResultType(QString name, QString label, QVariant::Type type);
     QString name;
+    QString label;
     QVariant::Type type;
 };
 

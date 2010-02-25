@@ -8,12 +8,16 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QSpinBox>
 #include <QtGui/QSlider>
+#include <QtGui/QTreeView>
+#include <QtGui/QTableView>
+#include <QtGui/QHeaderView>
 #include <QtDebug>
 #include "iconhelper.h"
 #include "clusteringscene.h"
 #include "tsdata.h"
 #include "cbdata.h"
 #include "padata.h"
+#include "processresultsmodel.h"
 
 ProcessDock::ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingScene, QWidget* parent):
         QDockWidget(factory->name(), parent), factory(factory), displayingScene(displayingScene)
@@ -100,10 +104,16 @@ void ProcessDock::start() {
     ///// Make the process widget ////
     processWidget = new QWidget();
     QGridLayout* layout = new QGridLayout(processWidget);
+    QBoxLayout* insideLayout;
 
     //// Process Results (left)
     QGroupBox* processGroup = new QGroupBox(tr("Process results"));
-    // TODO
+    QTreeView *tvResults = new QTreeView; // QTreeView looks better than a QTableView here
+    tvResults->setRootIsDecorated(false);
+    resultsModel = new ProcessResultsModel(process->resultTypes(), this);
+    tvResults->setModel(resultsModel);
+    insideLayout = new QHBoxLayout(processGroup);
+    insideLayout->addWidget(tvResults);
     layout->addWidget(processGroup, 0, 0);
 
     //// Blank middle column
@@ -114,7 +124,6 @@ void ProcessDock::start() {
     //// Animation Controls (right)
     QGroupBox* animGroup = new QGroupBox(tr("Animation Controls"));
     QBoxLayout* animLayout = new QVBoxLayout(animGroup);
-    QBoxLayout* insideLayout;
 
     // UI notes:
     // I'm still not sure about the layout here, but having Previous and Next
@@ -240,10 +249,9 @@ void ProcessDock::updatePlayState() {
 }
 
 void ProcessDock::frameChanged(int frame) {
-    qDebug() << frame;
+    QVariantMap results = animation->resultsOfIteration(frame);
+    resultsModel->setResults(animation->resultsOfIteration(frame));
     if(!displayingScene->isDataDisplayed(processOptions->get<TSDataPtr>("input"))) return;
-    qDebug() << animation->resultsOfIteration(frame);
-    CBDataPtr cb = animation->resultsOfIteration(frame).value("output_cb").value<CBDataPtr>();
-    qDebug() << cb;
+    CBDataPtr cb = results.value("output_cb").value<CBDataPtr>();
     if(cb) displayingScene->displayData(cb);
 }

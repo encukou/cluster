@@ -1,8 +1,8 @@
 #include "process.h"
 #include "processoptions.h"
 
-ProcessResultType::ProcessResultType(QString name, QVariant::Type type):
-        name(name), type(type)
+ProcessResultType::ProcessResultType(QString name, QString label, QVariant::Type type):
+        name(name), label(label), type(type)
 {}
 
 Process::Process(QObject* parent):

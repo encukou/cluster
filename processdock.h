@@ -34,6 +34,7 @@ protected:
     class QSlider* slider;
     class QToolButton* btnPlay;
     ClusteringScene* displayingScene;
+    class ProcessResultsModel* resultsModel;
 };
 
 #endif // PROCESSDOCK_H
