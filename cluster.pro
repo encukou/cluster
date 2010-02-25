@@ -31,7 +31,10 @@ SOURCES += main.cpp \
     processes/proc_kmeans.cpp \
     processes/rls.c \
     reporting.cpp \
-    datawrappermime.cpp
+    datawrappermime.cpp \
+    modules/voronoi.c \
+    modules/stack.c \
+    modules/sort.c
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -61,7 +64,10 @@ HEADERS += mainwindow.h \
     processes/proc_kmeans.h \
     processes/rls.h \
     reporting.h \
-    datawrappermime.h
+    datawrappermime.h \
+    modules/voronoi.h \
+    modules/stack.h \
+    modules/sort.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \

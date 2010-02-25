@@ -1,12 +1,14 @@
 #include "clusteringscene.h"
 #include "tsdata.h"
 #include "padata.h"
+#include "cbdata.h"
 
 ClusteringScene::ClusteringScene()
 {
     this->dataItem = NULL;
     this->centroidItem = NULL;
     this->partitionItem = NULL;
+    this->voronoiItem = NULL;
 }
 
 void ClusteringScene::displayData(DataWrapperPtr data)
@@ -21,6 +23,11 @@ void ClusteringScene::displayData(DataWrapperPtr data)
             this->centroidItem->setZValue(1);
 
             data->paintToScene(*this, this->centroidItem);
+
+            // TODO: if (displaying voronoi)
+            this->voronoiItem = new QGraphicsItemGroup();
+            data.dynamicCast<CBData>()->paintVoronoi(*this, this->voronoiItem);
+            this->addItem(this->voronoiItem);
 
             this->addItem(this->centroidItem);
 
@@ -73,6 +80,11 @@ void ClusteringScene::displayData(DataWrapperPtr data)
 void ClusteringScene::removeData(CBFILETYPE type) {
     switch (type) {
         case CBFILE: {
+            if (this->voronoiItem) {
+                this->removeItem(this->voronoiItem);
+                delete this->voronoiItem;
+                this->voronoiItem = NULL;
+            }
             if (this->centroidItem) {
                 this->removeItem(this->centroidItem);
                 delete this->centroidItem;

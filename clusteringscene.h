@@ -11,6 +11,7 @@ private:
     QGraphicsItemGroup *dataItem;
     QGraphicsItemGroup *centroidItem;
     QGraphicsItemGroup *partitionItem;
+    QGraphicsItemGroup *voronoiItem;
 
 public:
     ClusteringScene();
