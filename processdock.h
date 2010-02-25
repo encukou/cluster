@@ -2,7 +2,7 @@
 #define PROCESSDOCK_H
 
 #include <QtGui/QDockWidget>
-#include "process.h"
+#include "process_h.h"
 #include "animation.h"
 
 class ClusteringScene;
