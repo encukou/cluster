@@ -23,6 +23,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void setCaption(QString);
+    void paintEvent(QPaintEvent *event);
     QSize sizeHint() const;
     QString my_mimetype;
     QString fileDescription;
@@ -31,6 +32,7 @@ protected:
     ProcessOptionPtr option;
     CBFILETYPE myFileType;
     QString m_caption;
+    bool hasValidData;
 };
 
 /** Concrete class for widgets that accept DataWrappers (TrainingSets, Codebooks etc.)
@@ -50,6 +52,7 @@ public:
 protected:
     void valueChange(ProcessOptionPtr option, QVariant value) {
         if(option == this->option) {
+            hasValidData = false;
             if(!value.isValid()) {
                 setCaption(tr("(Drag a %1 here)").arg(fileDescription));
             }else{
@@ -59,10 +62,12 @@ protected:
                 if(ptr) {
                     this->data = ptr;
                     setCaption(this->data->name());
+                    hasValidData = true;
                 }else{
                     setCaption(tr("(Something other than a %1 is selected!)").arg(fileDescription));
                 }
             }
+            update();
         }
     }
 

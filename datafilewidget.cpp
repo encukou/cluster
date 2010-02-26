@@ -5,7 +5,7 @@
 #include "processoptions_types.h"
 
 AbstractDataFileWidget::AbstractDataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, CBFILETYPE myFileType, QWidget* parent):
-        QLabel(parent), options(options), option(option), myFileType(myFileType)
+        QLabel(parent), options(options), option(option), myFileType(myFileType), hasValidData(false)
 {
     setAcceptDrops(true);
     setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
@@ -25,6 +25,26 @@ void AbstractDataFileWidget::dragEnterEvent(QDragEnterEvent* event) {
         event->setDropAction(Qt::CopyAction);
         event->accept();
     }
+}
+
+void AbstractDataFileWidget::paintEvent(QPaintEvent *event)
+{
+    QLabel::paintEvent(event);
+    QString ext;
+
+    QPainter painter(this);
+    if (!hasValidData) painter.setPen(Qt::gray);
+    painter.setFont(QFont("Sans", 11));
+
+    switch (this->myFileType)
+    {
+        case TSFILE: ext = "TS"; break;
+        case CBFILE: ext = "CB"; break;
+        case PAFILE: ext = "PA"; break;
+        default: return;
+    }
+
+    painter.drawText(this->rect(), Qt::AlignCenter, ext);
 }
 
 void AbstractDataFileWidget::mousePressEvent(QMouseEvent* event) {
