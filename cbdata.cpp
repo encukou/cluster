@@ -12,6 +12,18 @@ CBData::CBData(QString &fileName)
     setFileName(fileName, "cb");
 }
 
+CBData::CBData(CODEBOOK* source) {
+    this->dataType = CBFILE;
+    m_fileName = "(Generated codebook)";
+    CreateNewCodebook((&codebook), BookSize(source), source);
+    CopyCodebook(source, (&codebook));
+}
+
+CBData::~CBData()
+{
+    FreeCodebook(&this->codebook);
+}
+
 void* CBData::getData()
 {
     return &this->codebook;
@@ -75,11 +87,4 @@ CODEBOOK* CBData::getDataCopy() {
     CreateNewCodebook(rv, BookSize((&codebook)), (&codebook));
     CopyCodebook((&codebook), rv);
     return rv;
-}
-
-CBData::CBData(CODEBOOK* source) {
-    this->dataType = CBFILE;
-    m_fileName = "(Generated codebook)";
-    CreateNewCodebook((&codebook), BookSize(source), source);
-    CopyCodebook(source, (&codebook));
 }

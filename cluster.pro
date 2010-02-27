@@ -36,7 +36,9 @@ SOURCES += main.cpp \
     clusteringitemdelegate.cpp \
     modules/voronoi.c \
     modules/stack.c \
-    modules/sort.c
+    modules/sort.c \
+    modules/fvec.c \
+    modules/textfile.c
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -71,7 +73,9 @@ HEADERS += mainwindow.h \
     clusteringitemdelegate.h \
     modules/voronoi.h \
     modules/stack.h \
-    modules/sort.h
+    modules/sort.h \
+    modules/fvec.h \
+    modules/textfile.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \

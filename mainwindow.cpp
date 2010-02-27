@@ -203,3 +203,21 @@ void MainWindow::on_actionSaveImage_triggered()
         image.save(fileName, "PNG");
     }
 }
+
+void MainWindow::on_actionImport_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Import text file", QString(), "Text files (*.txt)");
+
+    if (!fileName.isNull())
+    {
+        TSData *ts = NULL;
+        if (TSData::fromTextFile(fileName, &ts))
+        {
+            // TODO: do something with the data
+        }
+        else
+        {
+            QMessageBox::critical(this, "Import error!", "Unable to process text file!");
+        }
+    }
+}

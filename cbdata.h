@@ -11,8 +11,9 @@ private:
     CODEBOOK codebook;
 public:
     CBData(QString &fileName);
-
     CBData(CODEBOOK* source); // takes a COPY of the given data
+
+    virtual ~CBData();
 
     void* getData();
     int getDataSize();

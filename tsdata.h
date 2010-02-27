@@ -12,6 +12,9 @@ private:
     TRAININGSET trainingSet;
 public:
     TSData(QString &fileName);
+    TSData(TRAININGSET *ts);
+
+    virtual ~TSData();
 
     void* getData();
     int getDataSize();
@@ -20,6 +23,8 @@ public:
     void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0);
 
     TRAININGSET* getDataCopy();
+
+    static bool fromTextFile(QString &fileName, TSData **ts);
 };
 
 
