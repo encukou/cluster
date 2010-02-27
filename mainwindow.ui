@@ -19,7 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QGraphicsView" name="gvView">
+     <widget class="ClusteringGraphicsView" name="gvView">
       <property name="dragMode">
        <enum>QGraphicsView::ScrollHandDrag</enum>
       </property>
@@ -283,6 +283,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClusteringGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>clusteringgraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

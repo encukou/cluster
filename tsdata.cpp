@@ -196,5 +196,7 @@ bool TSData::fromTextFile(QString &fileName, TSData **ts)
     fvDeleteSet(Data, count);
     fvDeleteSet(minMax, dim);
 
+    FreeCodebook(&generated_ts);
+
     return true;
 }

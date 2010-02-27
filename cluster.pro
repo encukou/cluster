@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     modules/stack.c \
     modules/sort.c \
     modules/fvec.c \
-    modules/textfile.c
+    modules/textfile.c \
+    clusteringgraphicsview.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -75,7 +76,8 @@ HEADERS += mainwindow.h \
     modules/stack.h \
     modules/sort.h \
     modules/fvec.h \
-    modules/textfile.h
+    modules/textfile.h \
+    clusteringgraphicsview.h
 FORMS += mainwindow.ui \
     aboutdialog.ui
 QMAKE_CXXFLAGS += -Werror \
