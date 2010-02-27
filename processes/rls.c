@@ -136,7 +136,7 @@ int kmIter, int deterministic, int quietLevel, int useInitial)
   }
   
   PrintHeader(quietLevel);
-  PrintIterationRLS(quietLevel, 0, error, GetClock(c), 1);
+  PrintIterationRLS(quietLevel, 0, error, GetClock(c), 1, pCB);
 
   if (deterministic)
   {
@@ -191,7 +191,7 @@ int kmIter, int deterministic, int quietLevel, int useInitial)
       }
     }
 
-    PrintIterationRLS(quietLevel, i+1, error, GetClock(c), better);
+    PrintIterationRLS(quietLevel, i+1, error, GetClock(c), better, &CBnew);
   }
 
   error = CALC_MSE(currError);  

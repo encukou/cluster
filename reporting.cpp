@@ -26,8 +26,15 @@ void PrintFooterKM(int quietLevel, double error, int repeats,
                    double totalTime, int totalIter) {}
 
 void PrintIterationRLS(int quietLevel, int iter, double error, double time,
-                       int better) {
-    Q_ASSERT_X(false, __FILE__, "// TODO: RLS reporting");
+                       int better, void* codebook) {
+    if (better)
+    {
+        QVariantMap results;
+        results["error"] = error;
+        results["output"] = QVariant::fromValue<DataWrapperPtr>(DataWrapperPtr(new CBData((CODEBOOK*)codebook)));
+        results["iteration_num"] = iter;
+        Process::c_report_static(results);
+    }
 }
 
 void PrintFooterRLS(int quietLevel, int iter, double error, double time) {

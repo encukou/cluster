@@ -16,7 +16,7 @@ void PrintIterationKM(int quietLevel, int i, int iter, double error,
     double time, void* codebook);
 
 void PrintIterationRLS(int quietLevel, int iter, double error, double time,
-    int better);
+    int better, void* codebook);
 
 void PrintRepeat(int quietLevel, int repeats, int i, int iter, double error,
     double time, int better);

@@ -9,6 +9,7 @@
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/proc_kmeans.h"
+#include "processes/proc_rs.h"
 #include "datawrapper.h"
 #include "aboutdialog.h"
 #include "iconhelper.h"
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lvNewProcess->setModel(processFactoryModel);
 
     processFactoryModel->addFactory(new KMeansFactory);
+    processFactoryModel->addFactory(new RandomSwapFactory);
 
     // Open files in the current directory, for convenience
     foreach(const QFileInfo& fi, QDir::current().entryInfoList(QStringList() << "*.ts" << "*.cb" << "*.pa", QDir::Files | QDir::Readable, QDir::Time)) {
