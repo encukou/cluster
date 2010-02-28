@@ -13,8 +13,10 @@ ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultT
     while(registeredResults.size() < registeredResultTypes.size()) {
         registeredResults.append(QVariant());
     }
-    connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
-    connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
+    if(displayingScene) {
+        connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
+        connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
+    }
 }
 
 void ProcessResultsModel::setResults(QVariantMap results) {
@@ -98,14 +100,16 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
             }else if(role == Qt::DisplayRole) {
                 return rv;
             }
-        } // fall through (!!)
+        } break;
         default: return QVariant();
     }
+    return QVariant();
 }
 
 QMimeData* ProcessResultsModel::mimeData(const QModelIndexList& indexes) const {
     DataWrapperPtr datafile = data(indexes.value(0), Qt::DisplayRole).value<DataWrapperPtr>();
     if(datafile) {
+        qDebug() << "mimedata";
         return new DataWrapperMime(datafile);
     }else{
         return new QMimeData();
@@ -120,6 +124,10 @@ Qt::ItemFlags ProcessResultsModel::flags(const QModelIndex &index) const {
     }else{
         return commonFlags;
     }
+}
+
+Qt::DropActions ProcessResultsModel::supportedDropActions() const {
+    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 QVariant ProcessResultsModel::headerData(int section, Qt::Orientation orientation, int role) const {

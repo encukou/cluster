@@ -24,6 +24,7 @@ class FileListModel: public QAbstractItemModel {
         FLC_NAME,
         FLC_SIZE,
         FLC_DIMENSIONS,
+        FLC_PATH,
 
         FLC_COUNT
     };
@@ -33,10 +34,10 @@ public:
     ~FileListModel();
 
     /** Add a file to the model
-      *
-      * The model takes ownership of the file.
+      * The model takes ownership of the file if given as a C-pointer to DataWrapper.
       */
     QModelIndex addDataFile(DataWrapper* file);
+    QModelIndex addDataFile(DataWrapperPtr file);
     QModelIndex indexForFile(DataWrapperPtr file) const;
     QModelIndex indexForFile(class QFileInfo& fileInfo) const;
     DataWrapperPtr fileForIndex(QModelIndex index) const;
@@ -57,6 +58,7 @@ public:
     QStringList mimeTypes() const;
     QMimeData* mimeData(const QModelIndexList &indexes) const;
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+    Qt::DropActions supportedDropActions() const;
 
 protected slots:
     void handleDataChange(DataWrapperPtr);

@@ -42,6 +42,7 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const {
                             case FLC_NAME: return QVariant::fromValue<DataWrapperPtr>(p);
                             case FLC_SIZE: return p->getDataSize();
                             case FLC_DIMENSIONS: return p->getVectorSize();
+                            case FLC_PATH: return p->filePath();
                             case FLC_COUNT: return QVariant();
                         }
                     }else if(index.column() ==0 && role == Qt::DecorationRole) {
@@ -81,6 +82,7 @@ QVariant FileListModel::headerData(int section, Qt::Orientation orientation, int
         case FLC_NAME: return tr("Name");
         case FLC_SIZE: return tr("Vectors");
         case FLC_DIMENSIONS: return tr("Dimensionality");
+        case FLC_PATH: return tr("File path");
         case FLC_COUNT: return QVariant();
     }
     return QVariant();
@@ -111,15 +113,19 @@ int FileListModel::rowCount(const QModelIndex &parent) const {
 
 int FileListModel::columnCount(const QModelIndex &parent) const {
     if(!parent.isValid()) {
-        return 3;
+        return FLC_COUNT;
     }else if(parent.internalId() == FL_PARENT) {
-        return 3;
+        return FLC_COUNT;
     }else{
         return 0;
     }
 }
 
 QModelIndex FileListModel::addDataFile(DataWrapper* file) {
+    return addDataFile(DataWrapperPtr(file));
+}
+
+QModelIndex FileListModel::addDataFile(DataWrapperPtr file) {
     ItemType type = FL_COUNT;
     switch(file->getType()) {
         // TODO: a function that maps filetype to itemtype
@@ -129,14 +135,18 @@ QModelIndex FileListModel::addDataFile(DataWrapper* file) {
         case NOTFOUND: return QModelIndex();
     }
     if(type < FL_COUNT) {
+        foreach(DataWrapperPtr existingFile, m_data[type]) {
+            // If we already have it, skip!
+            if(existingFile == file) return indexForFile(existingFile);
+            if(existingFile->filePath() == file->filePath()) return indexForFile(existingFile);
+        }
         beginInsertRows(index(type, 0), m_data[type].size(), m_data[type].size());
-        m_data[type].append(DataWrapperPtr(file));
+        m_data[type].append(file);
         endInsertRows();
         return createIndex(m_data[type].size()-1, 0, type);
     }else{
         return QModelIndex();
     }
-
 }
 
 QModelIndex FileListModel::indexForFile(DataWrapperPtr file) const {
@@ -205,7 +215,12 @@ void FileListModel::handleDataChange(DataWrapperPtr data) {
 QStringList FileListModel::mimeTypes() const {
     QStringList types;
     types << "text/uri-list";
+    types << "application/x-clustering-datafile";
     return types;
+}
+
+Qt::DropActions FileListModel::supportedDropActions() const {
+    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
@@ -217,8 +232,13 @@ QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
     return new QMimeData();
 }
 
-bool FileListModel::dropMimeData(const QMimeData*, Qt::DropAction action, int, int, const QModelIndex&) {
+bool FileListModel::dropMimeData(const QMimeData* mimeData, Qt::DropAction action, int, int, const QModelIndex&) {
+    qDebug() << "Drop";
     if (action == Qt::IgnoreAction) return true;
-    // TODO
+    qDebug() << "!";
+    foreach(DataWrapperPtr data, DataWrapperMime::getDataWrappers(mimeData)) {
+        qDebug() << "ADF1";
+        addDataFile(data);
+    }
     return false;
 }

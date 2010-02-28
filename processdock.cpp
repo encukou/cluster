@@ -115,6 +115,7 @@ void ProcessDock::start() {
     tvResults->setModel(resultsModel);
     tvResults->setItemDelegate(new ClusteringItemDelegate);
     tvResults->setDragEnabled(true);
+    tvResults->setDragDropMode(QTreeView::DragOnly);
     insideLayout = new QHBoxLayout(processGroup);
     insideLayout->addWidget(tvResults);
     layout->addWidget(processGroup, 0, 0);

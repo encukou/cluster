@@ -11,13 +11,14 @@ bool DataWrapperMime::hasData(CBFILETYPE type) const {
 bool DataWrapperMime::hasFormat(const QString& mimeType) const {
     if(!m_data) return false;
     if((mimeType == "text/uri-list") && !m_data->filePath().isEmpty()) return true;
+    if(mimeType == "application/x-clustering-datafile") return true;
     // else
     return false;
 }
 
 QStringList DataWrapperMime::formats() const {
     if(!m_data) return QStringList();
-    return QStringList("text/uri-list");
+    return QStringList() << "text/uri-list" << "application/x-clustering-datafile";
 }
 
 QVariant DataWrapperMime::retrieveData(const QString& mimeType, QVariant::Type) const {
