@@ -35,6 +35,7 @@ void DataWrapper::setFileName(QString fileName, QString stdExtension) {
         m_fileName = fi.fileName();
     }
     m_filePath = fi.canonicalFilePath();
+    suggestedFilename = fi.fileName();
 }
 
 QString DataWrapper::name() {

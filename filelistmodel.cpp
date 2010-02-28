@@ -14,6 +14,7 @@ FileListModel::FileListModel(ClusteringScene* displayingScene, QObject *parent):
         connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(handleDataChange(DataWrapperPtr)));
         connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(handleDataChange(DataWrapperPtr)));
     }
+    setSupportedDragActions(Qt::CopyAction | Qt::LinkAction);
 }
 
 FileListModel::~FileListModel() {
@@ -220,7 +221,7 @@ QStringList FileListModel::mimeTypes() const {
 }
 
 Qt::DropActions FileListModel::supportedDropActions() const {
-    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
+    return Qt::CopyAction | Qt::LinkAction;
 }
 
 QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {

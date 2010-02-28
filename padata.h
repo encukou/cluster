@@ -15,6 +15,8 @@ public:
     PAData(QString &fileName, TSDataPtr ts_ptr);
     PAData(TSDataPtr ts_ptr);
 
+    bool save(QString filename) const;
+
     void* getData();
     int getDataSize();
     int getVectorSize();

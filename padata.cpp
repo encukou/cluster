@@ -43,10 +43,12 @@ PAData::PAData(QString &fileName, TSDataPtr ts_ptr)
 
 PAData::PAData(TSDataPtr ts_ptr)
 {
+    // TODO: This doesn't make much sense...
     this->dataType = PAFILE;
     this->associatedData = ts_ptr;
     CODEBOOK *cb = static_cast<CODEBOOK*>(ts_ptr.data()->getData());
     CreateNewPartitioning(&this->partition, cb, 1);
+    suggestedFilename = "partitioning.pa";
 }
 
 void* PAData::getData()
@@ -103,4 +105,9 @@ void PAData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
     }
 
     if (hull != NULL) FreeConvexHulls(hull);
+}
+
+bool PAData::save(QString filename) const {
+    WritePartitioning(filename.toLatin1().data(), (PARTITIONING*)&partition, (CODEBOOK*)associatedData->getData(), true);// TODO: WritePartitioning should accept a (const PARTITIONING*)
+    return true; // TODO: WritePartitioning doesn't indicate error/success. Fix that, and handle the result
 }

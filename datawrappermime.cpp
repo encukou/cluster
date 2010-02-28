@@ -1,5 +1,8 @@
 #include "datawrappermime.h"
 #include <QtCore/QUrl>
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtDebug>
 
 DataWrapperMime::DataWrapperMime(DataWrapperPtr data): m_data (data) {
 }
@@ -10,7 +13,7 @@ bool DataWrapperMime::hasData(CBFILETYPE type) const {
 
 bool DataWrapperMime::hasFormat(const QString& mimeType) const {
     if(!m_data) return false;
-    if((mimeType == "text/uri-list") && !m_data->filePath().isEmpty()) return true;
+    if((mimeType == "text/uri-list")) return true;
     if(mimeType == "application/x-clustering-datafile") return true;
     // else
     return false;
@@ -22,14 +25,23 @@ QStringList DataWrapperMime::formats() const {
 }
 
 QVariant DataWrapperMime::retrieveData(const QString& mimeType, QVariant::Type) const {
+    qDebug() << "!!!";
     if(mimeType == "text/uri-list") {
         if(!m_data->filePath().isEmpty()) {
             return QUrl::fromLocalFile(m_data->filePath()).toString() + "\r\n";
         }else{
-            // TODO: Save the file to a temporary location, and return that.
-            // Also remember that this was temporary, and don't offer to save to that location if the
-            // user later cooses to save the file (perhaps a DataWrapper::suggestedSavePath?)
-            // Note: Remove the "!m_data->filePath().isEmpty()" checks in hasFormat() when starting this task,
+            // HACK! TODO: a better way to drag unsaved files to a file manager is needed.
+            DataWrapperPtr data = m_data;
+            QDir tempDir = QDir::temp();
+            QFileInfo tempFileInfo(tempDir, data->suggestedFilename);
+            QFileInfo origTempFileInfo(tempFileInfo);
+            int i=0;
+            while(tempFileInfo.exists()) {
+                tempFileInfo = QFileInfo(tempDir, origTempFileInfo.completeBaseName() + "." + QString::number(i) + "." + origTempFileInfo.suffix());
+                i++;
+            }
+            m_data->save(tempFileInfo.filePath());
+            return QUrl::fromLocalFile(tempFileInfo.filePath()).toString() + "\r\n";
         }
     }
     return QVariant();

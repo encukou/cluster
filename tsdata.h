@@ -15,6 +15,7 @@ public:
     TSData(TRAININGSET *ts);
 
     virtual ~TSData();
+    bool save(QString filename) const;
 
     void* getData();
     int getDataSize();

@@ -19,12 +19,15 @@ public:
     virtual int getDataSize() = 0;
     virtual void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0) = 0;
     virtual int getVectorSize() = 0;
+    virtual bool save(QString filename) const = 0;
 
     QString name();
     QString filePath();
 
     static DataWrapper* fromFile(QString fileName);
     static CBFILETYPE getFileType(QString fileName);
+
+    QString suggestedFilename;
 
 protected:
     CBFILETYPE dataType;

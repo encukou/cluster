@@ -17,13 +17,18 @@ TSData::TSData(TRAININGSET *ts)
     CreateNewCodebook(&this->trainingSet, BookSize(ts), ts);
     CopyCodebook(ts, &this->trainingSet);
 
-    // TODO: what about fileName?
-    m_fileName = "(generated codebook)";
+    m_fileName = "(Generated training set)";
+    suggestedFilename = "trainingset";
 }
 
 TSData::~TSData()
 {
     FreeCodebook(&this->trainingSet);
+}
+
+bool TSData::save(QString filename) const {
+    WriteTrainingSet(filename.toLatin1().data(), (CODEBOOK*)&trainingSet, true);// TODO: WriteCodebook should accept a (const CODEBOOK*)
+    return true; // TODO: WriteCodebook doesn't indicate error/success. Fix that, and handle the result
 }
 
 void* TSData::getData()

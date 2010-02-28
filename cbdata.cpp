@@ -17,11 +17,17 @@ CBData::CBData(CODEBOOK* source) {
     m_fileName = "(Generated codebook)";
     CreateNewCodebook((&codebook), BookSize(source), source);
     CopyCodebook(source, (&codebook));
+    suggestedFilename = "codebook.cb";
 }
 
 CBData::~CBData()
 {
     FreeCodebook(&this->codebook);
+}
+
+bool CBData::save(QString filename) const {
+    WriteCodebook(filename.toLatin1().data(), (CODEBOOK*)&codebook, true);// TODO: WriteCodebook should accept a (const CODEBOOK*)
+    return true; // TODO: WriteCodebook doesn't indicate error/success. Fix that, and handle the result
 }
 
 void* CBData::getData()

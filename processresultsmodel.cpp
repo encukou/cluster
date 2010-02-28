@@ -17,6 +17,7 @@ ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultT
         connect(displayingScene, SIGNAL(dataDisplayed(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
         connect(displayingScene, SIGNAL(dataRemoved(DataWrapperPtr)), SLOT(datasetVisibilityChanged()));
     }
+    setSupportedDragActions(Qt::CopyAction | Qt::LinkAction);
 }
 
 void ProcessResultsModel::setResults(QVariantMap results) {
@@ -124,10 +125,6 @@ Qt::ItemFlags ProcessResultsModel::flags(const QModelIndex &index) const {
     }else{
         return commonFlags;
     }
-}
-
-Qt::DropActions ProcessResultsModel::supportedDropActions() const {
-    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 QVariant ProcessResultsModel::headerData(int section, Qt::Orientation orientation, int role) const {
