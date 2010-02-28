@@ -1,6 +1,7 @@
 #include "processresultsmodel.h"
 #include "datawrapper.h"
 #include "clusteringscene.h"
+#include "datawrappermime.h"
 #include <QtDebug>
 
 ProcessResultsModel::ProcessResultsModel(ProcessResultTypeList registeredResultTypes, ClusteringScene* displayingScene, QObject* parent):
@@ -99,6 +100,25 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
             }
         } // fall through (!!)
         default: return QVariant();
+    }
+}
+
+QMimeData* ProcessResultsModel::mimeData(const QModelIndexList& indexes) const {
+    DataWrapperPtr datafile = data(indexes.value(0), Qt::DisplayRole).value<DataWrapperPtr>();
+    if(datafile) {
+        return new DataWrapperMime(datafile);
+    }else{
+        return new QMimeData();
+    }
+}
+
+Qt::ItemFlags ProcessResultsModel::flags(const QModelIndex &index) const {
+    Qt::ItemFlags commonFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    DataWrapperPtr datafile = data(index, Qt::DisplayRole).value<DataWrapperPtr>();
+    if(datafile) {
+        return commonFlags | Qt::ItemIsDragEnabled;
+    }else{
+        return commonFlags;
     }
 }
 

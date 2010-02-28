@@ -114,6 +114,7 @@ void ProcessDock::start() {
     tvResults->setRootIsDecorated(false);
     tvResults->setModel(resultsModel);
     tvResults->setItemDelegate(new ClusteringItemDelegate);
+    tvResults->setDragEnabled(true);
     insideLayout = new QHBoxLayout(processGroup);
     insideLayout->addWidget(tvResults);
     layout->addWidget(processGroup, 0, 0);
