@@ -37,7 +37,5 @@ void PrintIterationRLS(int quietLevel, int iter, double error, double time,
     }
 }
 
-void PrintFooterRLS(int quietLevel, int iter, double error, double time) {
-    Q_ASSERT_X(false, __FILE__, "// TODO: RLS reporting");
-}
+void PrintFooterRLS(int quietLevel, int iter, double error, double time) {}
 
