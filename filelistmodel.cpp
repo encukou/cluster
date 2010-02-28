@@ -138,8 +138,11 @@ QModelIndex FileListModel::addDataFile(DataWrapperPtr file) {
     if(type < FL_COUNT) {
         foreach(DataWrapperPtr existingFile, m_data[type]) {
             // If we already have it, skip!
-            if(existingFile == file) return indexForFile(existingFile);
-            if(existingFile->filePath() == file->filePath()) return indexForFile(existingFile);
+            if(existingFile == file) return indexForFile(existingFile); // unsaved files
+            if(!existingFile->filePath().isEmpty() && existingFile->filePath() == file->filePath()) {
+                // Saved files
+                return indexForFile(existingFile);
+            }
         }
         beginInsertRows(index(type, 0), m_data[type].size(), m_data[type].size());
         m_data[type].append(file);
