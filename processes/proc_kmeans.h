@@ -5,6 +5,13 @@
 #include "tsdata.h"
 #include "cbdata.h"
 
+/** A wrapper around the K-Means algorithm.
+  *
+  * See Process documentation for details.
+  *
+  * When implementing a new Process, use this as an example of how it's done.
+  * Remember to also look at reporting.c
+  */
 class KMeans: public Process {
 public:
     KMeans(const ProcessOptionsPtr options, QObject* parent);
@@ -15,6 +22,12 @@ protected:
     CODEBOOK* codebook;
 };
 
+/** A factory for K-Means.
+  *
+  * See ProcessFactory documentation for details.
+  *
+  * When implementing a new ProcessFactory, use this as an example of how it's done.
+  */
 class KMeansFactory: public ProcessFactory {
 public:
     enum InitType {

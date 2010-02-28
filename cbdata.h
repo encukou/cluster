@@ -5,6 +5,8 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedPointer>
 
+/** Wrapper for a Codebook. For more information see the superclass, DataWrapper.
+  */
 class CBData : public DataWrapper
 {
 private:

@@ -3,10 +3,13 @@
 
 #include <QtGui/QDialog>
 
+/// Qt Designer puts generated UI code in this namespace.
 namespace Ui {
     class AboutDialog;
 }
 
+/** The About dialog. Just a normal dialog, with nothing special.
+  */
 class AboutDialog : public QDialog {
     Q_OBJECT
 public:

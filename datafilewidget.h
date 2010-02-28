@@ -7,7 +7,7 @@
 #include "processoptions_types.h"
 #include "datawrappermime.h"
 
-/** Base class for widgets that accept dropped DataWrappers (TrainingSets, Codebooks etc.)
+/** \brief Base class for widgets that accept dropped DataWrappers (TrainingSets, Codebooks etc.)
   */
 class AbstractDataFileWidget: public QLabel {
     Q_OBJECT
@@ -27,6 +27,7 @@ protected:
     QSize sizeHint() const;
     QString my_mimetype;
     QString fileDescription;
+    QString displayedString;
     DataWrapperPtr data;
     ProcessOptionsPtr options;
     ProcessOptionPtr option;
@@ -35,7 +36,7 @@ protected:
     bool hasValidData;
 };
 
-/** Concrete class for widgets that accept DataWrappers (TrainingSets, Codebooks etc.)
+/** \brief Concrete class for widgets that accept DataWrappers (TrainingSets, Codebooks etc.)
   *
   * (Signals & slots don't work with template classes, hence the need for this)
   */
@@ -43,10 +44,11 @@ template<class DataType>
 class DataFileWidget: public AbstractDataFileWidget {
     typedef QSharedPointer<DataType> DataPtr;
 public:
-    DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent, CBFILETYPE myFileType, QString fileDescription):
+    DataFileWidget(ProcessOptionsPtr options, ProcessOptionPtr option, QWidget* parent, CBFILETYPE myFileType, QString fileDescription, QString displayedString):
         AbstractDataFileWidget(options, option, myFileType, parent)
     {
         this->fileDescription = fileDescription;
+        this->displayedString = displayedString;
     }
 
 protected:

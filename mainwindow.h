@@ -11,6 +11,8 @@ namespace Ui
     class MainWindow;
 }
 
+/** The main window of the Clustering application.
+  */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

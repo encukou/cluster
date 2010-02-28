@@ -7,6 +7,9 @@
 
 class ClusteringScene;
 
+/** Implementation of the UI for a process.
+  * This is a QDockWidget that allows setting parameters of a process, and running it and inspecting results.
+  */
 class ProcessDock : public QDockWidget {
     Q_OBJECT
 public:

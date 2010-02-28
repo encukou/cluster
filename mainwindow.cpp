@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Open files in the current directory, for convenience
     foreach(const QFileInfo& fi, QDir::current().entryInfoList(QStringList() << "*.ts" << "*.cb" << "*.pa", QDir::Files | QDir::Readable, QDir::Time)) {
-        DataWrapper *data = DataWrapper::fromFile(fi.filePath());
+        DataWrapperPtr data = DataWrapper::fromFile(fi.filePath());
         if(data) {
             QModelIndex index = fileListModel->addDataFile(data);
             ui->tvFiles->expand(index.parent());
@@ -71,7 +71,7 @@ void MainWindow::on_actionOpen_triggered()
         QFileInfo info(fileName);
         QModelIndex index = fileListModel->indexForFile(info);
         if(!index.isValid()) {
-            DataWrapper *data = NULL;
+            DataWrapperPtr data;
             bool errorShown = false;
             CBFILETYPE type = DataWrapper::getFileType(fileName);
 
@@ -84,7 +84,7 @@ void MainWindow::on_actionOpen_triggered()
                 case PAFILE:
                     if (PAData::isValidForDataset(fileName, scene.getData(TSFILE).data()))
                     {
-                        data = new PAData(fileName, scene.getData(TSFILE).dynamicCast<TSData>());
+                        data = DataWrapperPtr(new PAData(fileName, scene.getData(TSFILE).dynamicCast<TSData>()));
                     }
                     else
                     {
@@ -192,10 +192,11 @@ void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)
 
 void MainWindow::on_actionSaveImage_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "PNG image (*.png)");
+    QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "PNG image (*.png);;");
 
     if (!fileName.isNull())
     {
+        // TODO: Ask if replacing
         int width = 800; // TODO: make configurable
         int height = scene.height() / (qreal)scene.width() * width;
         QImage image(width, height, QImage::Format_RGB32);

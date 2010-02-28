@@ -1,5 +1,6 @@
 #include "process_h.h"
 #include "processoptions.h"
+#include <QtCore/QMetaObject>
 
 ProcessResultType::ProcessResultType(QString name, QString label, QVariant::Type type):
         name(name), label(label), type(type)
@@ -58,6 +59,10 @@ void Process::reportIterationResult(QVariantMap results) {
     emit iterationDone(m_currentIteration, results);
     m_currentIteration++;
     m_lastResults = results;
+}
+
+ProcessResultTypeList Process::resultTypes() const {
+    return ProcessResultTypeList();
 }
 
 ProcessFactoryPtr ProcessFactory::pointer() {

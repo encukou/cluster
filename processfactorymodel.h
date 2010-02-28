@@ -6,6 +6,10 @@
 
 #include "process_h.h"
 
+/** The model for the process selection list.
+  *
+  * Use addFactory() to add a ProcessFactory, and processFactory(QModelIndex) to get the factory for a given model index.
+  */
 class ProcessFactoryModel: public QAbstractItemModel {
      Q_OBJECT
 

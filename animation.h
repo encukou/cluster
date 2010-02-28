@@ -5,6 +5,15 @@
 #include <QBasicTimer>
 #include "process_h.h"
 
+/** Stores the state of an animation, and allows modifying the state.
+  *
+  * An animation is a series of "frames", of which one is always the "current frame" (unless there are no frames).
+  * It can be played (in this state, the current frame advances in regular intervals), or paused.
+  *
+  * New frames can be added to an animation, even while it is playing. When a playing animations reaches
+  * the final frame, but more frames are still expected to be added, it pauses and waits for more frames.
+  * As soon as these are added, it resumes playing again.
+  */
 class Animation: public QObject {
     Q_OBJECT
 public:
@@ -63,6 +72,12 @@ private:
     QBasicTimer timer;
 };
 
+/** An Animation that displays the intermediate results of a Process. The process' iterations
+  * correspond to the animation's frames.
+  *
+  * The results of the setup of a process are in frame 0. The first "real" iteration has number 1.
+  * This numbering is inherited from Process.
+  */
 class ProcessAnimation: public Animation {
     Q_OBJECT
 public:

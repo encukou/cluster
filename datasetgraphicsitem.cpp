@@ -12,6 +12,7 @@ DataSetGraphicsItem::DataSetGraphicsItem(CODEBOOK *cb)
         this->points[i].setX(VectorScalar(cb, i, 0));
         this->points[i].setY(VectorScalar(cb, i, 1));
     }
+
 }
 
 DataSetGraphicsItem::~DataSetGraphicsItem()

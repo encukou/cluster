@@ -4,20 +4,19 @@
 #include "padata.h"
 #include <QFileInfo>
 
-DataWrapper* DataWrapper::fromFile(QString fileName)
+DataWrapperPtr DataWrapper::fromFile(QString fileName)
 {
     // TODO: If the file is already opened, don't open it again!
     CBFILETYPE type = DetermineCBFileType(fileName.toLatin1().data());
     switch (type)
     {
         case TSFILE:
-            return new TSData(fileName);
+            return DataWrapperPtr(new TSData(fileName));
         case CBFILE:
-            return new CBData(fileName);
+            return DataWrapperPtr(new CBData(fileName));
         case PAFILE:
         case NOTFOUND:
-        default:
-            return NULL;
+            return DataWrapperPtr();
      }
 }
 

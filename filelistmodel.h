@@ -7,6 +7,17 @@
 
 class ClusteringScene;
 
+/** A model that presents open files, organized by file name.
+  *
+  * Read Qt's documentation on the model/view architecture for an overview.
+  *
+  * The model's indexes have FL_PARENT as the custom data for "parent" (section name) indexes,
+  * and the specific value (FL_TRAININGSET, ...) as custom data for indexes representing individual files.
+  *
+  * New data files are added to the model by the addDataFile() method, or by drag-and drop (via DataWrapperMime).
+  *
+  * Model indexes and files can be looked up by the indexForFile() and fileForIndex() methods.
+  */
 class FileListModel: public QAbstractItemModel {
      Q_OBJECT
 
@@ -33,10 +44,13 @@ public:
     FileListModel(ClusteringScene* displayingScene=0, QObject *parent = 0);
     ~FileListModel();
 
-    /** Add a file to the model
-      * The model takes ownership of the file if given as a C-pointer to DataWrapper.
+    /** Add a file to the model.
+      * The model takes ownership of the file.
+      * Consider using addDataFile(DataWrapperPtr) instead.
       */
     QModelIndex addDataFile(DataWrapper* file);
+    /** Add a file to the model using a shared pointer.
+      */
     QModelIndex addDataFile(DataWrapperPtr file);
     QModelIndex indexForFile(DataWrapperPtr file) const;
     QModelIndex indexForFile(class QFileInfo& fileInfo) const;

@@ -6,6 +6,8 @@
 #include "datawrapper.h"
 #include "datasetgraphicsitem.h"
 
+/** Wrapper for a Training set. For more information see the superclass, DataWrapper.
+  */
 class TSData : public DataWrapper
 {
 private:

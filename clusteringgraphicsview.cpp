@@ -3,6 +3,9 @@
 ClusteringGraphicsView::ClusteringGraphicsView(QWidget *parent): QGraphicsView(parent)
 {
     this->autoFitting = true;
+
+    // Set the projection matrix; we're using mathematical coordinates (x left, y up) rather than Qt's (x left, y down)
+    scale(1, -1);
 }
 
 void ClusteringGraphicsView::resizeEvent(QResizeEvent *event)

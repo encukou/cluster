@@ -36,15 +36,7 @@ void AbstractDataFileWidget::paintEvent(QPaintEvent *event)
     if (!hasValidData) painter.setPen(Qt::gray);
     painter.setFont(QFont("Sans", 11));
 
-    switch (this->myFileType)
-    {
-        case TSFILE: ext = "TS"; break;
-        case CBFILE: ext = "CB"; break;
-        case PAFILE: ext = "PA"; break;
-        default: return;
-    }
-
-    painter.drawText(this->rect(), Qt::AlignCenter, ext);
+    painter.drawText(this->rect(), Qt::AlignCenter, displayedString);
 }
 
 void AbstractDataFileWidget::mousePressEvent(QMouseEvent* event) {

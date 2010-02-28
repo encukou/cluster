@@ -4,6 +4,11 @@
 #include <QtCore/QMimeData>
 #include "datawrapper.h"
 
+/** A QMimeData for passing DataWrapperPtr's around the application.
+  *
+  * Read Qt's documentation on QMimeData to get an overview of how this class works, especially
+  * the third approach "for storing custom data in a QMimeData object".
+  */
 class DataWrapperMime: public QMimeData {
     Q_OBJECT
 public:

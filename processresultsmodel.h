@@ -6,6 +6,13 @@
 
 class ClusteringScene;
 
+/** Model for the results of a process.
+  *
+  * Created with the process' resultTypes(), the results that are "registeres" this way
+  * show up in the intended order, with human-friendly labels instead of
+  * identifiers. Any unregistered results appear after the registered ones, probably ordered
+  * alphabetically.
+  */
 class ProcessResultsModel: public QAbstractTableModel {
     Q_OBJECT
 public:

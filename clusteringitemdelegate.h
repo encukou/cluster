@@ -4,6 +4,10 @@
 #include <QStyledItemDelegate>
 #include "datawrapper.h"
 
+/** Displays datasets properly in model views.
+  *
+  * Currently this only displays the name for datasets, otherwise it's the same as a QStyledItemDelegate.
+  */
 class ClusteringItemDelegate : public QStyledItemDelegate {
 public:
     ClusteringItemDelegate(QObject* parent = 0);

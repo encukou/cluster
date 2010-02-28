@@ -95,7 +95,8 @@ QWidget* TrainingSetOption::newWidget(ProcessOptionsPtr options, QWidget* parent
             this->pointer(),
             container,
             TSFILE,
-            tsw->tr("training set")
+            tsw->tr("training set"),
+            tsw->tr("TS")
         );
     layout->addWidget(tsw);
     QLabel* label = new QLabel(tsw->caption());
@@ -117,7 +118,8 @@ QWidget* CodebookOption::newWidget(ProcessOptionsPtr options, QWidget* parent) c
             this->pointer(),
             container,
             CBFILE,
-            tsw->tr("codebook")
+            tsw->tr("codebook"),
+            tsw->tr("CB")
         );
     layout->addWidget(tsw);
     QLabel* label = new QLabel(tsw->caption());
