@@ -103,6 +103,7 @@ ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, Proce
     TSDataPtr input = options->get<DataWrapperPtr>("input").dynamicCast<TSData>(); // TODO: Better API
     InitType init_type = (InitType) options->get<int>("init_type");
     CBDataPtr initial_cb = options->get<DataWrapperPtr>("initial_cb").dynamicCast<CBData>();
+    int cb_size = options->get<int>("cb_size");
 
     ValidationResult result;
 
@@ -113,21 +114,33 @@ ValidationResult KMeansFactory::validateOptions(ProcessOptionsPtr options, Proce
         options->validationError(result, tr("Bad initialization method"), "init_type");
     }
 
-    // Check for valid initialization type (INIT_CB with a codebook, or something else without one)
     if(initial_cb) {
+        // Check that the codebook size is consistent with the chosen CB size.
+        if(cb_size != initial_cb->getDataSize()) {
+            ValidationResult subresult;
+            if(lastChanged) {
+                subresult = options->set("cb_size", initial_cb->getDataSize());
+            }
+            if(subresult.badElements.contains(options->getOption("cb_size"))) {
+                options->validationError(result, tr("The number of clusters does not correspond to the given codebook (size %1)!").arg(initial_cb->getDataSize()), "cb_size");
+            }
+        }
+        // Check for valid initialization type (only INIT_CB can be used with a codebook)
         if(init_type != INIT_CB) {
             if(lastChanged->name == "init_type" && options->set("initial_cb", QVariant())) return true;
             if(lastChanged->name == "initial_cb" && options->set("init_type", INIT_CB)) return true;
             options->validationError(result, tr("The given initial codebook will be unused!"), "init_type initial_cb");
         }
+        if(input && initial_cb->getVectorSize() != input->getVectorSize()) {
+            options->validationError(result, tr("The dimensionalities of the training set and initial codebook are not the same!"), "initial_cb input");
+        }
     }else{
+        // Check for valid initialization type (INIT_CB can only be used with a codebook)
         if(init_type == INIT_CB) {
             if(lastChanged->name == "initial_cb" && options->setDefault("init_type")) return true;
             options->validationError(result, tr("No initial codebook given!"), "init_type initial_cb");;
         }
     }
-
-    // TODO: Check that the number of clusters (cb_size) is consistent with initial_cb
 
     // Check that we have input
     if(!input) options->validationError(result, tr("No training data given!"), "input");
