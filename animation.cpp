@@ -3,11 +3,8 @@
 #include <QtDebug>
 
 Animation::Animation(ProcessOptionsPtr animOptions, QObject* parent): QObject(parent) {
-    if(animOptions->get<bool>("start_stopped")) {
-        state = ANIM_STOPPED;
-    }else{
-        state = ANIM_WAITING;
-    }
+    stopAtNextFrame = animOptions->get<bool>("stop_at_first");
+    state = ANIM_WAITING;
     m_timerValue = animOptions->get<int>("timeout_value");
     m_frame = -1;
     m_lastLoadedFrame = -1;
@@ -27,7 +24,7 @@ ProcessOptionsPtr Animation::newOptions() {
         // TODO: Implement disabling animation
         //opts.append((new BoolOption("on", "Enable animation", true))->pointer());
 
-        opts.append((new BoolOption("start_stopped", "Stop at first frame", false))->pointer());
+        opts.append((new BoolOption("stop_at_first", "Stop at first frame", false))->pointer());
 
         IntOption* opt;
         opt = new IntOption("timeout_value", tr("Animation timer"), 200, 0, 100000);
@@ -133,6 +130,9 @@ void Animation::handleTimerEvent() {
             }else{
                 toNextFrame();
                 if(atLastFrame()) {
+                    pause();
+                }else if(stopAtNextFrame) {
+                    stopAtNextFrame = false;
                     pause();
                 }else{
                     startTimer();

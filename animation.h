@@ -70,6 +70,7 @@ private:
     int m_lastFrame;
     int m_timerValue;
     QBasicTimer timer;
+    bool stopAtNextFrame;
 };
 
 /** An Animation that displays the intermediate results of a Process. The process' iterations
