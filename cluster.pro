@@ -90,7 +90,4 @@ QMAKE_CXXFLAGS += -Werror \
 QMAKE_CFLAGS += -g \
     -Imodules/ \
     -DNDEBUG
-OTHER_FILES += TODO.txt \
-    doc/develop.html \
-    doc/download.html
 RESOURCES += resources/cluster.qrc

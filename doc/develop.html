@@ -18,9 +18,17 @@
                 (unfortunately, the SFTP server at cs.joensuu.fi doesn't seem to work with Bazaar, so you can't use <tt>bzr push</tt> easily).
             </p>
         <h2>Compiling</h2>
-            <p>Run <tt>qmake && make</tt> to compile the code on Linux.</p>
+            <p>Run <tt>qmake &amp;&amp; make</tt> to compile the code on Linux.</p>
             <p>On Windows, use the big green Run button in Qt creator (which you installed along with Qt).<br>Alternatively, put <tt>bzr</tt>, <tt>qmake</tt> and <tt>mingw32-make</tt> in your %PATH% and run the windist.bat file included in the source.</p>
-        <h2>Generating documentation</h2>
+        <h2>Quick introduction to Qt</h2>
+            <p>Qt is a big library which can be intimidating at first. We recommend reading about <a href="http://doc.trolltech.com/4.6/signalsandslots.html">Signals and slots</a> and <a href="http://doc.trolltech.com/4.6/model-view-introduction.html">Model/View introduction</a> for some highlights, in addition to the documentation for any Qt classes you use.</p>
+        <h2>Coding style guidelines</h2>
+            <p>Short style guide: 4-space indentation; ClassName, methodName, m_privateMemberVariable; use Doxygen-style documentation comments where appropriate.</p>
+            <p>Try to use good object-oriented design :)</p>
+        <h2>Code Documentation</h2>
+            <p>
+                Documentation can be found at <a href="generated/html/annotated.html">this page</a>.
+            </p>
             <p>
                 If you want to create the automatically-generated documentation, you will need to install <a href="http://doxygen.org/">Doxygen</a>, and download the <a href="http://cs.joensuu.fi/~pviktor/qt.tag">qt.tag</a> file into the main source directory.
                 After that just run the <tt>doxygen</tt> command.
