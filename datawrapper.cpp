@@ -8,8 +8,7 @@ DataWrapperPtr DataWrapper::fromFile(QString fileName)
 {
     // TODO: If the file is already opened, don't open it again!
     CBFILETYPE type = DetermineCBFileType(fileName.toLatin1().data());
-    switch (type)
-    {
+    switch (type) {
         case TSFILE:
             return DataWrapperPtr(new TSData(fileName));
         case CBFILE:
@@ -17,7 +16,8 @@ DataWrapperPtr DataWrapper::fromFile(QString fileName)
         case PAFILE:
         case NOTFOUND:
             return DataWrapperPtr();
-     }
+    }
+	return DataWrapperPtr();
 }
 
 CBFILETYPE DataWrapper::getFileType(QString fileName)
