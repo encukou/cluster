@@ -35,6 +35,7 @@ public slots:
 
 public:
     bool isDataDisplayed(DataWrapperPtr data) const;
+    bool isDataDisplayed(CBFILETYPE type) const;
     DataWrapperPtr getData(CBFILETYPE type) const;
     QVariant decorationForData(DataWrapperPtr data) const;
     void setShowingVoronoi(bool visible);

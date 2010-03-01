@@ -129,6 +129,16 @@ bool ClusteringScene::isDataDisplayed(DataWrapperPtr data) const {
     return data == centroidData || data == trainingData || data == partitionData;
 }
 
+bool ClusteringScene::isDataDisplayed(CBFILETYPE type) const {
+    switch (type)
+    {
+        case CBFILE: return centroidData;
+        case TSFILE: return trainingData;
+        case PAFILE: return partitionData;
+        default: return false;
+    }
+}
+
 DataWrapperPtr ClusteringScene::getData(CBFILETYPE type) const {
     switch (type)
     {

@@ -17,6 +17,7 @@
 #include "processdock.h"
 #include "padata.h"
 #include "clusteringitemdelegate.h"
+#include "imagesavedialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -193,19 +194,31 @@ void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)
 
 void MainWindow::on_actionSaveImage_triggered()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "PNG image (*.png);;");
-
-    if (!fileName.isNull())
+    if (!scene.isDataDisplayed(CBFILE) && !scene.isDataDisplayed(TSFILE))
     {
-        // TODO: Ask if replacing
-        int width = 800; // TODO: make configurable
-        int height = scene.height() / (qreal)scene.width() * width;
-        QImage image(width, height, QImage::Format_RGB32);
-        image.fill(0xffffffff);
+        QMessageBox::critical(this, "Cannot save image!", "Unable to save image. There is no data displayed!");
+        return;
+    }
 
-        QPainter painter(&image);
-        scene.render(&painter);
-        image.save(fileName, "PNG");
+    ImageSaveDialog dialog(this, &scene);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString format = dialog.getImageFormat();
+        QString filter = format == "PNG" ? "PNG image (*.png)" : "JPEG image (*.jpg *.jpeg)";
+        QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), filter);
+
+        if (!fileName.isNull())
+        {
+            // TODO: Ask if replacing
+            int width = dialog.getImageSize().width();
+            int height = dialog.getImageSize().height();
+            QImage image(width, height, QImage::Format_RGB32);
+            image.fill(0xffffffff);
+
+            QPainter painter(&image);
+            scene.render(&painter);
+            image.save(fileName, format.toAscii().constData());
+        }
     }
 }
 

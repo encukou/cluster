@@ -41,6 +41,7 @@ SOURCES += main.cpp \
     modules/textfile.c \
     clusteringgraphicsview.cpp \
     processes/proc_rs.cpp \
+    imagesavedialog.cpp \
     helpdialog.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
@@ -81,9 +82,11 @@ HEADERS += mainwindow.h \
     modules/textfile.h \
     clusteringgraphicsview.h \
     processes/proc_rs.h \
+    imagesavedialog.h \
     helpdialog.h
 FORMS += mainwindow.ui \
     aboutdialog.ui \
+    imagesavedialog.ui \
     helpdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
