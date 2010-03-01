@@ -25,7 +25,6 @@ QStringList DataWrapperMime::formats() const {
 }
 
 QVariant DataWrapperMime::retrieveData(const QString& mimeType, QVariant::Type) const {
-    qDebug() << "!!!";
     if(mimeType == "text/uri-list") {
         if(!m_data->filePath().isEmpty()) {
             return QUrl::fromLocalFile(m_data->filePath()).toString() + "\r\n";

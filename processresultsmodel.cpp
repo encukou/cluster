@@ -110,7 +110,6 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
 QMimeData* ProcessResultsModel::mimeData(const QModelIndexList& indexes) const {
     DataWrapperPtr datafile = data(indexes.value(0), Qt::DisplayRole).value<DataWrapperPtr>();
     if(datafile) {
-        qDebug() << "mimedata";
         return new DataWrapperMime(datafile);
     }else{
         return new QMimeData();

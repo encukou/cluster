@@ -239,11 +239,8 @@ QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {
 }
 
 bool FileListModel::dropMimeData(const QMimeData* mimeData, Qt::DropAction action, int, int, const QModelIndex&) {
-    qDebug() << "Drop";
     if (action == Qt::IgnoreAction) return true;
-    qDebug() << "!";
     foreach(DataWrapperPtr data, DataWrapperMime::getDataWrappers(mimeData)) {
-        qDebug() << "ADF1";
         addDataFile(data);
     }
     return false;

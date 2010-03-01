@@ -12,7 +12,6 @@ HelpDialog::HelpDialog(QWidget *parent) :
     QFile f(":/doc/index.html");
     f.open(QFile::ReadOnly);
     QString helpDocument = QString::fromUtf8(f.readAll());
-    qDebug() << f.errorString() << f.exists();
     // Remove unnecessary info
     QRegExp reRemove("<!-- .* START .* END -->");
     reRemove.setMinimal(true);
