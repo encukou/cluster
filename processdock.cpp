@@ -8,8 +8,6 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QSpinBox>
 #include <QtGui/QSlider>
-#include <QtGui/QTreeView>
-#include <QtGui/QTableView>
 #include <QtGui/QHeaderView>
 #include <QtDebug>
 #include "iconhelper.h"
@@ -19,6 +17,7 @@
 #include "padata.h"
 #include "processresultsmodel.h"
 #include "clusteringitemdelegate.h"
+#include "nicedragtreeview.h"
 
 ProcessDock::ProcessDock(ProcessFactoryPtr factory, ClusteringScene* displayingScene, QWidget* parent):
         QDockWidget(factory->name(), parent), factory(factory), displayingScene(displayingScene)
@@ -109,7 +108,7 @@ void ProcessDock::start() {
 
     //// Process Results (left)
     QGroupBox* processGroup = new QGroupBox(tr("Process results"));
-    QTreeView *tvResults = new QTreeView; // QTreeView looks better than a QTableView here
+    QTreeView *tvResults = new NiceDragTreeView;
     resultsModel = new ProcessResultsModel(process->resultTypes(), displayingScene, this);
     tvResults->setRootIsDecorated(false);
     tvResults->setModel(resultsModel);
@@ -263,4 +262,8 @@ void ProcessDock::frameChanged(int frame) {
 void ProcessDock::playPauseClicked() {
     if(!animation->playing() && displayingScene) displayingScene->displayData(processOptions->get<DataWrapperPtr>("input"));
     animation->playPause();
+}
+
+void ProcessDock::closeEvent(QCloseEvent*) {
+    deleteLater();
 }

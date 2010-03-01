@@ -42,8 +42,10 @@ void AbstractDataFileWidget::paintEvent(QPaintEvent *event)
 void AbstractDataFileWidget::mousePressEvent(QMouseEvent* event) {
     if(data && event->button() == Qt::LeftButton) {
         QDrag *drag = new QDrag(this);
+        //drag->setPixmap(QPixmap(":/dragimage.png"));
+        //drag->setHotSpot(QPoint(drag->pixmap().width()/2, drag->pixmap().height()));
         drag->setMimeData(new DataWrapperMime(data));
-        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+        Qt::DropAction dropAction = drag->exec(Qt::CopyAction | Qt::MoveAction | Qt::LinkAction);
         (void) dropAction;
     }
 }

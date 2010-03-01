@@ -27,6 +27,7 @@ private slots:
     void frameChanged(int);
     void playPauseClicked();
 protected:
+    void closeEvent(QCloseEvent* event);
     QMap<ProcessOptionPtr, QLabel*> optionValidationIconMap;
     QList<QLabel*> invalidIcons;
     ProcessOptionsPtr processOptions;

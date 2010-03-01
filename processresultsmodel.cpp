@@ -108,12 +108,11 @@ QVariant ProcessResultsModel::data(const QModelIndex &index, int role) const {
 }
 
 QMimeData* ProcessResultsModel::mimeData(const QModelIndexList& indexes) const {
-    DataWrapperPtr datafile = data(indexes.value(0), Qt::DisplayRole).value<DataWrapperPtr>();
-    if(datafile) {
-        return new DataWrapperMime(datafile);
-    }else{
-        return new QMimeData();
+    foreach(QModelIndex index, indexes) {
+        DataWrapperPtr datafile = data(index, Qt::DisplayRole).value<DataWrapperPtr>();
+        if(datafile) return new DataWrapperMime(datafile);
     }
+    return new QMimeData();
 }
 
 Qt::ItemFlags ProcessResultsModel::flags(const QModelIndex &index) const {
@@ -138,4 +137,8 @@ QVariant ProcessResultsModel::headerData(int section, Qt::Orientation orientatio
 
 void ProcessResultsModel::datasetVisibilityChanged() {
     emit dataChanged(createIndex(0, 1), createIndex(rowCount() - 1, 1));
+}
+
+Qt::DropActions ProcessResultsModel::supportedDropActions() {
+    return Qt::CopyAction | Qt::LinkAction;
 }

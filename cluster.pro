@@ -42,7 +42,8 @@ SOURCES += main.cpp \
     clusteringgraphicsview.cpp \
     processes/proc_rs.cpp \
     imagesavedialog.cpp \
-    helpdialog.cpp
+    helpdialog.cpp \
+    nicedragtreeview.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -83,7 +84,8 @@ HEADERS += mainwindow.h \
     clusteringgraphicsview.h \
     processes/proc_rs.h \
     imagesavedialog.h \
-    helpdialog.h
+    helpdialog.h \
+    nicedragtreeview.h
 FORMS += mainwindow.ui \
     aboutdialog.ui \
     imagesavedialog.ui \

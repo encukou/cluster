@@ -26,6 +26,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QMimeData* mimeData(const QModelIndexList &indexes) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::DropActions supportedDropActions();
 protected slots:
     void datasetVisibilityChanged();
 protected:

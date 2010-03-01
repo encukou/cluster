@@ -31,5 +31,6 @@
         <file>readme_silk.txt</file>
         <file alias="doc/index.html" >../doc/index.html</file>
         <file>icons/silk/16x16/cluster/voronoi.png</file>
+        <file>dragimage.png</file>
     </qresource>
 </RCC>
