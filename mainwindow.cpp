@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gvView->setScene(&scene);
 
     fileListModel->connect(&scene, SIGNAL(dataDropped(DataWrapperPtr)), SLOT(addDataFile(DataWrapperPtr)));
+    ui->gvView->connect(&scene, SIGNAL(sceneRectChanged(QRectF)), SLOT(fitForRect(QRectF)));
 
     // File
     ui->actionOpen->setIcon(loadIcon("actions", "document-open"));
@@ -189,7 +190,6 @@ void MainWindow::on_tvFiles_doubleClicked(QModelIndex index) {
         scene.removeData(type);
         scene.setSceneRect(scene.itemsBoundingRect());
     }
-    ui->gvView->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::on_actionDisplayVoronoi_triggered(bool checked)

@@ -9,6 +9,7 @@
   */
 class ClusteringGraphicsView : public QGraphicsView
 {
+    Q_OBJECT
 private:
     bool autoFitting;
 public:
@@ -16,6 +17,9 @@ public:
 
     void setAutoFit(bool autoFit);
     bool autoFit() { return autoFitting; }
+public slots:
+    void fitForRect(const QRectF &rect);
+
 signals:
     void dataDropped(DataWrapperPtr data);
 protected:

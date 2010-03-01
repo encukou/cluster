@@ -32,3 +32,12 @@ void ClusteringGraphicsView::setAutoFit(bool autoFit)
         }
     }
 }
+
+void ClusteringGraphicsView::fitForRect(const QRectF &rect)
+{
+    if (this->autoFitting)
+    {
+        this->fitInView(rect, Qt::KeepAspectRatio);
+    }
+}
+
