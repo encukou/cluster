@@ -42,10 +42,15 @@ public:
 signals:
     void dataDisplayed(DataWrapperPtr data);
     void dataRemoved(DataWrapperPtr data);
+    void dataDropped(DataWrapperPtr data);
 private:
     DataWrapperPtr trainingData;
     DataWrapperPtr centroidData;
     DataWrapperPtr partitionData;
+protected:
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
 };
 
 #endif // CLUSTERINGSCENE_H

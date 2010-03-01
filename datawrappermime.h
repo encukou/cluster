@@ -18,7 +18,7 @@ public:
     QStringList formats() const;
     QVariant retrieveData(const QString& mimeType, QVariant::Type type) const;
 public:
-    static bool canDrop(const QMimeData* data, CBFILETYPE type);
+    static bool canDrop(const QMimeData* data, CBFILETYPE type=NOTFOUND); // NOTFOUND = any type
     static QList<DataWrapperPtr> getDataWrappers(const QMimeData* data, bool onlyOne=false);
     template<class DataType> static QList<QSharedPointer<DataType> > getDataList(const QMimeData* data, bool onlyOne=false) {
         QList<QSharedPointer<DataType> > list;

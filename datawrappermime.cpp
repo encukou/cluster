@@ -48,11 +48,10 @@ QVariant DataWrapperMime::retrieveData(const QString& mimeType, QVariant::Type) 
 }
 
 bool DataWrapperMime::canDrop(const QMimeData* data, CBFILETYPE type) {
-    if(type == NOTFOUND) return false;
     const DataWrapperMime* myData = qobject_cast<const DataWrapperMime*>(data);
     if(myData && myData->m_data) {
         // We have a DataWrapperMime from this application (and with a valid data pointer)
-        return myData->m_data->getType() == type;
+        return type == NOTFOUND || myData->m_data->getType() == type;
     }else if(data->hasUrls()) {
         return true; // Just assume we can read the file(s) later
     }else{

@@ -2,6 +2,7 @@
 #define CLUSTERINGGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include "datawrapper.h"
 
 /** The view for clustering data. In addition to what a QGraphicsView does normally, this view
   * can zoom autometically so that all data is displayed.
@@ -15,6 +16,8 @@ public:
 
     void setAutoFit(bool autoFit);
     bool autoFit() { return autoFitting; }
+signals:
+    void dataDropped(DataWrapperPtr data);
 protected:
     void resizeEvent(QResizeEvent *event);
 };

@@ -40,11 +40,14 @@ MainWindow::MainWindow(QWidget *parent)
         DataWrapperPtr data = DataWrapper::fromFile(fi.filePath());
         if(data) {
             QModelIndex index = fileListModel->addDataFile(data);
-            ui->tvFiles->expand(index.parent());
         }
     }
 
+    ui->tvFiles->expandAll();
+
     ui->gvView->setScene(&scene);
+
+    fileListModel->connect(&scene, SIGNAL(dataDropped(DataWrapperPtr)), SLOT(addDataFile(DataWrapperPtr)));
 
     // File
     ui->actionOpen->setIcon(loadIcon("actions", "document-open"));

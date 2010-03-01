@@ -3,6 +3,9 @@
 #include "tsdata.h"
 #include "padata.h"
 #include "cbdata.h"
+#include "datawrappermime.h"
+#include <QtDebug>
+#include <QtGui/QGraphicsSceneDragDropEvent>
 
 ClusteringScene::ClusteringScene()
 {
@@ -172,4 +175,21 @@ QVariant ClusteringScene::decorationForData(DataWrapperPtr data) const {
     }
     // Everything else gets the transparent icon of nothingness
     return QColor(0, 0, 0, 0);
+}
+
+void ClusteringScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event) {
+    QGraphicsScene::dragEnterEvent(event);
+    if(DataWrapperMime::canDrop(event->mimeData())) event->accept();
+}
+
+void ClusteringScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event) {
+    QGraphicsScene::dragMoveEvent(event);
+    if(DataWrapperMime::canDrop(event->mimeData())) event->accept();
+}
+
+void ClusteringScene::dropEvent(QGraphicsSceneDragDropEvent *event) {
+    foreach(DataWrapperPtr data, DataWrapperMime::getDataWrappers(event->mimeData())) {
+        emit dataDropped(data);
+        displayData(data);
+    }
 }

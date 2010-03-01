@@ -44,18 +44,19 @@ public:
     FileListModel(ClusteringScene* displayingScene=0, QObject *parent = 0);
     ~FileListModel();
 
+    QModelIndex indexForFile(DataWrapperPtr file) const;
+    QModelIndex indexForFile(class QFileInfo& fileInfo) const;
+    DataWrapperPtr fileForIndex(QModelIndex index) const;
+    CBFILETYPE dataTypeForIndex(QModelIndex index) const;
+public slots:
+    /** Add a file to the model using a shared pointer.
+      */
+    QModelIndex addDataFile(DataWrapperPtr file);
     /** Add a file to the model.
       * The model takes ownership of the file.
       * Consider using addDataFile(DataWrapperPtr) instead.
       */
     QModelIndex addDataFile(DataWrapper* file);
-    /** Add a file to the model using a shared pointer.
-      */
-    QModelIndex addDataFile(DataWrapperPtr file);
-    QModelIndex indexForFile(DataWrapperPtr file) const;
-    QModelIndex indexForFile(class QFileInfo& fileInfo) const;
-    DataWrapperPtr fileForIndex(QModelIndex index) const;
-    CBFILETYPE dataTypeForIndex(QModelIndex index) const;
 
 public:
     // Model API (Inherited from QAbstractItemModel)
