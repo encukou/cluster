@@ -7,7 +7,7 @@ DataSetGraphicsItem::DataSetGraphicsItem(CODEBOOK *cb)
 
     // add a small padding to sceneRect, so that a centroid on the border 
     // doesn't cause a small jump of the scene
-    padding = (cb->MaxValue - cb->MinValue) / DIVIDER / 2;
+    padding = (cb->MaxValue - cb->MinValue) / DIVIDER / 2 + 1;
 
     this->min_value = cb->MinValue - padding;
     this->max_value = cb->MaxValue + padding;
