@@ -2,9 +2,16 @@
 
 DataSetGraphicsItem::DataSetGraphicsItem(CODEBOOK *cb)
 {
+    const qreal DIVIDER = 75.;
+    int padding;
+
+    // add a small padding to sceneRect, so that a centroid on the border 
+    // doesn't cause a small jump of the scene
+    padding = (cb->MaxValue - cb->MinValue) / DIVIDER / 2;
+
+    this->min_value = cb->MinValue - padding;
+    this->max_value = cb->MaxValue + padding;
     this->size = BookSize(cb);
-    this->min_value = cb->MinValue;
-    this->max_value = cb->MaxValue;
     this->points = new QPoint[size];
 
     for (int i=0; i<this->size; i++)
@@ -12,7 +19,6 @@ DataSetGraphicsItem::DataSetGraphicsItem(CODEBOOK *cb)
         this->points[i].setX(VectorScalar(cb, i, 0));
         this->points[i].setY(VectorScalar(cb, i, 1));
     }
-
 }
 
 DataSetGraphicsItem::~DataSetGraphicsItem()
