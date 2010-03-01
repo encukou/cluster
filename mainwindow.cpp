@@ -12,6 +12,7 @@
 #include "processes/proc_rs.h"
 #include "datawrapper.h"
 #include "aboutdialog.h"
+#include "helpdialog.h"
 #include "iconhelper.h"
 #include "processdock.h"
 #include "padata.h"
@@ -224,4 +225,8 @@ void MainWindow::on_actionImport_triggered()
             QMessageBox::critical(this, "Import error!", "Unable to process text file!");
         }
     }
+}
+
+void MainWindow::on_actionApplicationHelp_triggered() {
+    (new HelpDialog(this))->show();
 }

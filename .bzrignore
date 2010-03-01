@@ -1,10 +1,14 @@
 ui_*.h
 moc_*.cpp
-Makefile
+./Makefile
 ./cluster
-cluster.pro.user
+./cluster.pro.user
 ./*.o
 ./*.cb
 ./*.ts
 ./*.pa
 qrc_*.cpp
+./doc/generated
+./qt.tag
+./release
+./windows-binaries

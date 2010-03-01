@@ -28,6 +28,7 @@ private:
     ClusteringScene scene;
 
 private slots:
+    void on_actionApplicationHelp_triggered();
     void on_actionImport_triggered();
     void on_actionSaveImage_triggered();
     void on_actionDisplayVoronoi_triggered(bool checked);

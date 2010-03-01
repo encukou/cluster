@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Clustering visualization software - Development</title>
+    </head>
+    <body>
+        <h1>Clustering visualization – Development</h1>
+        <h2>Prerequisites</h2>
+            <p>To work on the Clustering GUI, you will need the Qt SDK and Bazaar.</p>
+            <p>For Windows, download <a href="http://qt.nokia.com/downloads/sdk-windows-cpp">Qt SDK</a> (direct download link), and <a href="http://wiki.bazaar.canonical.com/WindowsDownloads">Bazaar</a> (choose the latest Standalone stable release).</p>
+            <p>For Linux, just install the appropriate packages (<tt>sudo apt-get install libqt4-dev bzr</tt> should work in Debian/Ubuntu).</p>
+        <h2>Working with Bazaar</h2>
+            <p>Get the source with the <tt>bzr branch http://cs.joensuu.fi/~pviktor/cluster</tt> command (or Branch that address from the Bazaar Explorer GUI). This will create a “cluster” directory with your personal copy of the source.</p>
+            <p>Once you make significant changes, use the <tt>bzr ci</tt> command (or Commit from the GUI). This will save your changes locally.</p>
+            <p>
+                When you are ready to publish your changes, copy the “.bzr” directory to some accessible place (like cs.joensuu.fi/~yourlogin/cluster/.bzr) and send an e-mail to <a href="mailto:pviktor@cs.joensuu.fi">pviktor@cs.joensuu.fi</a> about it.
+                <br>
+                (unfortunately, the SFTP server at cs.joensuu.fi doesn't seem to work with Bazaar, so you can't use <tt>bzr push</tt> easily).
+            </p>
+        <h2>Compiling</h2>
+            <p>Run <tt>qmake && make</tt> to compile the code on Linux.</p>
+            <p>On Windows, use the big green Run button in Qt creator (which you installed along with Qt).<br>Alternatively, put <tt>bzr</tt>, <tt>qmake</tt> and <tt>mingw32-make</tt> in your %PATH% and run the windist.bat file included in the source.</p>
+        <h2>Generating documentation</h2>
+            <p>
+                If you want to create the automatically-generated documentation, you will need to install <a href="http://doxygen.org/">Doxygen</a>, and download the <a href="http://cs.joensuu.fi/~pviktor/qt.tag">qt.tag</a> file into the main source directory.
+                After that just run the <tt>doxygen</tt> command.
+            </p>
+    </body>
+</html>
