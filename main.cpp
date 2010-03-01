@@ -9,3 +9,14 @@ int main(int argc, char *argv[])
     return a.exec();
     delete w;
 }
+
+
+// Main page of auto-generated documentation:
+/** \mainpage
+  *
+  * This is the documentation for the Qt-based Clustering GUI.
+  *
+  * Please look at <a href="annotated.html">the Class list</a> to see all of the classes.
+  *
+  * If implementing a new process, look at KMeans.
+  */

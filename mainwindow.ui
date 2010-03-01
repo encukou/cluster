@@ -53,6 +53,9 @@
      <string>Image</string>
     </property>
     <widget class="QMenu" name="menuZoom">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Zoom</string>
      </property>
@@ -68,6 +71,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionApplicationHelp"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -239,6 +243,9 @@
    <property name="shortcut">
     <string>Ctrl++</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionZoomOut">
    <property name="text">
@@ -247,6 +254,9 @@
    <property name="shortcut">
     <string>Ctrl+-</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionViewSettings">
    <property name="enabled">
@@ -254,6 +264,9 @@
    </property>
    <property name="text">
     <string>View Settings...</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionAbout">
@@ -283,6 +296,11 @@
    </property>
    <property name="toolTip">
     <string>Import text file</string>
+   </property>
+  </action>
+  <action name="actionApplicationHelp">
+   <property name="text">
+    <string>Application help</string>
    </property>
   </action>
  </widget>

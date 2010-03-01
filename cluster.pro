@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     modules/fvec.c \
     modules/textfile.c \
     clusteringgraphicsview.cpp \
-    processes/proc_rs.cpp
+    processes/proc_rs.cpp \
+    helpdialog.cpp
 HEADERS += mainwindow.h \
     filelistmodel.h \
     datawrapper.h \
@@ -79,13 +80,14 @@ HEADERS += mainwindow.h \
     modules/fvec.h \
     modules/textfile.h \
     clusteringgraphicsview.h \
-    processes/proc_rs.h
+    processes/proc_rs.h \
+    helpdialog.h
 FORMS += mainwindow.ui \
-    aboutdialog.ui
+    aboutdialog.ui \
+    helpdialog.ui
 QMAKE_CXXFLAGS += -Werror \
     -g
 QMAKE_CFLAGS += -g \
     -Imodules/ \
     -DNDEBUG
-OTHER_FILES += TODO.txt
 RESOURCES += resources/cluster.qrc

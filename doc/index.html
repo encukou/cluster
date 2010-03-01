@@ -1,0 +1,154 @@
+
+<!--
+Note: This page also appears as the help of the application.
+Everything between "XXX START" and "XXX END" HTML comments is removed from the help page.
+-->
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Clustering visualization software</title>
+    </head>
+    <body>
+        <h1>Clustering visualization</h1>
+<!-- DOWNLOAD LINK START (version 0.1) -->
+            <p><a href="download.html">Download here</a> - version 0.1 (source code or Windows binary)</p>
+            <p><a href="develop.html">Developer instructions</a></p>
+<!-- DOWNLOAD LINK END -->
+        <h2>Overview</h2>
+            <p>This is a GUI tool for running and analyzing clustering algorithms.</p>
+        <h2>Terminology</h2>
+            <p>
+                In literature, the terminology for clustering problems varies,
+                depending mostly on the application.
+                At the University of Joensuu, the following terms are used:
+            </p>
+            <dl>
+                <dt>Training set<dt>
+                    <dd>The data to be partitioned<dd>
+                    <dd>also known as Data set, Feature vectors, Input data<dd>
+                <dt>Codebook<dt>
+                    <dd>The set of representative vectors for each partition<dd>
+                    <dd>also known as Centroids, Models, Representative vectors<dd>
+                <dt>Partitioning<dt>
+                    <dd>The mapping of each training vector to a partition<dd>
+            </dl>
+        <h2>How to use</h2>
+            <h3>Opening files</h3>
+            <p>
+                Select Open from the menu or toolbar to open training set, codebooks or partitioning files.
+                You can also drag the files from your file manager to the file list or to the visualization
+                to open them. Files can be in the binary formats used by
+                <a href="http://cs.joensuu.fi/sipu/clustering/">SIPU software</a>, or you can use
+                plain text files (one vector per line, separated by whitespace).
+            </p>
+            <p>
+                Note that partitionings are tied to a particular training set. You need to have a compatible
+                training set displayed in the data view to open a partitioning file. After opening, you can
+                select (double-click) a training set; all its partitionings will be marked with a “link” icon.
+            </p>
+            <h3>Displaying files</h3>
+            <p>
+                Double-click an entry in the file list to load it in the data view. Currently, only one
+                training set, one codebook and one partitioning may be displayed at once, so selecting
+                a file hides the previous dataset of the same type.
+            </p>
+            <p>
+                The results of a process are displayed automatically as the process animation is played,
+                provided that the input training set is displayed.
+            </p>
+            <p>
+                Double-click a section heading in the file list (“Training sets”, etc.) to remove the corresponding
+                data from the view. (Better UI is needed here)
+            </p>
+            <p>
+                When a partitioning file is displayed, the corresponding training set is also displayed.
+                Conversely, when a training set is removed from the view, the partitioning is removed as well.
+            </p>
+            <h3>Running clustering processes</h3>
+            <p>
+                Select an algorithm from the list at the bottom. This takes you to a page where you
+                can input paremeters.
+                Most algorithms will allow take training sets and initial codebook as parameters,
+                you can drag files from the file list to set these. Other parameters are set in
+                an intuitive way. You can also specify how the visualization will be animated.
+            </p>
+            <p>
+                When you are done, press the Run! button to start the process.
+                A movie-player-like interface is provided for viewing results of individual iterations.
+            </p>
+            <h3>Saving results</h3>
+            <p>
+                Select the Save Image action to save a picture of data displayed in the visualization
+                window to an image file. Results are saved in the PNG format by default.
+              <!-- TODO: SVG export
+                SVG is also supported if you need high-quality vector graphics.
+              -->
+            </p>
+              <!-- TODO: Animation export
+            <p>
+                The animation control screen has an option to save the results of all iterations as
+                a sequence of images. Use an external program for conversion to video (look at
+                <a href="http://wiki.blender.org/index.php/Doc:Tutorials/External_tools/Image_sequence_to_Video_file">Blender guide</a>,
+                in Linux try <tt>man ffmpeg; ffmpeg -r 10 -b 1800 -i %03d.jpg video.mp4</tt>, ... any other tips?)
+            </p>
+              -->
+        <h2>Changelog</h2>
+            <p>version 1.0 (Clustering Medhods course work, 2010-03-02)</p>
+            <ul>
+                <li>Initial release</li>
+            </ul>
+<!-- DEV INFO START -->
+        <h2>Bugs & TODO list</h2>
+            <p>
+                <ul>
+                    <li>Saving files</li>
+                    <li>Opening/saving text files</li>
+                    <li>
+                        Changing the speed of arunning animation
+                        <ul>
+                           <li>Get rid of Animation Options & use the space for process options.</li>
+                        </ul>
+                    </li>
+                    <li>View configuration</li>
+                    <li>Manual zooming/panning of the view</li>
+                    <li>Image saving options</li>
+                    <li>Context menu for files (save, save as, create optimal CB/PA)</li>
+                    <li>"Remove" button for <a href="generated/html/class_abstract_data_file_widget.html">DataFileWidget</a></li>
+                    <li>Renaming the data files (+sync with DataFileWidget etc)</li>
+                    <li>A way to stop a process (i.e. tell the process that it's no longer needed; the process should respect the message and stop processing)</li>
+                    <li>Saving/specifying random seeds</li>
+                    <li>Different random number generators</li>
+                    <li>Translate to different languages (<a href="http://qt.nokia.com/doc/4.6/internationalization.html">See here</a>, start reading at the "Produce Translations" section)</li>
+                    <li>. . .</li>
+                    <li>Also, search for the word TODO within the sources to find tasks to do. (<tt>grep todo -in *{,/*}.{cpp,h,html}</tt>)</li>
+                </ul>
+            </p>
+        <h2>Development</h2>
+            <p>
+                Please look at the <a href="develop.html">this page</a> for instructions on
+                compiling the software, and the tools you need.
+            </p>
+            <p>
+                If you want to add a new clustering algorithm, look at the K-Means implementation
+                in processes/kmeans.{cpp,h} and reporting.{cpp,h}.
+            </p>
+<!-- DEV INFO END -->
+        <h2>Credits</h2>
+            <p>
+                Developed at the <a href="http://www.uef.fi">University of Eastern Finland</a> by Michal Hrubý and Petr Viktorin
+            </p>
+            <p>
+                <a href="http://cs.joensuu.fi/sipu/clustering/">Data structures and algorithms</a> developed in the Speech and Image Processing Unit <a href="http://cs.joensuu.fi/sipu/clustering/"><span style=" text-decoration: underline; color:#0000ff;">(SIPU)</span></a> by Pasi Fränti, Juha Kivijärvi, Eugene Ageenko, Ismo Kärkkäinen, Timo Kaukoranta, and others (see source code comments).
+            </p>
+            <p>
+                The <a href="http://qt.nokia.com/">Qt</a> library by Nokia is used under the
+                <a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</a>.
+            </p>
+            <p>
+                Default "Silk" icons are by Mark James (<a href="http://www.famfamfam.com/lab/icons/silk/">Icon
+                page</a>), and are used under the
+                <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5</a> license.
+            </p>
+    </body>
+</html>
