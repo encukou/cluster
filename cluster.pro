@@ -93,4 +93,5 @@ QMAKE_CXXFLAGS += -Werror \
 QMAKE_CFLAGS += -g \
     -Imodules/ \
     -DNDEBUG
+QT += svg
 RESOURCES += resources/cluster.qrc

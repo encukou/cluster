@@ -6,6 +6,7 @@
 #include <QGraphicsEllipseItem>
 #include <QDir>
 #include <QMessageBox>
+#include <QtSvg/QSvgGenerator>
 #include "filelistmodel.h"
 #include "processfactorymodel.h"
 #include "processes/proc_kmeans.h"
@@ -205,20 +206,38 @@ void MainWindow::on_actionSaveImage_triggered()
     if (dialog.exec() == QDialog::Accepted)
     {
         QString format = dialog.getImageFormat();
-        QString filter = format == "PNG" ? "PNG image (*.png)" : "JPEG image (*.jpg *.jpeg)";
+        QString filter;
+        if(format == "SVG") {
+            filter = "SVG graphics (*.svg)";
+        }else if(format == "JPEG") {
+            filter = "JPEG image (*.jpg *.jpeg)";
+        }else{
+            filter = "PNG image (*.png)";
+        }
         QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), filter);
 
         if (!fileName.isNull())
         {
             // TODO: Ask if replacing
-            int width = dialog.getImageSize().width();
-            int height = dialog.getImageSize().height();
-            QImage image(width, height, QImage::Format_RGB32);
-            image.fill(0xffffffff);
+            if(format == "SVG") {
+                QSvgGenerator generator;
+                generator.setFileName(fileName);
+                generator.setSize(dialog.getImageSize());
+                generator.setViewBox(QRect(QPoint(0, -dialog.getImageSize().height()), dialog.getImageSize()));
+                QPainter painter(&generator);
+                painter.scale(1, -1); // Set scene transformation
+                scene.render(&painter);
+            }else{
+                int width = dialog.getImageSize().width();
+                int height = dialog.getImageSize().height();
+                QImage image(width, height, QImage::Format_RGB32);
+                image.fill(0xffffffff);
 
-            QPainter painter(&image);
-            scene.render(&painter);
-            image.save(fileName, format.toAscii().constData());
+                QPainter painter(&image);
+                painter.scale(1, -1); // Set scene transformation
+                scene.render(&painter);
+                image.save(fileName, format.toAscii().constData());
+            }
         }
     }
 }

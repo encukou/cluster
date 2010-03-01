@@ -28,7 +28,10 @@ void ImageSaveDialog::changeEvent(QEvent *e)
 
 QString ImageSaveDialog::getImageFormat()
 {
-    return m_ui->pngRadio->isChecked() ? "PNG" : "JPEG";
+    if(m_ui->jpegRadio->isChecked()) return "JPEG";
+    if(m_ui->svgRadio->isChecked()) return "SVG";
+    // else
+    return "PNG";
 }
 
 QSize ImageSaveDialog::getImageSize()
