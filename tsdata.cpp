@@ -181,7 +181,7 @@ static TRAININGSET WriteData2CB(float **Data, int count, int dim, float **MinMax
     return CB;
 }
 
-bool TSData::fromTextFile(QString &fileName, TSData **ts)
+bool TSData::fromTextFile(QString fileName, TSData **ts)
 {
     int count, dim;
     float **Data;

@@ -226,7 +226,7 @@ QStringList FileListModel::mimeTypes() const {
 }
 
 Qt::DropActions FileListModel::supportedDropActions() const {
-    return Qt::CopyAction | Qt::LinkAction;
+    return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 QMimeData* FileListModel::mimeData(const QModelIndexList& indexes) const {

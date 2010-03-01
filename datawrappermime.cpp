@@ -3,6 +3,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtDebug>
+#include "tsdata.h"
 
 DataWrapperMime::DataWrapperMime(DataWrapperPtr data): m_data (data) {
 }
@@ -67,8 +68,15 @@ QList<DataWrapperPtr> DataWrapperMime::getDataWrappers(const QMimeData* data, bo
     }else if(data->hasUrls()) {
         foreach(QUrl url, data->urls()) {
             DataWrapperPtr p = DataWrapperPtr(DataWrapper::fromFile(url.toLocalFile()));
-            if(p) list << p;
-            if(onlyOne) return list;
+            if(p) {
+                list << p;
+            }else{
+                TSData *tsptr;
+                if(TSData::fromTextFile(url.toLocalFile(), &tsptr)) {
+                    list << DataWrapperPtr(tsptr);
+                }
+            }
+            if(onlyOne && !list.empty()) return list;
         }
     }
     return list;

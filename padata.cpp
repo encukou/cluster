@@ -43,7 +43,7 @@ PAData::PAData(QString &fileName, TSDataPtr ts_ptr)
 
 PAData::PAData(TSDataPtr ts_ptr)
 {
-    // TODO: This doesn't make much sense...
+    // TODO: This doesn't make much sense...?
     this->dataType = PAFILE;
     this->associatedData = ts_ptr;
     CODEBOOK *cb = static_cast<CODEBOOK*>(ts_ptr.data()->getData());

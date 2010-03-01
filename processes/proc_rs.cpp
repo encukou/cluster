@@ -14,8 +14,6 @@ RandomSwap::RandomSwap(const ProcessOptionsPtr options, QObject* parent):
 {}
 
 void RandomSwap::process() {
-    // TODO
-
     TSDataPtr ts = options->get<DataWrapperPtr>("input").dynamicCast<TSData>();
     CBDataPtr cb = options->get<DataWrapperPtr>("initial_cb").dynamicCast<CBData>();
 

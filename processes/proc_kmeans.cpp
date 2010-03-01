@@ -14,8 +14,6 @@ KMeans::KMeans(const ProcessOptionsPtr options, QObject* parent):
 {}
 
 void KMeans::process() {
-    // TODO
-
     TSDataPtr ts = options->get<DataWrapperPtr>("input").dynamicCast<TSData>();
     CBDataPtr cb = options->get<DataWrapperPtr>("initial_cb").dynamicCast<CBData>();
 

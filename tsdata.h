@@ -27,7 +27,7 @@ public:
 
     TRAININGSET* getDataCopy();
 
-    static bool fromTextFile(QString &fileName, TSData **ts);
+    static bool fromTextFile(QString fileName, TSData **ts);
 };
 
 
