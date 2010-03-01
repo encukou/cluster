@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionZoomIn->setIcon(loadIcon("actions", "zoom-in"));
     ui->actionZoomOut->setIcon(loadIcon("actions", "zoom-out"));
     ui->actionAutoZoom->setIcon(loadIcon("actions", "zoom-fit-best"));
+    ui->actionDisplayVoronoi->setIcon(loadIcon("cluster", "voronoi"));
     // Help
     ui->actionAbout->setIcon(loadIcon("actions", "help-about"));
 }
