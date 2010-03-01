@@ -179,6 +179,7 @@ QModelIndex FileListModel::indexForFile(QFileInfo& fileInfo) const {
 }
 
 DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) const {
+    if(!index.isValid()) return DataWrapperPtr();
     ItemType type = ItemType(index.internalId());
     if(type != FL_PARENT) {
         return m_data[type][index.row()];
@@ -187,6 +188,7 @@ DataWrapperPtr FileListModel::fileForIndex(QModelIndex index) const {
 }
 
 CBFILETYPE FileListModel::dataTypeForIndex(QModelIndex index) const {
+    if(!index.isValid()) return NOTFOUND;
     ItemType type = ItemType(index.internalId());
     if(type == FL_PARENT) type = ItemType(index.row());
     switch(type) {

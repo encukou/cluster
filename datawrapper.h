@@ -42,7 +42,8 @@ public:
     virtual int getDataSize() = 0;
     virtual void paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group = 0) = 0;
     virtual int getVectorSize() = 0;
-    virtual bool save(QString filename) const = 0;
+    virtual bool save(QString filename) = 0;
+    virtual bool exportTxt(QString filename) const { return false; (void)filename; } // TODO: Text export
 
     QString name();
     QString filePath();

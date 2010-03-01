@@ -25,8 +25,9 @@ CBData::~CBData()
     FreeCodebook(&this->codebook);
 }
 
-bool CBData::save(QString filename) const {
+bool CBData::save(QString filename) {
     WriteCodebook(filename.toLatin1().data(), (CODEBOOK*)&codebook, true);// TODO: WriteCodebook should accept a (const CODEBOOK*)
+    setFileName(filename, "cb");
     return true; // TODO: WriteCodebook doesn't indicate error/success. Fix that, and handle the result
 }
 

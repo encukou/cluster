@@ -43,8 +43,8 @@
     <addaction name="actionOpen"/>
     <addaction name="actionImport"/>
     <addaction name="separator"/>
-    <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionEportTxt"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
@@ -173,7 +173,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen"/>
-   <addaction name="actionSave"/>
+   <addaction name="actionSaveAs"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
@@ -223,7 +223,7 @@
     <string>Save As...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionClose">
@@ -301,6 +301,14 @@
   <action name="actionApplicationHelp">
    <property name="text">
     <string>Application help</string>
+   </property>
+  </action>
+  <action name="actionEportTxt">
+   <property name="text">
+    <string>Eport txt...</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

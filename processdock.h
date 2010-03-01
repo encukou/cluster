@@ -25,6 +25,7 @@ private slots:
     void updateIterationMaximum(int);
     void updatePlayState();
     void frameChanged(int);
+    void playPauseClicked();
 protected:
     QMap<ProcessOptionPtr, QLabel*> optionValidationIconMap;
     QList<QLabel*> invalidIcons;

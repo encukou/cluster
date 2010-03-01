@@ -54,8 +54,7 @@ Everything between "XXX START" and "XXX END" HTML comments is removed from the h
                 a file hides the previous dataset of the same type.
             </p>
             <p>
-                The results of a process are displayed automatically as the process animation is played,
-                provided that the input training set is displayed.
+                The results of a process are displayed automatically when the process animation is played.
             </p>
             <p>
                 Double-click a section heading in the file list (“Training sets”, etc.) to remove the corresponding
@@ -79,6 +78,9 @@ Everything between "XXX START" and "XXX END" HTML comments is removed from the h
             </p>
             <h3>Saving results</h3>
             <p>
+                You can select a file (single-click) and choose Save As to save it.
+            </p>
+            <p>
                 Select the Save Image action to save a picture of data displayed in the visualization
                 window to an image file. Results are saved in the PNG format by default.
               <!-- TODO: SVG export
@@ -93,13 +95,23 @@ Everything between "XXX START" and "XXX END" HTML comments is removed from the h
                 in Linux try <tt>man ffmpeg; ffmpeg -r 10 -b 1800 -i %03d.jpg video.mp4</tt>, ... any other tips?)
             </p>
               -->
+            <h3>File icons</h3>
+            <p>Several icons can appear next to a file name. Here are their meanings:</p>
+            <dl>
+                <dt>Eye<dt>
+                    <dd>The dataset is currently displayed in the data view<dd>
+                <dt>Floppy disk<dt>
+                    <dd>The dataset is not saved<dd>
+                <dt>Link<dt>
+                    <dd>The partitioning belongs to the currently displayed training set<dd>
+            </dl>
         <h2>Changelog</h2>
             <p>version 1.0 (Clustering Medhods course work, 2010-03-02)</p>
             <ul>
                 <li>Initial release</li>
             </ul>
 <!-- DEV INFO START -->
-        <h2>Bugs & TODO list</h2>
+        <h2>Bugs &amp; TODO list</h2>
             <p>
                 <ul>
                     <li>Saving files</li>
@@ -107,12 +119,11 @@ Everything between "XXX START" and "XXX END" HTML comments is removed from the h
                     <li>
                         Changing the speed of arunning animation
                         <ul>
-                           <li>Get rid of Animation Options & use the space for process options.</li>
+                           <li>Get rid of Animation Options &amp; use the space for process options.</li>
                         </ul>
                     </li>
                     <li>View configuration</li>
                     <li>Manual zooming/panning of the view</li>
-                    <li>Image saving options</li>
                     <li>Context menu for files (save, save as, create optimal CB/PA)</li>
                     <li>"Remove" button for <a href="generated/html/class_abstract_data_file_widget.html">DataFileWidget</a></li>
                     <li>Renaming the data files (+sync with DataFileWidget etc)</li>

@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // File
     ui->actionOpen->setIcon(loadIcon("actions", "document-open"));
-    ui->actionSave->setIcon(loadIcon("actions", "document-save"));
+    ui->actionSaveAs->setIcon(loadIcon("actions", "document-save"));
     ui->actionClose->setIcon(loadIcon("actions", "application-exit"));
     // Image
     ui->actionSaveImage->setIcon(loadIcon("actions", "image-save"));
@@ -224,7 +224,7 @@ void MainWindow::on_actionSaveImage_triggered()
 
 void MainWindow::on_actionImport_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Import text file", QString(), "Text files (*.txt)");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Import text file"), QString(), "Text files (*.txt)");
 
     if (!fileName.isNull())
     {
@@ -244,4 +244,24 @@ void MainWindow::on_actionImport_triggered()
 
 void MainWindow::on_actionApplicationHelp_triggered() {
     (new HelpDialog(this))->show();
+}
+
+void MainWindow::on_actionSaveAs_triggered() {
+    DataWrapperPtr ptr = fileListModel->fileForIndex(ui->tvFiles->currentIndex());
+    if (ptr) {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save '%1' As...").arg(ptr->name()), ptr->suggestedFilename);
+        if(!fileName.isNull()) {
+            ptr->save(fileName);
+        }
+    }
+}
+
+void MainWindow::on_actionEportTxt_triggered() {
+    DataWrapperPtr ptr = fileListModel->fileForIndex(ui->tvFiles->currentIndex());
+    if (ptr) {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save '%1' As...").arg(ptr->name()), ptr->suggestedFilename);
+        if(!fileName.isNull()) {
+            ptr->exportTxt(fileName);
+        }
+    }
 }

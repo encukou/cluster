@@ -27,7 +27,7 @@ public:
     PAData(QString &fileName, TSDataPtr ts_ptr);
     PAData(TSDataPtr ts_ptr);
 
-    bool save(QString filename) const;
+    bool save(QString filename);
 
     void* getData();
     int getDataSize();

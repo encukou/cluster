@@ -152,7 +152,7 @@ void ProcessDock::start() {
     btnPlay->setMinimumSize(32, 32);
     btnPlay->setAutoRaise(true);
     btnPlay->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    animation->connect(btnPlay, SIGNAL(clicked()), SLOT(playPause()));
+    connect(btnPlay, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
     insideLayout->addWidget(btnPlay);
     insideLayout->setStretch(1, 1);
     insideLayout->addStretch(1);
@@ -258,4 +258,9 @@ void ProcessDock::frameChanged(int frame) {
     if(!displayingScene->isDataDisplayed(processOptions->get<DataWrapperPtr>("input"))) return;
     DataWrapperPtr cb = results.value("output").value<DataWrapperPtr>();
     if(cb) displayingScene->displayData(cb);
+}
+
+void ProcessDock::playPauseClicked() {
+    if(!animation->playing() && displayingScene) displayingScene->displayData(processOptions->get<DataWrapperPtr>("input"));
+    animation->playPause();
 }

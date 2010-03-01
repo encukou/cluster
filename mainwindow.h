@@ -28,6 +28,8 @@ private:
     ClusteringScene scene;
 
 private slots:
+    void on_actionEportTxt_triggered();
+    void on_actionSaveAs_triggered();
     void on_actionApplicationHelp_triggered();
     void on_actionImport_triggered();
     void on_actionSaveImage_triggered();

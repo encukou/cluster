@@ -16,7 +16,7 @@ public:
     CBData(CODEBOOK* source); // takes a COPY of the given data
 
     virtual ~CBData();
-    bool save(QString filename) const;
+    bool save(QString filename);
 
     void* getData();
     int getDataSize();

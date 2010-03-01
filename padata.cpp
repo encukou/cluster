@@ -107,7 +107,8 @@ void PAData::paintToScene(QGraphicsScene &scene, QGraphicsItemGroup *group)
     if (hull != NULL) FreeConvexHulls(hull);
 }
 
-bool PAData::save(QString filename) const {
+bool PAData::save(QString filename) {
     WritePartitioning(filename.toLatin1().data(), (PARTITIONING*)&partition, (CODEBOOK*)associatedData->getData(), true);// TODO: WritePartitioning should accept a (const PARTITIONING*)
+    setFileName(filename, "pa");
     return true; // TODO: WritePartitioning doesn't indicate error/success. Fix that, and handle the result
 }
