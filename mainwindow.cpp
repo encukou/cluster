@@ -235,6 +235,7 @@ void MainWindow::on_actionSaveImage_triggered()
 
                 QPainter painter(&image);
                 painter.scale(1, -1); // Set scene transformation
+                painter.translate(0, -dialog.getImageSize().height());
                 scene.render(&painter);
                 image.save(fileName, format.toAscii().constData());
             }
