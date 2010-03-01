@@ -217,7 +217,9 @@ void MainWindow::on_actionImport_triggered()
         TSData *ts = NULL;
         if (TSData::fromTextFile(fileName, &ts))
         {
-            // TODO: do something with the data
+            QModelIndex index = fileListModel->addDataFile(ts);
+            ui->tvFiles->expand(index.parent());
+            ui->tvFiles->scrollTo(index);
         }
         else
         {

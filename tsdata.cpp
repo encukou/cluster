@@ -17,7 +17,7 @@ TSData::TSData(TRAININGSET *ts)
     CreateNewCodebook(&this->trainingSet, BookSize(ts), ts);
     CopyCodebook(ts, &this->trainingSet);
 
-    m_fileName = "(Generated training set)";
+    m_fileName = "(imported training set)";
     suggestedFilename = "trainingset";
 }
 
