@@ -31,13 +31,13 @@ void ProcessResultsModel::setResults(QVariantMap results) {
     int grownBy = currentUnregisteredSize - prevUnregisteredSize;
     int regSize = registeredResults.size();
     if(ready) {
-        emit dataChanged(createIndex(0, 1), createIndex(regSize - 1 + common, 1));
+        emit dataChanged(createIndex(0, 1), createIndex(regSize + common - 1, 1));
         if(grownBy > 0) {
-            beginInsertRows(QModelIndex(), regSize + common + 1, regSize + maxSize - 1);
+            beginInsertRows(QModelIndex(), regSize + common, regSize + maxSize - 1);
             unregisteredResults = results;
             endInsertRows();
-        }else{
-            beginRemoveRows(QModelIndex(), regSize + common + 1, regSize + maxSize - 1);
+        }else if(grownBy < 0) {
+            beginRemoveRows(QModelIndex(), regSize + common, regSize + maxSize - 1);
             unregisteredResults = results;
             endRemoveRows();
         }

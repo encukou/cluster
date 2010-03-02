@@ -63,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionDisplayVoronoi->setIcon(loadIcon("cluster", "voronoi"));
     // Help
     ui->actionAbout->setIcon(loadIcon("actions", "help-about"));
+
+
+    // Disabled for release :(
+    ui->actionDisplayVoronoi->setVisible(false);
 }
 
 MainWindow::~MainWindow()

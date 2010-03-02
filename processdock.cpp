@@ -9,6 +9,7 @@
 #include <QtGui/QSpinBox>
 #include <QtGui/QSlider>
 #include <QtGui/QHeaderView>
+#include <QtGui/QCloseEvent>
 #include <QtDebug>
 #include "iconhelper.h"
 #include "clusteringscene.h"
@@ -264,6 +265,12 @@ void ProcessDock::playPauseClicked() {
     animation->playPause();
 }
 
-void ProcessDock::closeEvent(QCloseEvent*) {
-    deleteLater();
+void ProcessDock::closeEvent(QCloseEvent* event) {
+    if(process && process->isRunning()) {
+        event->ignore();
+        hide();
+    }else{
+        event->accept();
+        deleteLater();
+    }
 }

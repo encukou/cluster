@@ -17,8 +17,8 @@ ClusteringScene::ClusteringScene()
     this->showingVoronoi = false;
 }
 
-void ClusteringScene::displayData(DataWrapperPtr data)
-{
+void ClusteringScene::displayData(DataWrapperPtr data) {
+    if(!data) return;
     CBFILETYPE type = data->getType();
     switch (type)
     {
