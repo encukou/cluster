@@ -1,0 +1,19 @@
+A GUI tool for running and analyzing clustering algorithms
+
+Clustering Medhods course work, 2010-03-02
+
+http://cs.joensuu.fi/~pviktor/cluster/doc/index.html
+
+
+Credits
+
+Developed at the University of Eastern Finland by Michal Hrubý and Petr Viktorin
+
+Data structures and algorithms developed in the Speech and Image Processing Unit
+(SIPU) by Pasi Fränti, Juha Kivijärvi, Eugene Ageenko, Ismo Kärkkäinen, Timo
+Kaukoranta, and others (see source code comments).
+
+The Qt library by Nokia is used under the LGPL 2.1.
+
+Default "Silk" icons are by Mark James (Icon page), and are used under the Creative
+Commons Attribution 2.5 license. 
