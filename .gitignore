@@ -1,0 +1,15 @@
+/.bzr/
+ui_*.h
+moc_*.cpp
+/Makefile
+/cluster
+/cluster.pro.user
+/*.o
+/*.cb
+/*.ts
+/*.pa
+qrc_*.cpp
+/doc/generated
+/qt.tag
+/release
+/windows-binaries
